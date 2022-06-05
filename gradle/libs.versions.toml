@@ -1,0 +1,26 @@
+[versions]
+
+androidx-activity = "1.4.0"
+androidx-core = "1.8.0"
+androidx-lifecycle = "2.4.1"
+androidx-material3 = "1.0.0-alpha03"
+compose = "1.1.1"
+kotlin = "1.6.10"
+workflow = "1.8.0-beta01"
+
+[plugins]
+
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+
+[libraries]
+
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+androidx-core = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
+androidx-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
+androidx-material = { module = "androidx.compose.material:material", version.ref = "compose" }
+androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "androidx-material3" }
+
+workflow-core = { module = "com.squareup.workflow1:workflow-core-jvm", version.ref = "workflow" }
+workflow-runtime = { module = "com.squareup.workflow1:workflow-runtime-jvm", version.ref = "workflow" }
+workflow-ui = { module = "com.squareup.workflow1:workflow-ui-core-android", version.ref = "workflow" }
