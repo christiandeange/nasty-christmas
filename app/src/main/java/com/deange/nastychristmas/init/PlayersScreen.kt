@@ -137,7 +137,6 @@ class PlayersScreen(
           .padding(16.dp),
         enabled = players.size >= 2,
         onClick = { onStartGame() },
-        colors = filledTonalButtonColors(),
       ) {
         Text(
           style = LocalTextStyle.current.copy(fontWeight = Bold),

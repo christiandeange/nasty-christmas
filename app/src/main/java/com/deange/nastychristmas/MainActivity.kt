@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.deange.nastychristmas.init.PlayersWorkflow
+import com.deange.nastychristmas.round.NewRoundWorkflow
 import com.deange.nastychristmas.ui.theme.NastyChristmasTheme
 import com.deange.nastychristmas.ui.theme.StatusBarTheme
 import com.deange.nastychristmas.ui.workflow.BottomSheets
@@ -22,6 +23,7 @@ class MainActivity : ComponentActivity() {
   private val workflow by lazy {
     AppWorkflow(
       playersWorkflow = PlayersWorkflow(),
+      newRoundWorkflow = NewRoundWorkflow(),
     )
   }
 
