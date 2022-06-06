@@ -66,6 +66,7 @@ dependencies {
   implementation libs.androidx.lifecycle
   implementation libs.androidx.material
   implementation libs.androidx.material3
+  implementation libs.androidx.recyclerview
   implementation libs.kotlinx.serialization
   implementation libs.workflow.core
   implementation libs.workflow.runtime

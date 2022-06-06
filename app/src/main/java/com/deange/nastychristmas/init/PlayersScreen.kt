@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,8 +26,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.Bottom
@@ -36,8 +36,11 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.input.ImeAction.Companion.Send
+import androidx.compose.ui.unit.Dp.Companion.Hairline
 import androidx.compose.ui.unit.dp
 import com.deange.nastychristmas.R
+import com.deange.nastychristmas.ui.compose.animatedItemsIndexed
+import com.deange.nastychristmas.ui.compose.rememberAnimatedItemsState
 import com.deange.nastychristmas.ui.theme.LocalColorTheme
 import com.deange.nastychristmas.ui.theme.NastyChristmasTheme
 import com.deange.nastychristmas.ui.workflow.ViewRendering
@@ -95,8 +98,19 @@ class PlayersScreen(
         }
       }
 
-      LazyColumn(modifier = Modifier.weight(1f)) {
-        itemsIndexed(players, key = { _, name -> name }) { i, name ->
+      val listState = rememberLazyListState()
+      val animationState by rememberAnimatedItemsState(players)
+
+      if (animationState.isNotEmpty()) {
+        LaunchedEffect(animationState.size, animationState.last().visibility.isIdle) {
+          if (animationState.last().visibility.isIdle) {
+            listState.animateScrollToItem(animationState.size)
+          }
+        }
+      }
+
+      LazyColumn(modifier = Modifier.weight(1f), state = listState) {
+        animatedItemsIndexed(animationState, key = { name -> name }) { i, name ->
           Column(modifier = Modifier.animateItemPlacement()) {
             Text(
               modifier = Modifier
@@ -109,7 +123,10 @@ class PlayersScreen(
               text = name,
             )
 
-            Divider()
+            Divider(
+              color = MaterialTheme.colorScheme.outline,
+              thickness = Hairline,
+            )
           }
         }
       }
