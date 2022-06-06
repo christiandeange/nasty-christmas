@@ -1,16 +1,25 @@
+@file:OptIn(WorkflowUiExperimentalApi::class)
+
 package com.deange.nastychristmas.workflow
 
-import com.deange.nastychristmas.ui.workflow.BottomSheetContainerScreen
-import com.deange.nastychristmas.ui.workflow.BottomSheetScreen
-import com.deange.nastychristmas.ui.workflow.ViewRendering
+import com.deange.nastychristmas.init.PlayersWorkflow
+import com.deange.nastychristmas.ui.workflow.*
+import com.deange.nastychristmas.workflow.AppState.InitializingPlayers
 import com.squareup.workflow1.Snapshot
 import com.squareup.workflow1.StatefulWorkflow
+import com.squareup.workflow1.action
+import com.squareup.workflow1.renderChild
+import com.squareup.workflow1.ui.WorkflowUiExperimentalApi
+import com.squareup.workflow1.ui.container.BodyAndModalsScreen
 
-typealias AppScreen = BottomSheetContainerScreen<ViewRendering, BottomSheetScreen>
+typealias AppScreen = BodyAndModalsScreen<ViewRendering, BottomSheetScreen>
 
-class AppWorkflow : StatefulWorkflow<Unit, AppState, Unit, AppScreen>() {
+class AppWorkflow(
+  private val playersWorkflow: PlayersWorkflow,
+) : StatefulWorkflow<Unit, AppState, Unit, AppScreen>() {
   override fun initialState(props: Unit, snapshot: Snapshot?): AppState {
-    return AppState("Android")
+    return AppState.serializer().fromSnapshot(snapshot)
+      ?: InitializingPlayers
   }
 
   override fun render(
@@ -18,10 +27,18 @@ class AppWorkflow : StatefulWorkflow<Unit, AppState, Unit, AppScreen>() {
     renderState: AppState,
     context: RenderContext
   ): AppScreen {
-    return BottomSheetContainerScreen(
-      GreetingScreen(renderState.text)
+    return BodyAndModalsScreen(
+      body = context.renderChild(playersWorkflow) {
+        action {
+          setOutput(Unit)
+        }
+      }
     )
   }
 
-  override fun snapshotState(state: AppState): Snapshot? = null
+  override fun snapshotState(state: AppState): Snapshot {
+    return when (state) {
+      is InitializingPlayers -> InitializingPlayers.serializer().toSnapshot(state)
+    }
+  }
 }

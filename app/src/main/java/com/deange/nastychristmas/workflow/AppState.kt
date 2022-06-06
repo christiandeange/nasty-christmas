@@ -1,5 +1,9 @@
 package com.deange.nastychristmas.workflow
 
-data class AppState(
-  val text: String,
-)
+import kotlinx.serialization.Serializable
+
+@Serializable
+sealed class AppState {
+  @Serializable
+  object InitializingPlayers : AppState()
+}

@@ -12,12 +12,11 @@ import androidx.compose.ui.Modifier
 @Composable
 fun BottomSheets(
   sheets: List<BottomSheetScreen>,
-  viewEnvironment: ViewEnvironment,
   content: @Composable () -> Unit,
 ) {
   if (sheets.isNotEmpty()) {
     sheets.forEachIndexed { index, sheet ->
-      BottomSheet(sheet, viewEnvironment) {
+      BottomSheet(sheet) {
         if (index == 0) content()
       }
     }
@@ -30,7 +29,6 @@ fun BottomSheets(
 @Composable
 private fun BottomSheet(
   sheet: BottomSheetScreen,
-  viewEnvironment: ViewEnvironment,
   content: @Composable () -> Unit,
 ) {
   val bottomSheetState = rememberModalBottomSheetState(initialValue = Hidden)
@@ -53,7 +51,7 @@ private fun BottomSheet(
     sheetState = bottomSheetState,
     sheetContent = {
       Box(modifier = Modifier.fillMaxWidth()) {
-        sheet.View(viewEnvironment)
+        sheet.Content()
       }
     },
     content = content,

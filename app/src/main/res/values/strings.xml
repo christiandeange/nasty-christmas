@@ -1,3 +1,6 @@
 <resources>
-  <string name="app_name">NastyChristmas</string>
+  <string name="app_name">Nasty Christmas</string>
+  <string name="player_hint">Player Name</string>
+  <string name="add">Add</string>
+  <string name="lets_get_nasty">Let\'s Get Nasty!</string>
 </resources>

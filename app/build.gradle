@@ -1,6 +1,7 @@
 plugins {
   id 'com.android.application'
   id 'org.jetbrains.kotlin.android'
+  id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
 android {
@@ -33,6 +34,7 @@ android {
 
   kotlinOptions {
     jvmTarget = '1.8'
+    freeCompilerArgs += ['-opt-in=kotlin.RequiresOptIn']
   }
 
   buildFeatures {
@@ -50,6 +52,13 @@ android {
   }
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+  kotlinOptions {
+    jvmTarget = '1.8'
+    freeCompilerArgs += ['-opt-in=kotlin.RequiresOptIn']
+  }
+}
+
 dependencies {
   implementation libs.androidx.activity.compose
   implementation libs.androidx.compose.ui
@@ -57,7 +66,9 @@ dependencies {
   implementation libs.androidx.lifecycle
   implementation libs.androidx.material
   implementation libs.androidx.material3
+  implementation libs.kotlinx.serialization
   implementation libs.workflow.core
   implementation libs.workflow.runtime
-  implementation libs.workflow.ui
+  implementation libs.workflow.ui.android
+  implementation libs.workflow.ui.compose
 }
