@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.material3.Surface
 import androidx.lifecycle.lifecycleScope
 import com.deange.nastychristmas.end.EndGameWorkflow
 import com.deange.nastychristmas.init.PlayersWorkflow
@@ -45,7 +46,9 @@ class MainActivity : ComponentActivity() {
         StatusBarTheme()
         WorkflowRenderings(viewModel.renderings) { rendering ->
           BottomSheets(rendering.modals) {
-            rendering.body.Content()
+            Surface {
+              rendering.body.Content()
+            }
           }
         }
       }

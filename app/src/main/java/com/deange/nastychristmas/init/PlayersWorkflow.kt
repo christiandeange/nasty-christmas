@@ -29,7 +29,7 @@ class PlayersWorkflow : StatefulWorkflow<Unit, PlayersState, PlayersOutput, Play
       players = renderState.players.map { it.name },
       currentPlayer = renderState.currentPlayer,
       onAddPlayer = context.eventHandler { name ->
-        val newPlayers = state.players + Player(name)
+        val newPlayers = state.players + Player(name.trim())
         state = state.copy(
           players = newPlayers,
           // Clear the current player name.

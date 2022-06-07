@@ -17,7 +17,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ButtonDefaults.filledTonalButtonColors
 import androidx.compose.material3.Divider
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -36,6 +35,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.input.ImeAction.Companion.Send
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.Dp.Companion.Hairline
 import androidx.compose.ui.unit.dp
 import com.deange.nastychristmas.R
@@ -70,23 +70,31 @@ class PlayersScreen(
             modifier = Modifier.padding(16.dp),
             horizontalArrangement = spacedBy(16.dp),
           ) {
+            val isEnabled = currentPlayerName.isNotBlank() && currentPlayerName !in players
 
             OutlinedTextField(
               modifier = Modifier.weight(1f),
               shape = RoundedCornerShape(20.dp),
               value = currentPlayerName,
-              onValueChange = { currentPlayerName = it.replace("\n", "") },
+              onValueChange = { currentPlayerName = it },
               label = { Text(stringResource(R.string.player_hint)) },
               singleLine = true,
-              keyboardOptions = KeyboardOptions(imeAction = Send),
-              keyboardActions = KeyboardActions(onSend = { onAddPlayer(currentPlayerName) }),
+              keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Words,
+                imeAction = Send,
+              ),
+              keyboardActions = KeyboardActions(onSend = {
+                if (isEnabled) {
+                  onAddPlayer(currentPlayerName)
+                }
+              }),
             )
 
             FilledTonalButton(
               modifier = Modifier
                 .size(56.dp)
                 .align(Bottom),
-              enabled = currentPlayerName.isNotBlank() && currentPlayerName !in players,
+              enabled = isEnabled,
               onClick = { onAddPlayer(currentPlayerName) },
               contentPadding = PaddingValues(0.dp),
             ) {

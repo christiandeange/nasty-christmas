@@ -78,11 +78,11 @@ fun NastyChristmasTheme(
   content: @Composable () -> Unit,
 ) {
   val colorScheme = when {
-    // Dynamic color is available on Android 12+
-    SDK_INT >= S -> {
-      val context = LocalContext.current
-      if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-    }
+    // Dynamic color is available on Android 12+, but disable it for now.
+    // SDK_INT >= S -> {
+    //   val context = LocalContext.current
+    //   if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    // }
     darkTheme -> DarkColors
     else -> LightColors
   }

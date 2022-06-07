@@ -26,7 +26,7 @@ class OpenGiftWorkflow : StatefulWorkflow<OpenGiftProps, OpenGiftState, Gift, Vi
       roundNumber = renderProps.round,
       giftName = renderState.giftName,
       onAddGift = context.eventHandler { giftName ->
-        setOutput(Gift(giftName))
+        setOutput(Gift(giftName.trim()))
       }
     )
   }

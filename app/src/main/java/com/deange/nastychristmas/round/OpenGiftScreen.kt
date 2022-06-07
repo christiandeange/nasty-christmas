@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.deange.nastychristmas.R
 import com.deange.nastychristmas.ui.workflow.ViewRendering
@@ -59,11 +60,18 @@ class OpenGiftScreen(
           modifier = Modifier.weight(1f),
           shape = RoundedCornerShape(20.dp),
           value = currentGiftName,
-          onValueChange = { currentGiftName = it.replace("\n", "") },
+          onValueChange = { currentGiftName = it },
           label = { Text(stringResource(R.string.gift_hint)) },
           singleLine = true,
-          keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
-          keyboardActions = KeyboardActions(onSend = { onAddGift(currentGiftName) }),
+          keyboardOptions = KeyboardOptions(
+            capitalization = KeyboardCapitalization.Sentences,
+            imeAction = ImeAction.Send,
+          ),
+          keyboardActions = KeyboardActions(onSend = {
+            if (currentGiftName.isNotBlank()) {
+              onAddGift(currentGiftName)
+            }
+          }),
         )
 
         FilledTonalButton(
