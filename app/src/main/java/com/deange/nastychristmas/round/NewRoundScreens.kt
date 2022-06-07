@@ -2,7 +2,6 @@ package com.deange.nastychristmas.round
 
 import android.view.animation.AccelerateInterpolator
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -82,7 +81,6 @@ class NewRoundPlayerScreen(
   }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun PlayerSelectionScreen(
   player: Player,

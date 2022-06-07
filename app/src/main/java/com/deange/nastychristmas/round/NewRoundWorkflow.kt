@@ -13,7 +13,11 @@ class NewRoundWorkflow :
   StatefulWorkflow<NewRoundProps, NewRoundState, Player, ViewRendering>() {
   override fun initialState(props: NewRoundProps, snapshot: Snapshot?): NewRoundState {
     return NewRoundState.serializer().fromSnapshot(snapshot)
-      ?: SelectingNextPlayer
+      ?: if (props.playerPool.size > 1) {
+        SelectingNextPlayer
+      } else {
+        NextPlayerSelected(props.playerPool.single())
+      }
   }
 
   override fun render(

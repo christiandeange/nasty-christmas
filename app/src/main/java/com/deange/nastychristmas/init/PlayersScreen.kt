@@ -62,13 +62,14 @@ class PlayersScreen(
     BackHandler(onBack = onBack)
 
     Column {
+      var currentPlayerName by currentPlayer.asMutableState()
+
       NastyChristmasTheme(darkTheme = LocalColorTheme.current.isLight()) {
         Surface(color = MaterialTheme.colorScheme.inversePrimary) {
           Row(
             modifier = Modifier.padding(16.dp),
             horizontalArrangement = spacedBy(16.dp),
           ) {
-            var currentPlayerName by currentPlayer.asMutableState()
 
             OutlinedTextField(
               modifier = Modifier.weight(1f),
@@ -135,7 +136,7 @@ class PlayersScreen(
         modifier = Modifier
           .fillMaxWidth()
           .padding(16.dp),
-        enabled = players.size >= 2,
+        enabled = players.size >= 2 && currentPlayerName.isBlank(),
         onClick = { onStartGame() },
       ) {
         Text(

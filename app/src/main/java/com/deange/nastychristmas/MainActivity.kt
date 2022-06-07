@@ -5,8 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.deange.nastychristmas.end.EndGameWorkflow
 import com.deange.nastychristmas.init.PlayersWorkflow
 import com.deange.nastychristmas.round.NewRoundWorkflow
+import com.deange.nastychristmas.round.OpenGiftWorkflow
+import com.deange.nastychristmas.round.StealingRoundWorkflow
 import com.deange.nastychristmas.ui.theme.NastyChristmasTheme
 import com.deange.nastychristmas.ui.theme.StatusBarTheme
 import com.deange.nastychristmas.ui.workflow.BottomSheets
@@ -24,6 +27,9 @@ class MainActivity : ComponentActivity() {
     AppWorkflow(
       playersWorkflow = PlayersWorkflow(),
       newRoundWorkflow = NewRoundWorkflow(),
+      openGiftWorkflow = OpenGiftWorkflow(),
+      stealingRoundWorkflow = StealingRoundWorkflow(),
+      endGameWorkflow = EndGameWorkflow(),
     )
   }
 

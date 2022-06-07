@@ -4,4 +4,12 @@
   <string name="add">Add</string>
   <string name="lets_get_nasty">Let\'s Get Nasty!</string>
   <string name="round_title">Going next for Round %1$d is…</string>
+  <string name="open_gift_round_title">Round %1$d: %2$s is opening…</string>
+  <string name="steal_round_title">Round %1$d: %2$s is going to…</string>
+  <string name="open_gift_title">Open New Gift</string>
+  <string name="open_gift_description">This finishes the round and brings us all closer to the end.</string>
+  <string name="gift_hint">Gift Name</string>
+  <string name="confirm">Confirm</string>
+  <string name="steal_from">Steal from %1$s</string>
+  <string name="thanks_for_playing">Thanks for playing!</string>
 </resources>
