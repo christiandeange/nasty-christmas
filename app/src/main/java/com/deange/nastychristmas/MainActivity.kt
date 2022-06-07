@@ -11,6 +11,7 @@ import com.deange.nastychristmas.init.PlayersWorkflow
 import com.deange.nastychristmas.round.NewRoundWorkflow
 import com.deange.nastychristmas.round.OpenGiftWorkflow
 import com.deange.nastychristmas.round.StealingRoundWorkflow
+import com.deange.nastychristmas.settings.GameSettingsWorkflow
 import com.deange.nastychristmas.ui.theme.NastyChristmasTheme
 import com.deange.nastychristmas.ui.theme.StatusBarTheme
 import com.deange.nastychristmas.ui.workflow.BottomSheets
@@ -31,6 +32,7 @@ class MainActivity : ComponentActivity() {
       openGiftWorkflow = OpenGiftWorkflow(),
       stealingRoundWorkflow = StealingRoundWorkflow(),
       endGameWorkflow = EndGameWorkflow(),
+      gameSettingsWorkflow = GameSettingsWorkflow(),
     )
   }
 

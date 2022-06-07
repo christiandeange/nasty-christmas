@@ -2,6 +2,8 @@ package com.deange.nastychristmas.round
 
 import com.deange.nastychristmas.round.PlayerChoice.OpenNewGift
 import com.deange.nastychristmas.round.PlayerChoice.StealGiftFrom
+import com.deange.nastychristmas.round.StealingRoundOutput.ChangeGameSettings
+import com.deange.nastychristmas.round.StealingRoundOutput.EndRound
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.deange.nastychristmas.ui.workflow.fromSnapshot
 import com.deange.nastychristmas.ui.workflow.toSnapshot
@@ -39,13 +41,18 @@ class StealingRoundWorkflow : StatefulWorkflow<
         )
       )
 
+      val allowAnySteal = !renderProps.settings.enforceOwnership
+
       renderState.gifts.forEach { (player, gift) ->
+        val isCurrentChoice = (renderState.currentChoice as? StealGiftFrom)?.victim == player
+        val alreadyOwnedThisRound = renderState.currentPlayer in gift.owners
+
         add(
           StealOrOpenChoice.Steal(
             playerName = player.name,
             giftName = gift.gift.name,
-            isSelected = (renderState.currentChoice as? StealGiftFrom)?.victim == player,
-            isEnabled = renderState.currentPlayer !in gift.owners,
+            isSelected = isCurrentChoice,
+            isEnabled = allowAnySteal || !alreadyOwnedThisRound,
             onPicked = context.eventHandler {
               state = state.copy(currentChoice = StealGiftFrom(player))
             }
@@ -58,11 +65,19 @@ class StealingRoundWorkflow : StatefulWorkflow<
       playerName = renderState.currentPlayer.name,
       roundNumber = renderProps.roundNumber,
       choices = choices,
+      onChangeSettings = context.eventHandler {
+        setOutput(
+          ChangeGameSettings(
+            currentPlayer = state.currentPlayer,
+            gifts = state.gifts
+          )
+        )
+      },
       onConfirmChoice = context.eventHandler {
         when (val currentChoice: PlayerChoice = state.currentChoice!!) {
           is OpenNewGift -> {
             setOutput(
-              StealingRoundOutput(
+              EndRound(
                 playerOpeningGift = state.currentPlayer,
                 gifts = state.gifts,
               )
@@ -79,7 +94,7 @@ class StealingRoundWorkflow : StatefulWorkflow<
             )
           }
         }
-      }
+      },
     )
   }
 

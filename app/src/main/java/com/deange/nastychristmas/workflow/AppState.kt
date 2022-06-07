@@ -2,6 +2,7 @@ package com.deange.nastychristmas.workflow
 
 import com.deange.nastychristmas.model.GiftOwners
 import com.deange.nastychristmas.model.Player
+import com.deange.nastychristmas.settings.GameSettings
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -15,7 +16,8 @@ sealed class AppState {
     val playerPool: Set<Player>,
     val round: Int,
     val gifts: GiftOwners,
-  ): AppState()
+    val settings: GameSettings,
+  ) : AppState()
 
   @Serializable
   data class OpeningGift(
@@ -24,7 +26,8 @@ sealed class AppState {
     val player: Player,
     val round: Int,
     val gifts: GiftOwners,
-  ): AppState()
+    val settings: GameSettings,
+  ) : AppState()
 
   @Serializable
   data class StealingRound(
@@ -33,10 +36,21 @@ sealed class AppState {
     val startingPlayer: Player,
     val round: Int,
     val gifts: GiftOwners,
-  ): AppState()
+    val settings: GameSettings,
+  ) : AppState()
 
   @Serializable
   data class EndGame(
     val gifts: GiftOwners,
+  ) : AppState()
+
+  @Serializable
+  data class ChangeGameSettings(
+    val allPlayers: List<Player>,
+    val playerPool: Set<Player>,
+    val player: Player,
+    val round: Int,
+    val gifts: GiftOwners,
+    val settings: GameSettings,
   ) : AppState()
 }

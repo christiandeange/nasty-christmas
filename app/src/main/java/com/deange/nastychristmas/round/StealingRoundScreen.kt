@@ -1,5 +1,6 @@
 package com.deange.nastychristmas.round
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
@@ -11,8 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -20,19 +25,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import com.deange.nastychristmas.R
 import com.deange.nastychristmas.round.StealOrOpenChoice.Open
 import com.deange.nastychristmas.round.StealOrOpenChoice.Steal
+import com.deange.nastychristmas.ui.compose.TwoLineText
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 
+@OptIn(ExperimentalFoundationApi::class)
 class StealingRoundScreen(
   val playerName: String,
   val roundNumber: Int,
   val choices: List<StealOrOpenChoice>,
   val onConfirmChoice: () -> Unit,
+  val onChangeSettings: () -> Unit,
 ) : ViewRendering {
   @Composable
   override fun Content() {
@@ -41,19 +50,33 @@ class StealingRoundScreen(
         .fillMaxSize()
         .padding(vertical = 16.dp)
     ) {
-      Text(
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 64.dp),
-        text = stringResource(R.string.steal_round_title, roundNumber, playerName),
-        style = MaterialTheme.typography.titleLarge,
-      )
-
-      LazyColumn(
-        modifier = Modifier.weight(1f)
+      Row(
+        modifier = Modifier.padding(bottom = 64.dp),
+        horizontalArrangement = spacedBy(16.dp),
+        verticalAlignment = CenterVertically,
       ) {
+        Text(
+          modifier = Modifier
+            .padding(start = 16.dp)
+            .weight(1f),
+          text = stringResource(R.string.steal_round_title, roundNumber, playerName),
+          style = MaterialTheme.typography.titleLarge,
+        )
+
+        IconButton(onClick = { onChangeSettings() }) {
+          Icon(
+            painter = rememberVectorPainter(image = Icons.Default.Settings),
+            contentDescription = stringResource(R.string.settings),
+          )
+        }
+      }
+
+      LazyColumn(modifier = Modifier.weight(1f)) {
         items(choices, key = { it.key }) { choice ->
           when (choice) {
             is Open -> {
               ChoiceRow(
+                modifier = Modifier.animateItemPlacement(),
                 titleText = stringResource(R.string.open_gift_title),
                 descriptionText = stringResource(R.string.open_gift_description),
                 isSelected = choice.isSelected,
@@ -62,6 +85,7 @@ class StealingRoundScreen(
             }
             is Steal -> {
               ChoiceRow(
+                modifier = Modifier.animateItemPlacement(),
                 titleText = stringResource(R.string.steal_from, choice.playerName),
                 descriptionText = choice.giftName,
                 isSelected = choice.isSelected,
@@ -123,25 +147,11 @@ private fun ChoiceRow(
       selected = isSelected,
     )
 
-    Column(
-      modifier = Modifier.padding(vertical = 4.dp),
-      verticalArrangement = spacedBy(4.dp),
-    ) {
-      Text(
-        text = titleText,
-        style = MaterialTheme.typography.bodyMedium.copy(
-          fontWeight = Bold,
-          color = textColor,
-        ),
-      )
-
-      Text(
-        text = descriptionText,
-        style = MaterialTheme.typography.bodySmall.copy(
-          color = textColor,
-        ),
-      )
-    }
+    TwoLineText(
+      title = titleText,
+      description = descriptionText,
+      textColor = textColor,
+    )
   }
 }
 
