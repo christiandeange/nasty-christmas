@@ -1,6 +1,7 @@
 package com.deange.nastychristmas.round
 
 import android.view.animation.AccelerateInterpolator
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
@@ -40,6 +41,8 @@ class NewRoundPlayerSelectionScreen(
 ) : ViewRendering {
   @Composable
   override fun Content() {
+    BackHandler(onBack = { /* no-op */ })
+
     val frameDelays = remember {
       val finalTimeout = random.nextLong(1000L, 2000L)
       val interpolator = AccelerateInterpolator(6f)
@@ -77,6 +80,7 @@ class NewRoundPlayerScreen(
 ) : ViewRendering {
   @Composable
   override fun Content() {
+    BackHandler(onBack = onContinue)
     PlayerSelectionScreen(player, round, onContinue)
   }
 }

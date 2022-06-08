@@ -49,7 +49,7 @@ class GameSettingsWorkflow : StatefulWorkflow<
           setOutput(ResetGame)
         }
       },
-      onCancel = context.eventHandler {
+      onBack = context.eventHandler {
         setOutput(UpdateGameSettings(props))
       },
       onConfirmSettings = context.eventHandler {

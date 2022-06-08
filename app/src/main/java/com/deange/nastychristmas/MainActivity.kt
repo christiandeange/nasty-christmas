@@ -5,13 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.Surface
-import androidx.lifecycle.lifecycleScope
+import androidx.compose.runtime.LaunchedEffect
 import com.deange.nastychristmas.end.EndGameWorkflow
 import com.deange.nastychristmas.init.PlayersWorkflow
 import com.deange.nastychristmas.round.NewRoundWorkflow
 import com.deange.nastychristmas.round.OpenGiftWorkflow
 import com.deange.nastychristmas.round.StealingRoundWorkflow
 import com.deange.nastychristmas.settings.GameSettingsWorkflow
+import com.deange.nastychristmas.storage.GameStateStorage
 import com.deange.nastychristmas.ui.theme.NastyChristmasTheme
 import com.deange.nastychristmas.ui.theme.StatusBarTheme
 import com.deange.nastychristmas.ui.workflow.BottomSheets
@@ -19,9 +20,7 @@ import com.deange.nastychristmas.ui.workflow.WorkflowRenderings
 import com.deange.nastychristmas.workflow.AppViewModel
 import com.deange.nastychristmas.workflow.AppViewModelFactory
 import com.deange.nastychristmas.workflow.AppWorkflow
-import com.deange.nastychristmas.storage.GameStateStorage
 import com.squareup.workflow1.ui.WorkflowUiExperimentalApi
-import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 @OptIn(WorkflowUiExperimentalApi::class)
@@ -64,11 +63,11 @@ class MainActivity : ComponentActivity() {
           }
         }
       }
-    }
 
-    lifecycleScope.launch {
-      viewModel.waitForExit()
-      finish()
+      LaunchedEffect(viewModel) {
+        viewModel.waitForExit()
+        finish()
+      }
     }
   }
 }

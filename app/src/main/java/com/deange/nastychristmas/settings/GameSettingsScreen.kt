@@ -41,7 +41,7 @@ import com.squareup.workflow1.ui.WorkflowUiExperimentalApi
 import com.squareup.workflow1.ui.compose.asMutableState
 
 class GameSettingsScreen(
-  val onCancel: () -> Unit,
+  val onBack: () -> Unit,
   val enforceOwnership: Boolean,
   val onEnforceOwnershipChanged: (Boolean) -> Unit,
   val giftNames: List<GiftNameRow>,
@@ -51,7 +51,7 @@ class GameSettingsScreen(
 ) : ViewRendering {
   @Composable
   override fun Content() {
-    BackHandler(onBack = onCancel)
+    BackHandler(onBack = onBack)
 
     Column(
       modifier = Modifier

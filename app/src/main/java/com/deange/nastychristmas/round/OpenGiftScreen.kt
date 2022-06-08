@@ -1,5 +1,6 @@
 package com.deange.nastychristmas.round
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -42,6 +43,8 @@ class OpenGiftScreen(
 ) : ViewRendering {
   @Composable
   override fun Content() {
+    BackHandler(onBack = { /* no-op */ })
+
     Column(
       modifier = Modifier
         .fillMaxSize()

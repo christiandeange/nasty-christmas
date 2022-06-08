@@ -1,5 +1,6 @@
 package com.deange.nastychristmas.end
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +23,8 @@ class EndGameScreen(
 ) : ViewRendering {
   @Composable
   override fun Content() {
+    BackHandler(onBack = onContinue)
+
     Box(
       modifier = Modifier
         .fillMaxSize()
