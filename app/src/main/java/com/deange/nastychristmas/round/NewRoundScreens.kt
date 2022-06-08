@@ -44,13 +44,14 @@ class NewRoundPlayerSelectionScreen(
     BackHandler(onBack = { /* no-op */ })
 
     val frameDelays = remember {
-      val finalTimeout = random.nextLong(1000L, 2000L)
+      // Last delay is between 1.25s and 1.75s, everything prior exponentially decays to that amount.
+      val finalTimeout = random.nextLong(1250L, 1750L)
       val interpolator = AccelerateInterpolator(6f)
 
-      LongArray(40).apply {
+      LongArray(50).apply {
         for (i in indices) {
           val t = i / (size - 1).toFloat()
-          this[i] = lerp(11f, finalTimeout.toFloat(), interpolator.getInterpolation(t)).toLong()
+          this[i] = lerp(1f, finalTimeout.toFloat(), interpolator.getInterpolation(t)).toLong()
         }
       }
     }
