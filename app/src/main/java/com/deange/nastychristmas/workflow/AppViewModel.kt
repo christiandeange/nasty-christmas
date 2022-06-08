@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.savedstate.SavedStateRegistryOwner
 import com.deange.nastychristmas.storage.GameState
 import com.deange.nastychristmas.storage.GameStateStorage
+import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.deange.nastychristmas.workflow.AppOutput.ClearGameState
 import com.deange.nastychristmas.workflow.AppOutput.Exit
 import com.deange.nastychristmas.workflow.AppOutput.SaveGameState
@@ -43,7 +44,7 @@ class AppViewModel(
   private val running = Job()
 
   @OptIn(WorkflowUiExperimentalApi::class)
-  val renderings: StateFlow<AppScreen> by lazy {
+  val renderings: StateFlow<ViewRendering> by lazy {
     val restoredGameState: GameState? = runBlocking { storage.get() }
     val initialProps: AppProps = if (restoredGameState == null) {
       NewGame

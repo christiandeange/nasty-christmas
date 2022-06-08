@@ -15,7 +15,6 @@ import com.deange.nastychristmas.settings.GameSettingsWorkflow
 import com.deange.nastychristmas.storage.GameStateStorage
 import com.deange.nastychristmas.ui.theme.NastyChristmasTheme
 import com.deange.nastychristmas.ui.theme.StatusBarTheme
-import com.deange.nastychristmas.ui.workflow.BottomSheets
 import com.deange.nastychristmas.ui.workflow.WorkflowRenderings
 import com.deange.nastychristmas.workflow.AppViewModel
 import com.deange.nastychristmas.workflow.AppViewModelFactory
@@ -55,11 +54,9 @@ class MainActivity : ComponentActivity() {
     setContent {
       NastyChristmasTheme {
         StatusBarTheme()
-        WorkflowRenderings(viewModel.renderings) { rendering ->
-          BottomSheets(rendering.modals) {
-            Surface {
-              rendering.body.Content()
-            }
+        WorkflowRenderings(viewModel.renderings) { screen ->
+          Surface {
+            screen.Content()
           }
         }
       }
