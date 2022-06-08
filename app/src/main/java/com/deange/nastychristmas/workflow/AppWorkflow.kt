@@ -250,6 +250,7 @@ class AppWorkflow(
             settings = renderState.settings,
           )
         } else {
+          setOutput(ClearGameState)
           EndGame(gifts = newGifts)
         }
       }
