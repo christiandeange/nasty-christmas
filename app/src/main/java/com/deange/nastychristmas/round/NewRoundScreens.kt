@@ -63,7 +63,7 @@ class NewRoundPlayerSelectionScreen(
       if (frame < frameDelays.lastIndex) {
         delay(frameDelays[frame])
         frame++
-        randomPlayer = playerPool.random(random)
+        randomPlayer = (playerPool - randomPlayer).random(random)
       } else {
         delay(frameDelays[frame])
         onPlayerSelected(randomPlayer)
