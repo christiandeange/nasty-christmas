@@ -2,7 +2,6 @@ package com.deange.nastychristmas.round
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,51 +43,44 @@ class OpenGiftScreen(
   override fun Content() {
     BackHandler(onBack = { /* no-op */ })
 
-    Column(
+    Row(
       modifier = Modifier
         .fillMaxSize()
-        .padding(16.dp)
+        .padding(16.dp),
+      horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-      Text(
-        modifier = Modifier.padding(bottom = 64.dp),
-        text = stringResource(R.string.open_gift_round_title, roundNumber, playerName),
-        style = MaterialTheme.typography.titleLarge,
+      var currentGiftName by giftName.asMutableState()
+
+      OutlinedTextField(
+        modifier = Modifier.weight(1f),
+        shape = RoundedCornerShape(20.dp),
+        value = currentGiftName,
+        onValueChange = { currentGiftName = it },
+        label = { Text(stringResource(R.string.open_gift_round_title, roundNumber, playerName)) },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(
+          capitalization = KeyboardCapitalization.Sentences,
+          imeAction = ImeAction.Send,
+        ),
+        keyboardActions = KeyboardActions(onSend = {
+          if (currentGiftName.isNotBlank()) {
+            onAddGift(currentGiftName)
+          }
+        }),
       )
 
-      Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-        var currentGiftName by giftName.asMutableState()
-
-        OutlinedTextField(
-          modifier = Modifier.weight(1f),
-          shape = RoundedCornerShape(20.dp),
-          value = currentGiftName,
-          onValueChange = { currentGiftName = it },
-          label = { Text(stringResource(R.string.gift_hint)) },
-          singleLine = true,
-          keyboardOptions = KeyboardOptions(
-            capitalization = KeyboardCapitalization.Sentences,
-            imeAction = ImeAction.Send,
-          ),
-          keyboardActions = KeyboardActions(onSend = {
-            if (currentGiftName.isNotBlank()) {
-              onAddGift(currentGiftName)
-            }
-          }),
+      FilledTonalButton(
+        modifier = Modifier
+          .size(56.dp)
+          .align(Alignment.Bottom),
+        enabled = currentGiftName.isNotBlank(),
+        onClick = { onAddGift(currentGiftName) },
+        contentPadding = PaddingValues(0.dp),
+      ) {
+        Icon(
+          painter = rememberVectorPainter(Icons.Default.Add),
+          contentDescription = stringResource(R.string.add),
         )
-
-        FilledTonalButton(
-          modifier = Modifier
-            .size(56.dp)
-            .align(Alignment.Bottom),
-          enabled = currentGiftName.isNotBlank(),
-          onClick = { onAddGift(currentGiftName) },
-          contentPadding = PaddingValues(0.dp),
-        ) {
-          Icon(
-            painter = rememberVectorPainter(Icons.Default.Add),
-            contentDescription = stringResource(R.string.add),
-          )
-        }
       }
     }
   }
