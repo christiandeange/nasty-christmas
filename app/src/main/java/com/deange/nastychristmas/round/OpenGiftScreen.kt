@@ -1,10 +1,9 @@
 package com.deange.nastychristmas.round
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,7 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Bottom
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
@@ -44,10 +43,9 @@ class OpenGiftScreen(
     BackHandler(onBack = { /* no-op */ })
 
     Row(
-      modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp),
-      horizontalArrangement = Arrangement.spacedBy(16.dp)
+      modifier = Modifier.padding(16.dp),
+      horizontalArrangement = spacedBy(16.dp),
+      verticalAlignment = Bottom,
     ) {
       var currentGiftName by giftName.asMutableState()
 
@@ -70,9 +68,7 @@ class OpenGiftScreen(
       )
 
       FilledTonalButton(
-        modifier = Modifier
-          .size(56.dp)
-          .align(Alignment.Bottom),
+        modifier = Modifier.size(56.dp),
         enabled = currentGiftName.isNotBlank(),
         onClick = { onAddGift(currentGiftName) },
         contentPadding = PaddingValues(0.dp),

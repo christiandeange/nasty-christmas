@@ -4,8 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import com.deange.nastychristmas.end.EndGameWorkflow
 import com.deange.nastychristmas.init.PlayersWorkflow
 import com.deange.nastychristmas.round.NewRoundWorkflow
@@ -55,8 +58,10 @@ class MainActivity : ComponentActivity() {
       NastyChristmasTheme {
         StatusBarTheme()
         WorkflowRenderings(viewModel.renderings) { screen ->
-          Surface {
-            screen.Content()
+          Surface(Modifier.fillMaxSize()) {
+            Box {
+              screen.Content()
+            }
           }
         }
       }
