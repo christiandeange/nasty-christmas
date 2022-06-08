@@ -23,6 +23,7 @@ class StealingRoundWorkflow : StatefulWorkflow<
         currentPlayer = props.startingPlayer,
         gifts = props.gifts,
         currentChoice = null,
+        previousState = null,
       )
   }
 
@@ -73,6 +74,11 @@ class StealingRoundWorkflow : StatefulWorkflow<
           )
         )
       },
+      onUndo = context.eventHandler {
+        state.previousState?.let { previous ->
+          state = previous
+        }
+      }.takeIf { renderState.previousState != null },
       onConfirmChoice = context.eventHandler {
         when (val currentChoice: PlayerChoice = state.currentChoice!!) {
           is OpenNewGift -> {
@@ -84,14 +90,7 @@ class StealingRoundWorkflow : StatefulWorkflow<
             )
           }
           is StealGiftFrom -> {
-            state = StealingRoundState(
-              currentPlayer = currentChoice.victim,
-              gifts = state.gifts.withSteal(
-                stealer = state.currentPlayer,
-                victim = currentChoice.victim,
-              ),
-              currentChoice = null,
-            )
+            state = state.withSteal(victim = currentChoice.victim)
           }
         }
       },

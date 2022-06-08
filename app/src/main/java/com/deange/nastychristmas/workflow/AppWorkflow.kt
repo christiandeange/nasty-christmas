@@ -72,167 +72,32 @@ class AppWorkflow(
     context: RenderContext
   ): AppScreen = when (renderState) {
     is InitializingPlayers -> {
-      BodyAndModalsScreen(
-        body = context.renderChild(playersWorkflow) { output ->
-          savingGameStateAction {
-            when (output) {
-              is NoPlayers -> setOutput(Exit)
-              is StartWithPlayers -> {
-                state = PickingPlayer(
-                  allPlayers = output.players,
-                  playerPool = output.players.toSet(),
-                  selectedPlayer = null,
-                  round = 1,
-                  gifts = GiftOwners(emptyMap()),
-                  settings = GameSettings(enforceOwnership = true),
-                )
-              }
-            }
-          }
-        }
-      )
+      context.renderInitializingPlayers()
     }
     is PickingPlayer -> {
-      val newRoundProps = NewRoundProps(
-        allPlayers = renderState.allPlayers,
-        playerPool = renderState.playerPool,
-        selectedPlayer = renderState.selectedPlayer,
-        roundNumber = renderState.round,
-      )
-      BodyAndModalsScreen(
-        body = context.renderChild(newRoundWorkflow, newRoundProps) { output ->
-          savingGameStateAction {
-            when (output) {
-              is UpdateGameStateWithPlayer -> {
-                state = renderState.copy(selectedPlayer = output.player)
-              }
-              is PlayerSelected -> {
-                val player = output.player
-                state = if (renderState.gifts.stealableGifts(player).isEmpty()) {
-                  OpeningGift(
-                    allPlayers = renderState.allPlayers,
-                    playerPool = renderState.playerPool - player,
-                    round = renderState.round,
-                    player = player,
-                    gifts = renderState.gifts,
-                    settings = renderState.settings,
-                  )
-                } else {
-                  StealingRound(
-                    allPlayers = renderState.allPlayers,
-                    playerPool = renderState.playerPool - player,
-                    round = renderState.round,
-                    startingPlayer = player,
-                    gifts = renderState.gifts,
-                    settings = renderState.settings,
-                  )
-                }
-              }
-            }
-          }
-        }
-      )
+      context.renderPickingPlayer(renderState)
     }
     is StealingRound -> {
-      val stealingRoundProps = StealingRoundProps(
-        allPlayers = renderState.allPlayers,
-        playerPool = renderState.playerPool,
-        roundNumber = renderState.round,
-        startingPlayer = renderState.startingPlayer,
-        gifts = renderState.gifts,
-        settings = renderState.settings,
-      )
-      BodyAndModalsScreen(
-        body = context.renderChild(stealingRoundWorkflow, stealingRoundProps) { output ->
-          savingGameStateAction {
-            state = when (output) {
-              is StealingRoundOutput.ChangeGameSettings -> {
-                ChangeGameSettings(
-                  allPlayers = renderState.allPlayers,
-                  playerPool = renderState.playerPool,
-                  round = renderState.round,
-                  player = output.currentPlayer,
-                  gifts = output.gifts,
-                  settings = renderState.settings,
-                )
-              }
-              is StealingRoundOutput.EndRound -> {
-                OpeningGift(
-                  allPlayers = renderState.allPlayers,
-                  playerPool = renderState.playerPool,
-                  round = renderState.round,
-                  player = output.playerOpeningGift,
-                  gifts = output.gifts,
-                  settings = renderState.settings,
-                )
-              }
-            }
-          }
-        }
-      )
+      context.renderStealingRound(renderState)
     }
     is OpeningGift -> {
-      val openGiftProps = OpenGiftProps(
-        player = renderState.player,
-        round = renderState.round,
-      )
-      BodyAndModalsScreen(
-        body = context.renderChild(openGiftWorkflow, openGiftProps) { gift ->
-          savingGameStateAction {
-            val newGifts = renderState.gifts.clearOwnerHistory() + renderState.player.owns(gift)
-            state = if (renderState.playerPool.isNotEmpty()) {
-              PickingPlayer(
-                allPlayers = renderState.allPlayers,
-                playerPool = renderState.playerPool,
-                selectedPlayer = null,
-                round = renderState.round + 1,
-                gifts = newGifts,
-                settings = renderState.settings,
-              )
-            } else {
-              EndGame(gifts = newGifts)
-            }
-          }
-        }
-      )
+      context.renderOpeningGift(renderState)
     }
     is EndGame -> {
-      val endGameProps = EndGameProps(finalGifts = renderState.gifts.clearOwnerHistory())
-      BodyAndModalsScreen(
-        body = context.renderChild(endGameWorkflow, endGameProps) {
-          savingGameStateAction {
-            setOutput(Exit)
-          }
-        }
-      )
+      context.renderEndGame(renderState)
     }
     is ChangeGameSettings -> {
-      val changeableSettings = ChangeableSettings(
-        settings = renderState.settings,
-        gifts = renderState.gifts,
+      context.renderStealingRound(
+        StealingRound(
+          allPlayers = renderState.allPlayers,
+          playerPool = renderState.playerPool,
+          startingPlayer = renderState.player,
+          round = renderState.round,
+          gifts = renderState.gifts,
+          settings = renderState.settings,
+        )
       )
-      BodyAndModalsScreen(
-        body = context.renderChild(gameSettingsWorkflow, changeableSettings) { output ->
-          savingGameStateAction {
-            when (output) {
-              is UpdateGameSettings -> {
-                state = StealingRound(
-                  allPlayers = renderState.allPlayers,
-                  playerPool = renderState.playerPool,
-                  round = renderState.round,
-                  startingPlayer = renderState.player,
-                  gifts = output.settings.gifts,
-                  settings = output.settings.settings,
-                )
-              }
-              is ResetGame -> {
-                state = initialState(NewGame, snapshot = null)
-                setOutput(ClearGameState)
-              }
-            }
-          }
-        }
-      )
+      context.renderChangeGameSettings(renderState)
     }
   }
 
@@ -269,6 +134,185 @@ class AppWorkflow(
         settings = gameState.settings,
       )
     }
+  }
+
+  private fun RenderContext.renderInitializingPlayers(): AppScreen {
+    return BodyAndModalsScreen(
+      body = renderChild(playersWorkflow) { output ->
+        savingGameStateAction {
+          when (output) {
+            is NoPlayers -> setOutput(Exit)
+            is StartWithPlayers -> {
+              state = PickingPlayer(
+                allPlayers = output.players,
+                playerPool = output.players.toSet(),
+                selectedPlayer = null,
+                round = 1,
+                gifts = GiftOwners(emptyMap()),
+                settings = GameSettings(enforceOwnership = true),
+              )
+            }
+          }
+        }
+      }
+    )
+  }
+
+  private fun RenderContext.renderPickingPlayer(
+    renderState: PickingPlayer
+  ): AppScreen {
+    val newRoundProps = NewRoundProps(
+      allPlayers = renderState.allPlayers,
+      playerPool = renderState.playerPool,
+      selectedPlayer = renderState.selectedPlayer,
+      roundNumber = renderState.round,
+    )
+    return BodyAndModalsScreen(
+      body = renderChild(newRoundWorkflow, newRoundProps) { output ->
+        savingGameStateAction {
+          when (output) {
+            is UpdateGameStateWithPlayer -> {
+              state = renderState.copy(selectedPlayer = output.player)
+            }
+            is PlayerSelected -> {
+              val player = output.player
+              state = if (renderState.gifts.stealableGifts(player).isEmpty()) {
+                OpeningGift(
+                  allPlayers = renderState.allPlayers,
+                  playerPool = renderState.playerPool - player,
+                  round = renderState.round,
+                  player = player,
+                  gifts = renderState.gifts,
+                  settings = renderState.settings,
+                )
+              } else {
+                StealingRound(
+                  allPlayers = renderState.allPlayers,
+                  playerPool = renderState.playerPool - player,
+                  round = renderState.round,
+                  startingPlayer = player,
+                  gifts = renderState.gifts,
+                  settings = renderState.settings,
+                )
+              }
+            }
+          }
+        }
+      }
+    )
+  }
+
+  private fun RenderContext.renderStealingRound(
+    renderState: StealingRound,
+  ): AppScreen {
+    val stealingRoundProps = StealingRoundProps(
+      allPlayers = renderState.allPlayers,
+      playerPool = renderState.playerPool,
+      roundNumber = renderState.round,
+      startingPlayer = renderState.startingPlayer,
+      gifts = renderState.gifts,
+      settings = renderState.settings,
+    )
+    return BodyAndModalsScreen(
+      body = renderChild(stealingRoundWorkflow, stealingRoundProps) { output ->
+        savingGameStateAction {
+          state = when (output) {
+            is StealingRoundOutput.ChangeGameSettings -> {
+              ChangeGameSettings(
+                allPlayers = renderState.allPlayers,
+                playerPool = renderState.playerPool,
+                round = renderState.round,
+                player = output.currentPlayer,
+                gifts = output.gifts,
+                settings = renderState.settings,
+              )
+            }
+            is StealingRoundOutput.EndRound -> {
+              OpeningGift(
+                allPlayers = renderState.allPlayers,
+                playerPool = renderState.playerPool,
+                round = renderState.round,
+                player = output.playerOpeningGift,
+                gifts = output.gifts,
+                settings = renderState.settings,
+              )
+            }
+          }
+        }
+      }
+    )
+  }
+
+  private fun RenderContext.renderOpeningGift(
+    renderState: OpeningGift,
+  ): AppScreen {
+    val openGiftProps = OpenGiftProps(
+      player = renderState.player,
+      round = renderState.round,
+    )
+    return BodyAndModalsScreen(
+      body = renderChild(openGiftWorkflow, openGiftProps) { gift ->
+        savingGameStateAction {
+          val newGifts = renderState.gifts.clearOwnerHistory() + renderState.player.owns(gift)
+          state = if (renderState.playerPool.isNotEmpty()) {
+            PickingPlayer(
+              allPlayers = renderState.allPlayers,
+              playerPool = renderState.playerPool,
+              selectedPlayer = null,
+              round = renderState.round + 1,
+              gifts = newGifts,
+              settings = renderState.settings,
+            )
+          } else {
+            EndGame(gifts = newGifts)
+          }
+        }
+      }
+    )
+  }
+
+  private fun RenderContext.renderEndGame(
+    renderState: EndGame,
+  ): AppScreen {
+    val endGameProps = EndGameProps(finalGifts = renderState.gifts.clearOwnerHistory())
+    return BodyAndModalsScreen(
+      body = renderChild(endGameWorkflow, endGameProps) {
+        savingGameStateAction {
+          setOutput(Exit)
+        }
+      }
+    )
+  }
+
+  private fun RenderContext.renderChangeGameSettings(
+    renderState: ChangeGameSettings
+  ): AppScreen {
+    val changeableSettings = ChangeableSettings(
+      settings = renderState.settings,
+      gifts = renderState.gifts,
+    )
+    return BodyAndModalsScreen(
+      body = renderChild(gameSettingsWorkflow, changeableSettings) { output ->
+        savingGameStateAction {
+          when (output) {
+            is UpdateGameSettings -> {
+              state = StealingRound(
+                allPlayers = renderState.allPlayers,
+                playerPool = renderState.playerPool,
+                round = renderState.round,
+                startingPlayer = renderState.player,
+                gifts = output.settings.gifts,
+                settings = output.settings.settings,
+              )
+            }
+            is ResetGame -> {
+              state = initialState(NewGame, snapshot = null)
+              setOutput(ClearGameState)
+            }
+          }
+        }
+      }
+    )
   }
 
   private fun savingGameStateAction(

@@ -9,7 +9,20 @@ data class StealingRoundState(
   val currentPlayer: Player,
   val gifts: GiftOwners,
   val currentChoice: PlayerChoice?,
-)
+  val previousState: StealingRoundState?,
+) {
+  fun withSteal(victim: Player): StealingRoundState {
+    return copy(
+      currentPlayer = victim,
+      gifts = gifts.withSteal(
+        stealer = currentPlayer,
+        victim = victim,
+      ),
+      currentChoice = null,
+      previousState = this,
+    )
+  }
+}
 
 @Serializable
 sealed class PlayerChoice {

@@ -18,4 +18,5 @@
   <string name="edit_gift_names">Edit Gift Names</string>
   <string name="reset_app">Reset App</string>
   <string name="confirm_reset_app">Confirm Reset App</string>
+  <string name="undo">Undo</string>
 </resources>

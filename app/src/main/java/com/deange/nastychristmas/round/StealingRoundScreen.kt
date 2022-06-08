@@ -3,7 +3,6 @@ package com.deange.nastychristmas.round
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
@@ -41,6 +41,7 @@ class StealingRoundScreen(
   val playerName: String,
   val roundNumber: Int,
   val choices: List<StealOrOpenChoice>,
+  val onUndo: (() -> Unit)?,
   val onConfirmChoice: () -> Unit,
   val onChangeSettings: () -> Unit,
 ) : ViewRendering {
@@ -55,16 +56,25 @@ class StealingRoundScreen(
     ) {
       Row(
         modifier = Modifier.padding(bottom = 64.dp),
-        horizontalArrangement = spacedBy(16.dp),
         verticalAlignment = CenterVertically,
       ) {
         Text(
           modifier = Modifier
-            .padding(start = 16.dp)
+            .padding(horizontal = 16.dp)
             .weight(1f),
           text = stringResource(R.string.steal_round_title, roundNumber, playerName),
           style = MaterialTheme.typography.titleLarge,
         )
+
+        IconButton(
+          enabled = onUndo != null,
+          onClick = { onUndo!!() },
+        ) {
+          Icon(
+            painter = rememberVectorPainter(image = Icons.Default.ArrowBack),
+            contentDescription = stringResource(R.string.undo),
+          )
+        }
 
         IconButton(onClick = { onChangeSettings() }) {
           Icon(
