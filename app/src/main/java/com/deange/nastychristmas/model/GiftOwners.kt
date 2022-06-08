@@ -37,11 +37,6 @@ class GiftOwners(
     )
   }
 
-  fun canSteal(player: Player, gift: Gift): Boolean {
-    val ownedGift = owners.values.single { it.gift == gift }
-    return player !in ownedGift.owners
-  }
-
   fun stealableGifts(player: Player): Set<Gift> {
     return owners.values
       .filter { player !in it.owners }

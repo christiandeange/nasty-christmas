@@ -33,6 +33,7 @@ import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 class NewRoundPlayerSelectionScreen(
+  val random: Random,
   val playerPool: Set<Player>,
   val round: Int,
   val onPlayerSelected: (Player) -> Unit,
@@ -40,7 +41,7 @@ class NewRoundPlayerSelectionScreen(
   @Composable
   override fun Content() {
     val frameDelays = remember {
-      val finalTimeout = Random.nextLong(1000L, 2000L)
+      val finalTimeout = random.nextLong(1000L, 2000L)
       val interpolator = AccelerateInterpolator(6f)
 
       LongArray(40).apply {
@@ -52,13 +53,13 @@ class NewRoundPlayerSelectionScreen(
     }
 
     var frame: Int by remember { mutableStateOf(0) }
-    var randomPlayer by remember { mutableStateOf(playerPool.random()) }
+    var randomPlayer by remember { mutableStateOf(playerPool.random(random)) }
 
     LaunchedEffect(frame) {
       if (frame < frameDelays.lastIndex) {
         delay(frameDelays[frame])
         frame++
-        randomPlayer = playerPool.random()
+        randomPlayer = playerPool.random(random)
       } else {
         delay(frameDelays[frame])
         onPlayerSelected(randomPlayer)

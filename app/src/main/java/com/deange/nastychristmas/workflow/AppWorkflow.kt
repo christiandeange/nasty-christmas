@@ -9,6 +9,8 @@ import com.deange.nastychristmas.init.PlayersOutput.StartWithPlayers
 import com.deange.nastychristmas.init.PlayersWorkflow
 import com.deange.nastychristmas.model.GiftOwners
 import com.deange.nastychristmas.model.owns
+import com.deange.nastychristmas.round.NewRoundOutput.PlayerSelected
+import com.deange.nastychristmas.round.NewRoundOutput.UpdateGameStateWithPlayer
 import com.deange.nastychristmas.round.NewRoundProps
 import com.deange.nastychristmas.round.NewRoundWorkflow
 import com.deange.nastychristmas.round.OpenGiftProps
@@ -18,11 +20,20 @@ import com.deange.nastychristmas.round.StealingRoundProps
 import com.deange.nastychristmas.round.StealingRoundWorkflow
 import com.deange.nastychristmas.settings.ChangeableSettings
 import com.deange.nastychristmas.settings.GameSettings
+import com.deange.nastychristmas.settings.GameSettingsOutput.ResetGame
+import com.deange.nastychristmas.settings.GameSettingsOutput.UpdateGameSettings
 import com.deange.nastychristmas.settings.GameSettingsWorkflow
+import com.deange.nastychristmas.storage.GameState
+import com.deange.nastychristmas.storage.asGameState
 import com.deange.nastychristmas.ui.workflow.BottomSheetScreen
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.deange.nastychristmas.ui.workflow.fromSnapshot
 import com.deange.nastychristmas.ui.workflow.toSnapshot
+import com.deange.nastychristmas.workflow.AppOutput.ClearGameState
+import com.deange.nastychristmas.workflow.AppOutput.Exit
+import com.deange.nastychristmas.workflow.AppOutput.SaveGameState
+import com.deange.nastychristmas.workflow.AppProps.NewGame
+import com.deange.nastychristmas.workflow.AppProps.RestoredFromSave
 import com.deange.nastychristmas.workflow.AppState.ChangeGameSettings
 import com.deange.nastychristmas.workflow.AppState.EndGame
 import com.deange.nastychristmas.workflow.AppState.InitializingPlayers
@@ -31,6 +42,7 @@ import com.deange.nastychristmas.workflow.AppState.PickingPlayer
 import com.deange.nastychristmas.workflow.AppState.StealingRound
 import com.squareup.workflow1.Snapshot
 import com.squareup.workflow1.StatefulWorkflow
+import com.squareup.workflow1.WorkflowAction
 import com.squareup.workflow1.action
 import com.squareup.workflow1.renderChild
 import com.squareup.workflow1.ui.WorkflowUiExperimentalApi
@@ -45,27 +57,31 @@ class AppWorkflow(
   private val stealingRoundWorkflow: StealingRoundWorkflow,
   private val endGameWorkflow: EndGameWorkflow,
   private val gameSettingsWorkflow: GameSettingsWorkflow,
-) : StatefulWorkflow<Unit, AppState, Unit, AppScreen>() {
-  override fun initialState(props: Unit, snapshot: Snapshot?): AppState {
+) : StatefulWorkflow<AppProps, AppState, AppOutput, AppScreen>() {
+  override fun initialState(props: AppProps, snapshot: Snapshot?): AppState {
     return AppState.serializer().fromSnapshot(snapshot)
-      ?: InitializingPlayers
+      ?: when (props) {
+        is NewGame -> InitializingPlayers
+        is RestoredFromSave -> stateFromRestoredGameState(props.gameState)
+      }
   }
 
   override fun render(
-    renderProps: Unit,
+    renderProps: AppProps,
     renderState: AppState,
     context: RenderContext
   ): AppScreen = when (renderState) {
     is InitializingPlayers -> {
       BodyAndModalsScreen(
         body = context.renderChild(playersWorkflow) { output ->
-          action {
+          savingGameStateAction {
             when (output) {
-              is NoPlayers -> setOutput(Unit)
+              is NoPlayers -> setOutput(Exit)
               is StartWithPlayers -> {
                 state = PickingPlayer(
                   allPlayers = output.players,
                   playerPool = output.players.toSet(),
+                  selectedPlayer = null,
                   round = 1,
                   gifts = GiftOwners(emptyMap()),
                   settings = GameSettings(enforceOwnership = true),
@@ -80,29 +96,38 @@ class AppWorkflow(
       val newRoundProps = NewRoundProps(
         allPlayers = renderState.allPlayers,
         playerPool = renderState.playerPool,
+        selectedPlayer = renderState.selectedPlayer,
         roundNumber = renderState.round,
       )
       BodyAndModalsScreen(
-        body = context.renderChild(newRoundWorkflow, newRoundProps) { player ->
-          action {
-            if (renderState.gifts.stealableGifts(player).isEmpty()) {
-              state = OpeningGift(
-                allPlayers = renderState.allPlayers,
-                playerPool = renderState.playerPool - player,
-                round = renderState.round,
-                player = player,
-                gifts = renderState.gifts,
-                settings = renderState.settings,
-              )
-            } else {
-              state = StealingRound(
-                allPlayers = renderState.allPlayers,
-                playerPool = renderState.playerPool - player,
-                round = renderState.round,
-                startingPlayer = player,
-                gifts = renderState.gifts,
-                settings = renderState.settings,
-              )
+        body = context.renderChild(newRoundWorkflow, newRoundProps) { output ->
+          savingGameStateAction {
+            when (output) {
+              is UpdateGameStateWithPlayer -> {
+                state = renderState.copy(selectedPlayer = output.player)
+              }
+              is PlayerSelected -> {
+                val player = output.player
+                state = if (renderState.gifts.stealableGifts(player).isEmpty()) {
+                  OpeningGift(
+                    allPlayers = renderState.allPlayers,
+                    playerPool = renderState.playerPool - player,
+                    round = renderState.round,
+                    player = player,
+                    gifts = renderState.gifts,
+                    settings = renderState.settings,
+                  )
+                } else {
+                  StealingRound(
+                    allPlayers = renderState.allPlayers,
+                    playerPool = renderState.playerPool - player,
+                    round = renderState.round,
+                    startingPlayer = player,
+                    gifts = renderState.gifts,
+                    settings = renderState.settings,
+                  )
+                }
+              }
             }
           }
         }
@@ -119,7 +144,7 @@ class AppWorkflow(
       )
       BodyAndModalsScreen(
         body = context.renderChild(stealingRoundWorkflow, stealingRoundProps) { output ->
-          action {
+          savingGameStateAction {
             state = when (output) {
               is StealingRoundOutput.ChangeGameSettings -> {
                 ChangeGameSettings(
@@ -153,12 +178,13 @@ class AppWorkflow(
       )
       BodyAndModalsScreen(
         body = context.renderChild(openGiftWorkflow, openGiftProps) { gift ->
-          action {
+          savingGameStateAction {
             val newGifts = renderState.gifts.clearOwnerHistory() + renderState.player.owns(gift)
             state = if (renderState.playerPool.isNotEmpty()) {
               PickingPlayer(
                 allPlayers = renderState.allPlayers,
                 playerPool = renderState.playerPool,
+                selectedPlayer = null,
                 round = renderState.round + 1,
                 gifts = newGifts,
                 settings = renderState.settings,
@@ -174,8 +200,8 @@ class AppWorkflow(
       val endGameProps = EndGameProps(finalGifts = renderState.gifts.clearOwnerHistory())
       BodyAndModalsScreen(
         body = context.renderChild(endGameWorkflow, endGameProps) {
-          action {
-            setOutput(Unit)
+          savingGameStateAction {
+            setOutput(Exit)
           }
         }
       )
@@ -187,15 +213,23 @@ class AppWorkflow(
       )
       BodyAndModalsScreen(
         body = context.renderChild(gameSettingsWorkflow, changeableSettings) { output ->
-          action {
-            state = StealingRound(
-              allPlayers = renderState.allPlayers,
-              playerPool = renderState.playerPool,
-              round = renderState.round,
-              startingPlayer = renderState.player,
-              gifts = output.gifts,
-              settings = output.settings,
-            )
+          savingGameStateAction {
+            when (output) {
+              is UpdateGameSettings -> {
+                state = StealingRound(
+                  allPlayers = renderState.allPlayers,
+                  playerPool = renderState.playerPool,
+                  round = renderState.round,
+                  startingPlayer = renderState.player,
+                  gifts = output.settings.gifts,
+                  settings = output.settings.settings,
+                )
+              }
+              is ResetGame -> {
+                state = initialState(NewGame, snapshot = null)
+                setOutput(ClearGameState)
+              }
+            }
           }
         }
       )
@@ -204,5 +238,47 @@ class AppWorkflow(
 
   override fun snapshotState(state: AppState): Snapshot {
     return AppState.serializer().toSnapshot(state)
+  }
+
+  private fun stateFromRestoredGameState(gameState: GameState): AppState {
+    return if (gameState.currentPlayer == null) {
+      PickingPlayer(
+        allPlayers = gameState.allPlayers,
+        playerPool = gameState.playerPool,
+        selectedPlayer = null,
+        round = gameState.roundNumber,
+        gifts = gameState.gifts,
+        settings = gameState.settings,
+      )
+    } else if (gameState.gifts.stealableGifts(gameState.currentPlayer).isEmpty()) {
+      OpeningGift(
+        allPlayers = gameState.allPlayers,
+        playerPool = gameState.playerPool,
+        round = gameState.roundNumber,
+        player = gameState.currentPlayer,
+        gifts = gameState.gifts,
+        settings = gameState.settings,
+      )
+    } else {
+      StealingRound(
+        allPlayers = gameState.allPlayers,
+        playerPool = gameState.playerPool,
+        round = gameState.roundNumber,
+        startingPlayer = gameState.currentPlayer,
+        gifts = gameState.gifts,
+        settings = gameState.settings,
+      )
+    }
+  }
+
+  private fun savingGameStateAction(
+    name: String = "",
+    update: WorkflowAction<AppProps, AppState, AppOutput>.Updater.() -> Unit,
+  ) = action(name) {
+    update()
+
+    state.asGameState()?.let { gameState ->
+      setOutput(SaveGameState(gameState))
+    }
   }
 }

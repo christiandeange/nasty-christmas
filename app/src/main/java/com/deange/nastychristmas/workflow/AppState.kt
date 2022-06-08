@@ -14,6 +14,7 @@ sealed class AppState {
   data class PickingPlayer(
     val allPlayers: List<Player>,
     val playerPool: Set<Player>,
+    val selectedPlayer: Player?,
     val round: Int,
     val gifts: GiftOwners,
     val settings: GameSettings,

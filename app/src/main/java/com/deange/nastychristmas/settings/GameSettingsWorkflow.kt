@@ -1,6 +1,8 @@
 package com.deange.nastychristmas.settings
 
 import com.deange.nastychristmas.model.GiftOwners
+import com.deange.nastychristmas.settings.GameSettingsOutput.ResetGame
+import com.deange.nastychristmas.settings.GameSettingsOutput.UpdateGameSettings
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.deange.nastychristmas.ui.workflow.fromSnapshot
 import com.deange.nastychristmas.ui.workflow.toSnapshot
@@ -13,7 +15,7 @@ import com.squareup.workflow1.ui.WorkflowUiExperimentalApi
 class GameSettingsWorkflow : StatefulWorkflow<
     ChangeableSettings,
     GameSettingsState,
-    ChangeableSettings,
+    GameSettingsOutput,
     ViewRendering
     >() {
 
@@ -21,6 +23,7 @@ class GameSettingsWorkflow : StatefulWorkflow<
     return GameSettingsState.serializer().fromSnapshot(snapshot)
       ?: GameSettingsState(
         enforceOwnership = props.settings.enforceOwnership,
+        showConfirmResetGame = false,
         giftNames = props.gifts.map { (_, ownedGift) ->
           GiftName(ownedGift, TextController(ownedGift.gift.name))
         }
@@ -38,11 +41,19 @@ class GameSettingsWorkflow : StatefulWorkflow<
         state = state.copy(enforceOwnership = enforceOwnership)
       },
       giftNames = renderState.giftNames.asRows(),
+      showConfirmResetGame = renderState.showConfirmResetGame,
+      onResetGame = context.eventHandler {
+        if (!state.showConfirmResetGame) {
+          state = state.copy(showConfirmResetGame = true)
+        } else {
+          setOutput(ResetGame)
+        }
+      },
       onCancel = context.eventHandler {
-        setOutput(props)
+        setOutput(UpdateGameSettings(props))
       },
       onConfirmSettings = context.eventHandler {
-        setOutput(state.asSettings(props.gifts))
+        setOutput(UpdateGameSettings(state.asSettings(props.gifts)))
       },
     )
   }

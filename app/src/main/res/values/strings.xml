@@ -16,4 +16,6 @@
   <string name="enforce_ownership_title">Enforce Ownership</string>
   <string name="enforce_ownership_description">Require that you cannot steal a gift you have already had in the same round.</string>
   <string name="edit_gift_names">Edit Gift Names</string>
+  <string name="reset_app">Reset App</string>
+  <string name="confirm_reset_app">Confirm Reset App</string>
 </resources>

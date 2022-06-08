@@ -1,6 +1,7 @@
 package com.deange.nastychristmas.settings
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
@@ -13,11 +14,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ButtonDefaults.filledTonalButtonColors
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,6 +45,8 @@ class GameSettingsScreen(
   val enforceOwnership: Boolean,
   val onEnforceOwnershipChanged: (Boolean) -> Unit,
   val giftNames: List<GiftNameRow>,
+  val showConfirmResetGame: Boolean,
+  val onResetGame: () -> Unit,
   val onConfirmSettings: () -> Unit,
 ) : ViewRendering {
   @Composable
@@ -70,16 +75,48 @@ class GameSettingsScreen(
         }
       }
 
-      FilledTonalButton(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-        onClick = { onConfirmSettings() },
+      Column(
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
+        verticalArrangement = spacedBy(16.dp),
       ) {
-        Text(
-          style = LocalTextStyle.current.copy(fontWeight = Bold),
-          text = stringResource(R.string.confirm).uppercase(),
-        )
+        if (!showConfirmResetGame) {
+          OutlinedButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { onResetGame() },
+            border = BorderStroke(
+              width = 2.dp,
+              color = MaterialTheme.colorScheme.errorContainer,
+            ),
+          ) {
+            Text(
+              style = LocalTextStyle.current.copy(fontWeight = Bold),
+              text = stringResource(R.string.reset_app).uppercase(),
+            )
+          }
+        } else {
+          FilledTonalButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { onResetGame() },
+            colors = filledTonalButtonColors(
+              containerColor = MaterialTheme.colorScheme.errorContainer,
+            ),
+          ) {
+            Text(
+              style = LocalTextStyle.current.copy(fontWeight = Bold),
+              text = stringResource(R.string.confirm_reset_app).uppercase(),
+            )
+          }
+        }
+
+        FilledTonalButton(
+          modifier = Modifier.fillMaxWidth(),
+          onClick = { onConfirmSettings() },
+        ) {
+          Text(
+            style = LocalTextStyle.current.copy(fontWeight = Bold),
+            text = stringResource(R.string.confirm).uppercase(),
+          )
+        }
       }
     }
   }

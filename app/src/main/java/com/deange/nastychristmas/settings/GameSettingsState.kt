@@ -1,6 +1,5 @@
 package com.deange.nastychristmas.settings
 
-import com.deange.nastychristmas.model.Gift
 import com.deange.nastychristmas.model.OwnedGift
 import com.deange.nastychristmas.ui.workflow.TextControllerSerializer
 import com.squareup.workflow1.ui.TextController
@@ -10,6 +9,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GameSettingsState(
   val enforceOwnership: Boolean,
+  val showConfirmResetGame: Boolean,
   val giftNames: List<GiftName>,
 )
 
