@@ -18,7 +18,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +30,6 @@ import com.deange.nastychristmas.R
 import com.deange.nastychristmas.model.Player
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class NewRoundPlayerSelectionScreen(
@@ -41,29 +39,30 @@ class NewRoundPlayerSelectionScreen(
 ) : ViewRendering {
   @Composable
   override fun Content() {
-    val coroutineScope = rememberCoroutineScope()
-    val finalTimeout = remember { Random.nextLong(1000L, 2000L) }
-    val interpolator = remember { AccelerateInterpolator(6f) }
+    val frameDelays = remember {
+      val finalTimeout = Random.nextLong(1000L, 2000L)
+      val interpolator = AccelerateInterpolator(6f)
 
-    val frameDelays = LongArray(50)
-    for (i in frameDelays.indices) {
-      val t = i / (frameDelays.size - 1).toFloat()
-      frameDelays[i] = lerp(11f, finalTimeout.toFloat(), interpolator.getInterpolation(t)).toLong()
+      LongArray(40).apply {
+        for (i in indices) {
+          val t = i / (size - 1).toFloat()
+          this[i] = lerp(11f, finalTimeout.toFloat(), interpolator.getInterpolation(t)).toLong()
+        }
+      }
     }
 
     var frame: Int by remember { mutableStateOf(0) }
     var randomPlayer by remember { mutableStateOf(playerPool.random()) }
 
-    if (frame <= frameDelays.lastIndex) {
-      LaunchedEffect(frame) {
-        coroutineScope.launch {
-          delay(frameDelays[frame])
-          frame += 1
-          randomPlayer = playerPool.random()
-        }
+    LaunchedEffect(frame) {
+      if (frame < frameDelays.lastIndex) {
+        delay(frameDelays[frame])
+        frame++
+        randomPlayer = playerPool.random()
+      } else {
+        delay(frameDelays[frame])
+        onPlayerSelected(randomPlayer)
       }
-    } else {
-      onPlayerSelected(randomPlayer)
     }
 
     PlayerSelectionScreen(randomPlayer, round, onContinue = null)
