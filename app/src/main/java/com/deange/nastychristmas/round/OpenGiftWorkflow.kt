@@ -7,9 +7,7 @@ import com.deange.nastychristmas.ui.workflow.toSnapshot
 import com.squareup.workflow1.Snapshot
 import com.squareup.workflow1.StatefulWorkflow
 import com.squareup.workflow1.ui.TextController
-import com.squareup.workflow1.ui.WorkflowUiExperimentalApi
 
-@OptIn(WorkflowUiExperimentalApi::class)
 class OpenGiftWorkflow : StatefulWorkflow<OpenGiftProps, OpenGiftState, Gift, ViewRendering>() {
   override fun initialState(props: OpenGiftProps, snapshot: Snapshot?): OpenGiftState {
     return OpenGiftState.serializer().fromSnapshot(snapshot)

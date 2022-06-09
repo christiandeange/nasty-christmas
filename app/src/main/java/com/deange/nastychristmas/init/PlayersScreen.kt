@@ -45,10 +45,9 @@ import com.deange.nastychristmas.ui.theme.LocalColorTheme
 import com.deange.nastychristmas.ui.theme.NastyChristmasTheme
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.squareup.workflow1.ui.TextController
-import com.squareup.workflow1.ui.WorkflowUiExperimentalApi
 import com.squareup.workflow1.ui.compose.asMutableState
 
-@OptIn(ExperimentalFoundationApi::class, WorkflowUiExperimentalApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 class PlayersScreen(
   private val players: List<String>,
   private val currentPlayer: TextController,

@@ -28,10 +28,8 @@ import androidx.compose.ui.unit.dp
 import com.deange.nastychristmas.R
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.squareup.workflow1.ui.TextController
-import com.squareup.workflow1.ui.WorkflowUiExperimentalApi
 import com.squareup.workflow1.ui.compose.asMutableState
 
-@OptIn(WorkflowUiExperimentalApi::class)
 class OpenGiftScreen(
   val playerName: String,
   val roundNumber: Int,

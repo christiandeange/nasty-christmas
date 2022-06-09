@@ -9,9 +9,7 @@ import com.deange.nastychristmas.ui.workflow.toSnapshot
 import com.squareup.workflow1.Snapshot
 import com.squareup.workflow1.StatefulWorkflow
 import com.squareup.workflow1.ui.TextController
-import com.squareup.workflow1.ui.WorkflowUiExperimentalApi
 
-@OptIn(WorkflowUiExperimentalApi::class)
 class GameSettingsWorkflow : StatefulWorkflow<
     ChangeableSettings,
     GameSettingsState,

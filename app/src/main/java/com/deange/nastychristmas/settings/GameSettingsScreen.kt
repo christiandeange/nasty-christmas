@@ -37,7 +37,6 @@ import com.deange.nastychristmas.model.OwnedGift
 import com.deange.nastychristmas.ui.compose.TwoLineText
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.squareup.workflow1.ui.TextController
-import com.squareup.workflow1.ui.WorkflowUiExperimentalApi
 import com.squareup.workflow1.ui.compose.asMutableState
 
 class GameSettingsScreen(
@@ -149,7 +148,6 @@ private fun EnforceOwnershipCheck(
   }
 }
 
-@OptIn(WorkflowUiExperimentalApi::class)
 @Composable
 fun EditGiftCardNameRow(row: GiftNameRow) {
   Row(
@@ -175,7 +173,6 @@ fun EditGiftCardNameRow(row: GiftNameRow) {
   }
 }
 
-@OptIn(WorkflowUiExperimentalApi::class)
 data class GiftNameRow(
   val gift: OwnedGift,
   val name: TextController,

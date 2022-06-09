@@ -1,7 +1,6 @@
 package com.deange.nastychristmas.ui.workflow
 
 import com.squareup.workflow1.ui.TextController
-import com.squareup.workflow1.ui.WorkflowUiExperimentalApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
@@ -9,7 +8,6 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@OptIn(WorkflowUiExperimentalApi::class)
 object TextControllerSerializer : KSerializer<TextController> {
   override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("TextController", STRING)
 

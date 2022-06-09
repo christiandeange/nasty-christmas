@@ -22,10 +22,8 @@ import com.deange.nastychristmas.ui.workflow.WorkflowRenderings
 import com.deange.nastychristmas.workflow.AppViewModel
 import com.deange.nastychristmas.workflow.AppViewModelFactory
 import com.deange.nastychristmas.workflow.AppWorkflow
-import com.squareup.workflow1.ui.WorkflowUiExperimentalApi
 import kotlin.random.Random
 
-@OptIn(WorkflowUiExperimentalApi::class)
 class MainActivity : ComponentActivity() {
 
   private val storage by lazy {
