@@ -2,8 +2,10 @@ package com.deange.nastychristmas.workflow
 
 import com.deange.nastychristmas.end.EndGameProps
 import com.deange.nastychristmas.end.EndGameWorkflow
+import com.deange.nastychristmas.init.PlayersOutput
 import com.deange.nastychristmas.init.PlayersOutput.NoPlayers
 import com.deange.nastychristmas.init.PlayersOutput.StartWithPlayers
+import com.deange.nastychristmas.init.PlayersProps
 import com.deange.nastychristmas.init.PlayersWorkflow
 import com.deange.nastychristmas.model.GiftOwners
 import com.deange.nastychristmas.model.owns
@@ -41,7 +43,6 @@ import com.squareup.workflow1.Snapshot
 import com.squareup.workflow1.StatefulWorkflow
 import com.squareup.workflow1.WorkflowAction
 import com.squareup.workflow1.action
-import com.squareup.workflow1.renderChild
 
 class AppWorkflow(
   private val playersWorkflow: PlayersWorkflow,
@@ -54,7 +55,7 @@ class AppWorkflow(
   override fun initialState(props: AppProps, snapshot: Snapshot?): AppState {
     return AppState.serializer().fromSnapshot(snapshot)
       ?: when (props) {
-        is NewGame -> InitializingPlayers
+        is NewGame -> InitializingPlayers(allPlayers = emptyList())
         is RestoredFromSave -> stateFromRestoredGameState(props.gameState)
       }
   }
@@ -65,7 +66,7 @@ class AppWorkflow(
     context: RenderContext
   ): ViewRendering = when (renderState) {
     is InitializingPlayers -> {
-      context.renderInitializingPlayers()
+      context.renderInitializingPlayers(renderState)
     }
     is PickingPlayer -> {
       context.renderPickingPlayer(renderState)
@@ -99,7 +100,11 @@ class AppWorkflow(
   }
 
   private fun stateFromRestoredGameState(gameState: GameState): AppState {
-    return if (gameState.currentPlayer == null) {
+    return if (gameState.roundNumber < 0) {
+      InitializingPlayers(
+        allPlayers = gameState.allPlayers,
+      )
+    } else if (gameState.currentPlayer == null) {
       PickingPlayer(
         allPlayers = gameState.allPlayers,
         playerPool = gameState.playerPool,
@@ -129,11 +134,17 @@ class AppWorkflow(
     }
   }
 
-  private fun RenderContext.renderInitializingPlayers(): ViewRendering {
-    return renderChild(playersWorkflow) { output ->
+  private fun RenderContext.renderInitializingPlayers(
+    renderState: InitializingPlayers,
+  ): ViewRendering {
+    val playersProps = PlayersProps(players = renderState.allPlayers)
+    return renderChild(playersWorkflow, playersProps) { output ->
       savingGameStateAction {
         when (output) {
           is NoPlayers -> setOutput(Exit)
+          is PlayersOutput.PlayersUpdated -> {
+            state = InitializingPlayers(allPlayers = output.players)
+          }
           is StartWithPlayers -> {
             state = PickingPlayer(
               allPlayers = output.players,

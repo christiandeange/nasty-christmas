@@ -8,7 +8,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class AppState {
   @Serializable
-  object InitializingPlayers : AppState()
+  data class InitializingPlayers(
+    val allPlayers: List<Player>,
+  ) : AppState()
 
   @Serializable
   data class PickingPlayer(

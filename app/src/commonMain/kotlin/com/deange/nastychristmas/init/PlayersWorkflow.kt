@@ -1,6 +1,7 @@
 package com.deange.nastychristmas.init
 
 import com.deange.nastychristmas.init.PlayersOutput.NoPlayers
+import com.deange.nastychristmas.init.PlayersOutput.PlayersUpdated
 import com.deange.nastychristmas.init.PlayersOutput.StartWithPlayers
 import com.deange.nastychristmas.model.Player
 import com.deange.nastychristmas.ui.compose.TextController
@@ -9,17 +10,19 @@ import com.deange.nastychristmas.ui.workflow.toSnapshot
 import com.squareup.workflow1.Snapshot
 import com.squareup.workflow1.StatefulWorkflow
 
-class PlayersWorkflow : StatefulWorkflow<Unit, PlayersState, PlayersOutput, PlayersScreen>() {
-  override fun initialState(props: Unit, snapshot: Snapshot?): PlayersState {
+class PlayersWorkflow :
+  StatefulWorkflow<PlayersProps, PlayersState, PlayersOutput, PlayersScreen>() {
+
+  override fun initialState(props: PlayersProps, snapshot: Snapshot?): PlayersState {
     return PlayersState.serializer().fromSnapshot(snapshot)
       ?: PlayersState(
-        players = emptyList(),
+        players = props.players,
         currentPlayer = TextController(""),
       )
   }
 
   override fun render(
-    renderProps: Unit,
+    renderProps: PlayersProps,
     renderState: PlayersState,
     context: RenderContext
   ): PlayersScreen {
@@ -33,10 +36,12 @@ class PlayersWorkflow : StatefulWorkflow<Unit, PlayersState, PlayersOutput, Play
           // Clear the current player name.
           currentPlayer = TextController(""),
         )
+        setOutput(PlayersUpdated(state.players))
       },
       onDeletePlayer = context.eventHandler { index ->
         val newPlayers = state.players.toMutableList().apply { removeAt(index) }.toList()
         state = state.copy(players = newPlayers)
+        setOutput(PlayersUpdated(state.players))
       },
       onBack = context.eventHandler {
         setOutput(NoPlayers)
