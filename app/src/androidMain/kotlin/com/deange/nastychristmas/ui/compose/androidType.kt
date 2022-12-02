@@ -9,49 +9,79 @@ import com.deange.nastychristmas.core.MR
 actual suspend fun appFont(): FontFamily {
   return FontFamily(
     Font(
-      resId = MR.fonts.Inter.extraLight.fontResourceId,
+      resId = MR.fonts.AvenirNextLTPro.extraLight.fontResourceId,
       weight = FontWeight.ExtraLight,
       style = FontStyle.Normal,
     ),
     Font(
-      resId = MR.fonts.Inter.light.fontResourceId,
-      weight = FontWeight.Light,
-      style = FontStyle.Normal,
+      resId = MR.fonts.AvenirNextLTPro.extraLight.fontResourceId,
+      weight = FontWeight.ExtraLight,
+      style = FontStyle.Italic,
     ),
     Font(
-      resId = MR.fonts.Inter.thin.fontResourceId,
-      weight = FontWeight.Thin,
-      style = FontStyle.Normal,
-    ),
-    Font(
-      resId = MR.fonts.Inter.regular.fontResourceId,
+      resId = MR.fonts.AvenirNextLTPro.regular.fontResourceId,
       weight = FontWeight.Normal,
       style = FontStyle.Normal,
     ),
     Font(
-      resId = MR.fonts.Inter.medium.fontResourceId,
+      resId = MR.fonts.AvenirNextLTPro.regular.fontResourceId,
+      weight = FontWeight.Normal,
+      style = FontStyle.Italic,
+    ),
+    Font(
+      resId = MR.fonts.AvenirNextLTPro.medium.fontResourceId,
       weight = FontWeight.Medium,
       style = FontStyle.Normal,
     ),
     Font(
-      resId = MR.fonts.Inter.semiBold.fontResourceId,
+      resId = MR.fonts.AvenirNextLTPro.medium.fontResourceId,
+      weight = FontWeight.Medium,
+      style = FontStyle.Italic,
+    ),
+    Font(
+      resId = MR.fonts.AvenirNextLTPro.semiBold.fontResourceId,
       weight = FontWeight.SemiBold,
       style = FontStyle.Normal,
     ),
     Font(
-      resId = MR.fonts.Inter.bold.fontResourceId,
+      resId = MR.fonts.AvenirNextLTPro.semiBold.fontResourceId,
+      weight = FontWeight.SemiBold,
+      style = FontStyle.Italic,
+    ),
+    Font(
+      resId = MR.fonts.AvenirNextLTPro.bold.fontResourceId,
       weight = FontWeight.Bold,
       style = FontStyle.Normal,
     ),
     Font(
-      resId = MR.fonts.Inter.extraBold.fontResourceId,
-      weight = FontWeight.ExtraBold,
+      resId = MR.fonts.AvenirNextLTPro.bold.fontResourceId,
+      weight = FontWeight.Bold,
+      style = FontStyle.Italic,
+    ),
+    Font(
+      resId = MR.fonts.AvenirNextLTPro.heavy.fontResourceId,
+      weight = FontWeight.Black,
       style = FontStyle.Normal,
     ),
     Font(
-      resId = MR.fonts.Inter.black.fontResourceId,
+      resId = MR.fonts.AvenirNextLTPro.heavy.fontResourceId,
       weight = FontWeight.Black,
+      style = FontStyle.Italic,
+    ),
+  )
+}
+
+actual suspend fun serifFont(): FontFamily {
+  return FontFamily(
+    Font(
+      resId = MR.fonts.Borgest.regular.fontResourceId,
+      weight = FontWeight.Normal,
       style = FontStyle.Normal,
+    ),
+    Font(
+      resId = MR.fonts.Borgest.regularItalic.fontResourceId,
+      weight = FontWeight.Normal,
+      style = FontStyle.Italic,
     ),
   )
 }

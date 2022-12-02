@@ -7,6 +7,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
+import com.deange.nastychristmas.ui.compose.appFont
 
 private val LightColors = lightColorScheme(
   primary = md_theme_light_primary,
@@ -35,7 +36,9 @@ private val LightColors = lightColorScheme(
   inverseOnSurface = md_theme_light_inverseOnSurface,
   inverseSurface = md_theme_light_inverseSurface,
   inversePrimary = md_theme_light_inversePrimary,
+  surfaceTint = md_theme_light_surfaceTint,
 )
+
 
 private val DarkColors = darkColorScheme(
   primary = md_theme_dark_primary,
@@ -64,12 +67,12 @@ private val DarkColors = darkColorScheme(
   inverseOnSurface = md_theme_dark_inverseOnSurface,
   inverseSurface = md_theme_dark_inverseSurface,
   inversePrimary = md_theme_dark_inversePrimary,
+  surfaceTint = md_theme_dark_surfaceTint,
 )
-
 
 @Composable
 fun NastyChristmasTheme(
-  darkTheme: Boolean = isSystemInDarkTheme(),
+  darkTheme: Boolean = true, // isSystemInDarkTheme(),
   content: @Composable () -> Unit,
 ) {
   val colorScheme = when {
@@ -85,7 +88,7 @@ fun NastyChristmasTheme(
   CompositionLocalProvider(LocalColorTheme provides ColorTheme(darkTheme)) {
     MaterialTheme(
       colorScheme = colorScheme,
-      typography = AppTypography(),
+      typography = AppTypography(appFont),
       content = content,
     )
   }

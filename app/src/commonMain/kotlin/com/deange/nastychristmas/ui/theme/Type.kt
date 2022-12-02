@@ -1,26 +1,26 @@
 package com.deange.nastychristmas.ui.theme
 
 import androidx.compose.material3.Typography
-import com.deange.nastychristmas.ui.compose.appFont
+import androidx.compose.ui.text.font.FontFamily
 
-fun AppTypography(): Typography {
+fun AppTypography(fontFamily: FontFamily): Typography {
   val base = Typography()
 
   return base.copy(
-    displayLarge = base.displayLarge.copy(fontFamily = appFont),
-    displayMedium = base.displayMedium.copy(fontFamily = appFont),
-    displaySmall = base.displaySmall.copy(fontFamily = appFont),
-    headlineLarge = base.headlineLarge.copy(fontFamily = appFont),
-    headlineMedium = base.headlineMedium.copy(fontFamily = appFont),
-    headlineSmall = base.headlineSmall.copy(fontFamily = appFont),
-    titleLarge = base.titleLarge.copy(fontFamily = appFont),
-    titleMedium = base.titleMedium.copy(fontFamily = appFont),
-    titleSmall = base.titleSmall.copy(fontFamily = appFont),
-    bodyLarge = base.bodyLarge.copy(fontFamily = appFont),
-    bodyMedium = base.bodyMedium.copy(fontFamily = appFont),
-    bodySmall = base.bodySmall.copy(fontFamily = appFont),
-    labelLarge = base.labelLarge.copy(fontFamily = appFont),
-    labelMedium = base.labelMedium.copy(fontFamily = appFont),
-    labelSmall = base.labelSmall.copy(fontFamily = appFont),
+    displayLarge = base.displayLarge.copy(fontFamily = fontFamily),
+    displayMedium = base.displayMedium.copy(fontFamily = fontFamily),
+    displaySmall = base.displaySmall.copy(fontFamily = fontFamily),
+    headlineLarge = base.headlineLarge.copy(fontFamily = fontFamily),
+    headlineMedium = base.headlineMedium.copy(fontFamily = fontFamily),
+    headlineSmall = base.headlineSmall.copy(fontFamily = fontFamily),
+    titleLarge = base.titleLarge.copy(fontFamily = fontFamily),
+    titleMedium = base.titleMedium.copy(fontFamily = fontFamily),
+    titleSmall = base.titleSmall.copy(fontFamily = fontFamily),
+    bodyLarge = base.bodyLarge.copy(fontFamily = fontFamily),
+    bodyMedium = base.bodyMedium.copy(fontFamily = fontFamily),
+    bodySmall = base.bodySmall.copy(fontFamily = fontFamily),
+    labelLarge = base.labelLarge.copy(fontFamily = fontFamily),
+    labelMedium = base.labelMedium.copy(fontFamily = fontFamily),
+    labelSmall = base.labelSmall.copy(fontFamily = fontFamily),
   )
 }

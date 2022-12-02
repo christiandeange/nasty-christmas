@@ -1,53 +1,62 @@
 package com.deange.nastychristmas.init
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement.spacedBy
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ButtonDefaults.filledTonalButtonElevation
-import androidx.compose.material3.Divider
-import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment.Companion.Bottom
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.input.ImeAction.Companion.Send
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.unit.Dp.Companion.Hairline
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.deange.nastychristmas.core.MR
 import com.deange.nastychristmas.ui.compose.BackHandler
 import com.deange.nastychristmas.ui.compose.TextController
 import com.deange.nastychristmas.ui.compose.asMutableState
 import com.deange.nastychristmas.ui.compose.evaluate
-import com.deange.nastychristmas.ui.theme.LocalColorTheme
-import com.deange.nastychristmas.ui.theme.NastyChristmasTheme
+import com.deange.nastychristmas.ui.compose.flow.FlowRow
+import com.deange.nastychristmas.ui.compose.flow.SizeMode
+import com.deange.nastychristmas.ui.compose.serifFont
+import com.deange.nastychristmas.ui.compose.toPainter
+import com.deange.nastychristmas.ui.theme.AppTypography
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 
-@OptIn(ExperimentalFoundationApi::class)
 class PlayersScreen(
   private val players: List<String>,
   private val currentPlayer: TextController,
@@ -60,26 +69,55 @@ class PlayersScreen(
   override fun Content() {
     BackHandler(onBack = onBack)
 
-    Column {
+    Surface(modifier = Modifier.fillMaxSize()) {
       var currentPlayerName by currentPlayer.asMutableState()
+      val isEnabled by derivedStateOf {
+        currentPlayerName.isNotBlank() && currentPlayerName !in players
+      }
 
-      NastyChristmasTheme(darkTheme = LocalColorTheme.current.isLight()) {
-        Surface(color = MaterialTheme.colorScheme.inversePrimary) {
-          Row(
-            modifier = Modifier.padding(16.dp),
-            horizontalArrangement = spacedBy(16.dp),
+      MR.images.background.toPainter()?.let { background ->
+        Image(
+          modifier = Modifier.fillMaxSize().blur(8.dp),
+          painter = background,
+          contentDescription = null,
+          contentScale = ContentScale.Crop,
+        )
+      }
+
+      Scaffold(
+        containerColor = Color.Transparent,
+        topBar = {
+          Column(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            horizontalAlignment = CenterHorizontally,
           ) {
-            val isEnabled = currentPlayerName.isNotBlank() && currentPlayerName !in players
+            MaterialTheme(typography = AppTypography(serifFont)) {
+              Text(
+                modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
+                text = MR.strings.app_name.evaluate(),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.displayLarge.copy(
+                  lineHeight = MaterialTheme.typography.displayLarge.lineHeight * 0.75f,
+                  letterSpacing = 3.sp,
+                  fontWeight = Bold,
+                ),
+              )
+            }
 
             OutlinedTextField(
-              modifier = Modifier.weight(1f),
-              shape = RoundedCornerShape(20.dp),
+              modifier = Modifier.padding(horizontal = 72.dp, vertical = 8.dp),
+              shape = CircleShape,
               value = currentPlayerName,
               onValueChange = { currentPlayerName = it },
               label = { Text(MR.strings.player_hint.evaluate()) },
               singleLine = true,
+              colors = TextFieldDefaults.outlinedTextFieldColors(
+                containerColor = Color.Black.copy(alpha = 0.80f),
+                focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+              ),
               keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Words,
+                autoCorrect = false,
                 imeAction = Send,
               ),
               keyboardActions = KeyboardActions(onSend = {
@@ -87,69 +125,78 @@ class PlayersScreen(
                   onAddPlayer(currentPlayerName)
                 }
               }),
+              trailingIcon = {
+                IconButton(onClick = {
+                  if (isEnabled) {
+                    onAddPlayer(currentPlayerName)
+                  }
+                }) {
+                  Icon(
+                    painter = rememberVectorPainter(Icons.Default.PlayArrow),
+                    contentDescription = MR.strings.add.evaluate(),
+                  )
+                }
+              }
             )
+          }
+        },
+        content = { contentPadding ->
+          Column(
+            modifier = Modifier.padding(contentPadding).padding(horizontal = 16.dp).fillMaxHeight(),
+            horizontalAlignment = CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom,
+          ) {
+            val scrollState = rememberScrollState()
+            LaunchedEffect(players.size) {
+              scrollState.animateScrollTo(scrollState.maxValue)
+            }
 
-            FilledTonalButton(
-              modifier = Modifier
-                .size(56.dp)
-                .align(Bottom),
-              enabled = isEnabled,
-              onClick = { onAddPlayer(currentPlayerName) },
-              contentPadding = PaddingValues(0.dp),
-              elevation = filledTonalButtonElevation(
-                defaultElevation = 8.dp,
-                focusedElevation = 8.dp,
-                pressedElevation = 16.dp,
-              )
+            FlowRow(
+              modifier = Modifier.verticalScroll(scrollState).padding(horizontal = 16.dp),
+              mainAxisSize = SizeMode.Expand,
+              mainAxisSpacing = 16.dp,
+              crossAxisSpacing = 16.dp,
             ) {
-              Icon(
-                painter = rememberVectorPainter(Icons.Default.Add),
-                contentDescription = MR.strings.add.evaluate(),
+              players.forEachIndexed { i, player ->
+                FilterChip(
+                  label = { Text(player) },
+                  shape = CircleShape,
+                  colors = FilterChipDefaults.filterChipColors(
+                    containerColor = Color.Black.copy(alpha = 0.80f)
+                  ),
+                  trailingIcon = {
+                    IconButton(onClick = { onDeletePlayer(i) }) {
+                      Icon(
+                        painter = rememberVectorPainter(Icons.Default.Clear),
+                        contentDescription = null,
+                      )
+                    }
+                  },
+                  onClick = {},
+                  selected = false,
+                )
+              }
+            }
+          }
+        },
+        bottomBar = {
+          Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Center,
+          ) {
+            ElevatedButton(
+              modifier = Modifier.padding(vertical = 8.dp),
+              enabled = players.size >= 2 && currentPlayerName.isBlank(),
+              onClick = { onStartGame() },
+            ) {
+              Text(
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = Bold),
+                text = MR.strings.lets_get_nasty.evaluate().uppercase(),
               )
             }
           }
-        }
-      }
-
-      val listState = rememberLazyListState()
-      LaunchedEffect(players.size) {
-        listState.animateScrollToItem(players.size)
-      }
-
-      LazyColumn(modifier = Modifier.weight(1f), state = listState) {
-        itemsIndexed(players, key = { _, name -> name }) { i, name ->
-          Column {
-            Text(
-              modifier = Modifier
-                .fillMaxWidth()
-                .combinedClickable(
-                  onClick = { },
-                  onLongClick = { onDeletePlayer(i) },
-                )
-                .padding(16.dp),
-              text = name,
-            )
-
-            Divider(
-              color = MaterialTheme.colorScheme.outline,
-              thickness = Hairline,
-            )
-          }
-        }
-      }
-
-      FilledTonalButton(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(16.dp),
-        enabled = players.size >= 2 && currentPlayerName.isBlank(),
-        onClick = { onStartGame() },
-      ) {
-        Text(
-          style = LocalTextStyle.current.copy(fontWeight = Bold),
-          text = MR.strings.lets_get_nasty.evaluate().uppercase(),
-        )
-      }
+        },
+      )
     }
   }
 }

@@ -14,6 +14,7 @@
   <string name="open_gift_round_title">Round %1$d: %2$s is opening…</string>
   <string name="open_gift_title">Open New Gift</string>
   <string name="player_hint">Player Name</string>
+  <string name="remove">Remove</string>
   <string name="reset_app">Reset App</string>
   <string name="round">Round %1$d</string>
   <string name="round_title">Going next for Round %1$d is…</string>
