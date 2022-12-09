@@ -173,7 +173,11 @@ class AppWorkflow(
       savingGameStateAction {
         when (output) {
           is UpdateGameStateWithPlayer -> {
-            state = renderState.copy(selectedPlayer = output.player)
+            val player = output.player
+            state = renderState.copy(
+              playerPool = renderState.playerPool - player,
+              selectedPlayer = player,
+            )
           }
           is PlayerSelected -> {
             val player = output.player
