@@ -20,7 +20,6 @@ import com.deange.nastychristmas.round.StealingRoundWorkflow
 import com.deange.nastychristmas.settings.GameSettingsWorkflow
 import com.deange.nastychristmas.store.DataStoreStorage
 import com.deange.nastychristmas.store.PersistentStorage
-import com.deange.nastychristmas.ui.compose.appFont
 import com.deange.nastychristmas.ui.compose.initTypography
 import com.deange.nastychristmas.ui.theme.NastyChristmasTheme
 import com.deange.nastychristmas.ui.theme.StatusBarTheme
