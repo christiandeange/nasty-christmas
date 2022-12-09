@@ -1,8 +1,9 @@
+import org.gradle.api.tasks.compile.JavaCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  id("com.android.application") version "8.0.0-alpha08" apply false
-  id("com.android.library") version "8.0.0-alpha08" apply false
+  id("com.android.application") version "7.3.1" apply false
+  id("com.android.library") version "7.3.1" apply false
   id("dev.icerock.mobile.multiplatform-resources") version "0.20.1" apply false
   id("org.jetbrains.compose") version "1.2.0" apply false
   kotlin("multiplatform") version "1.7.10" apply false

@@ -11,6 +11,15 @@ plugins {
 android {
   namespace = "com.deange.nastychristmas.core"
   compileSdk = 33
+
+  // Remove with AGP 8.
+  sourceSets["main"].res.srcDir(
+    buildDir
+      .resolve("generated")
+      .resolve("moko")
+      .resolve("androidMain")
+      .resolve("res")
+  )
 }
 
 kotlin {
