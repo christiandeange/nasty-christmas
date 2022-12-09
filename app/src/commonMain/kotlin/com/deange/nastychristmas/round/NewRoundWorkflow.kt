@@ -43,6 +43,7 @@ class NewRoundWorkflow(
     }
     is NextPlayerSelected -> {
       NewRoundPlayerScreen(
+        random = random,
         player = renderState.player,
         round = renderProps.roundNumber,
         onContinue = context.eventHandler {

@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -29,6 +30,8 @@ import com.deange.nastychristmas.core.MR
 import com.deange.nastychristmas.model.Player
 import com.deange.nastychristmas.ui.compose.BackHandler
 import com.deange.nastychristmas.ui.compose.evaluate
+import com.deange.nastychristmas.ui.compose.konfetti.render.KonfettiView
+import com.deange.nastychristmas.ui.compose.konfetti.render.PresetKonfetti
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import kotlinx.coroutines.delay
 import kotlin.math.pow
@@ -76,6 +79,7 @@ class NewRoundPlayerSelectionScreen(
 }
 
 class NewRoundPlayerScreen(
+  val random: Random,
   val player: Player,
   val round: Int,
   val onContinue: () -> Unit
@@ -83,7 +87,15 @@ class NewRoundPlayerScreen(
   @Composable
   override fun Content() {
     BackHandler(onBack = onContinue)
-    PlayerSelectionScreen(player, round, onContinue)
+    Box {
+      KonfettiView(
+        modifier = Modifier.fillMaxSize(),
+        parties = PresetKonfetti.explode(),
+        random = random,
+      )
+
+      PlayerSelectionScreen(player, round, onContinue)
+    }
   }
 }
 
