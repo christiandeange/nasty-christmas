@@ -1,70 +1,89 @@
+@file:OptIn(ExperimentalTextApi::class)
+
 package com.deange.nastychristmas.ui.compose
 
+import android.annotation.SuppressLint
+import android.content.res.AssetManager
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import com.deange.nastychristmas.core.MR
+
+@SuppressLint("StaticFieldLeak")
+lateinit var fontsAssetManager: AssetManager
 
 actual suspend fun appFont(): FontFamily {
   return FontFamily(
     Font(
-      resId = MR.fonts.AvenirNextLTPro.extraLight.fontResourceId,
+      "AvenirNextLTPro-ExtraLight.otf",
+      fontsAssetManager,
       weight = FontWeight.ExtraLight,
       style = FontStyle.Normal,
     ),
     Font(
-      resId = MR.fonts.AvenirNextLTPro.extraLight.fontResourceId,
+      "AvenirNextLTPro-ExtraLightItalic.otf",
+      fontsAssetManager,
       weight = FontWeight.ExtraLight,
       style = FontStyle.Italic,
     ),
     Font(
-      resId = MR.fonts.AvenirNextLTPro.regular.fontResourceId,
+      "AvenirNextLTPro-Regular.otf",
+      fontsAssetManager,
       weight = FontWeight.Normal,
       style = FontStyle.Normal,
     ),
     Font(
-      resId = MR.fonts.AvenirNextLTPro.regular.fontResourceId,
+      "AvenirNextLTPro-RegularItalic.otf",
+      fontsAssetManager,
       weight = FontWeight.Normal,
       style = FontStyle.Italic,
     ),
     Font(
-      resId = MR.fonts.AvenirNextLTPro.medium.fontResourceId,
+      "AvenirNextLTPro-Medium.otf",
+      fontsAssetManager,
       weight = FontWeight.Medium,
       style = FontStyle.Normal,
     ),
     Font(
-      resId = MR.fonts.AvenirNextLTPro.medium.fontResourceId,
+      "AvenirNextLTPro-MediumItalic.otf",
+      fontsAssetManager,
       weight = FontWeight.Medium,
       style = FontStyle.Italic,
     ),
     Font(
-      resId = MR.fonts.AvenirNextLTPro.semiBold.fontResourceId,
+      "AvenirNextLTPro-SemiBold.otf",
+      fontsAssetManager,
       weight = FontWeight.SemiBold,
       style = FontStyle.Normal,
     ),
     Font(
-      resId = MR.fonts.AvenirNextLTPro.semiBold.fontResourceId,
+      "AvenirNextLTPro-SemiBoldItalic.otf",
+      fontsAssetManager,
       weight = FontWeight.SemiBold,
       style = FontStyle.Italic,
     ),
     Font(
-      resId = MR.fonts.AvenirNextLTPro.bold.fontResourceId,
+      "AvenirNextLTPro-Bold.otf",
+      fontsAssetManager,
       weight = FontWeight.Bold,
       style = FontStyle.Normal,
     ),
     Font(
-      resId = MR.fonts.AvenirNextLTPro.bold.fontResourceId,
+      "AvenirNextLTPro-BoldItalic.otf",
+      fontsAssetManager,
       weight = FontWeight.Bold,
       style = FontStyle.Italic,
     ),
     Font(
-      resId = MR.fonts.AvenirNextLTPro.heavy.fontResourceId,
+      "AvenirNextLTPro-Heavy.otf",
+      fontsAssetManager,
       weight = FontWeight.Black,
       style = FontStyle.Normal,
     ),
     Font(
-      resId = MR.fonts.AvenirNextLTPro.heavy.fontResourceId,
+      "AvenirNextLTPro-HeavyItalic.otf",
+      fontsAssetManager,
       weight = FontWeight.Black,
       style = FontStyle.Italic,
     ),
@@ -74,12 +93,14 @@ actual suspend fun appFont(): FontFamily {
 actual suspend fun serifFont(): FontFamily {
   return FontFamily(
     Font(
-      resId = MR.fonts.Borgest.regular.fontResourceId,
+      "Borgest-Regular.ttf",
+      fontsAssetManager,
       weight = FontWeight.Normal,
       style = FontStyle.Normal,
     ),
     Font(
-      resId = MR.fonts.Borgest.regularItalic.fontResourceId,
+      "Borgest-RegularItalic.ttf",
+      fontsAssetManager,
       weight = FontWeight.Normal,
       style = FontStyle.Italic,
     ),

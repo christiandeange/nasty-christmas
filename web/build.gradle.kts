@@ -1,4 +1,3 @@
-import com.android.build.gradle.internal.tasks.factory.dependsOn
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
@@ -25,6 +24,9 @@ kotlin {
         implementation(npm("process", "0.11.10"))
         implementation(npm("url", "0.11.0"))
       }
+
+      resources.srcDir("../app/resources")
+      resources.srcDir("../app/fonts")
     }
   }
 }
@@ -51,14 +53,6 @@ val jsAppBuild = project.buildDir.resolve("jsapp")
 val packageJson = jsAppBuild.resolve("package.json")
 val packageLockJson = jsAppBuild.resolve("package-lock.json")
 val nodeModules = jsAppBuild.resolve("node_modules")
-
-val jsCopyResourcesFromApp = tasks.register<Copy>("jsCopyResourcesFromApp") {
-  from("../app/build/generated/moko/jsMain/comdeangenastychristmascore/res")
-  into("build/generated/moko/jsMain/comdeangenastychristmasweb/res")
-
-  dependsOn(":app:generateMRjsMain")
-}
-tasks.named("jsProcessResources").dependsOn(jsCopyResourcesFromApp)
 
 val copyJsAppFilesTask = tasks.register<Copy>("copyJsAppFiles") {
   from(jsAppSrc)

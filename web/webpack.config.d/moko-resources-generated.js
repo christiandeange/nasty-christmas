@@ -1,1 +1,0 @@
-/Users/christian/Documents/NastyChristmas/app/webpack.config.d/moko-resources-generated.js

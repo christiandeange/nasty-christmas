@@ -10,7 +10,7 @@ import com.deange.nastychristmas.state.GameState
 import com.deange.nastychristmas.store.BrowserLocalStorage
 import com.deange.nastychristmas.store.PersistentStorage
 import com.deange.nastychristmas.store.preference
-import com.deange.nastychristmas.ui.compose.initResources
+import com.deange.nastychristmas.ui.compose.initTypography
 import com.deange.nastychristmas.workflow.App
 import com.deange.nastychristmas.workflow.AppOutput.ClearGameState
 import com.deange.nastychristmas.workflow.AppOutput.Exit
@@ -24,7 +24,7 @@ import kotlin.js.Date
 import kotlin.random.Random
 
 suspend fun main() {
-  initResources()
+  initTypography()
 
   onWasmReady {
     runApp()

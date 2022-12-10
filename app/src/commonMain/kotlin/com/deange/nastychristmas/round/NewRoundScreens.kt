@@ -25,12 +25,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.deange.nastychristmas.core.MR
 import com.deange.nastychristmas.model.Player
 import com.deange.nastychristmas.ui.compose.BackHandler
-import com.deange.nastychristmas.ui.compose.evaluate
 import com.deange.nastychristmas.ui.compose.konfetti.render.KonfettiView
 import com.deange.nastychristmas.ui.compose.konfetti.render.PresetKonfetti
+import com.deange.nastychristmas.ui.theme.Strings
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import kotlinx.coroutines.delay
 import kotlin.math.pow
@@ -111,7 +110,7 @@ private fun PlayerSelectionScreen(
   ) {
     Text(
       modifier = Modifier.align(Alignment.TopStart),
-      text = MR.strings.round_title.evaluate(round),
+      text = Strings.roundTitle.evaluate(round),
       style = MaterialTheme.typography.titleLarge,
     )
 
@@ -142,7 +141,7 @@ private fun PlayerSelectionScreen(
       ) {
         Text(
           style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold),
-          text = MR.strings.ok.evaluate(),
+          text = Strings.ok.evaluate(),
         )
       }
     }

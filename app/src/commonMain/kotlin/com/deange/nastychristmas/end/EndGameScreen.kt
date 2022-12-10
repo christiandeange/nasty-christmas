@@ -13,9 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.deange.nastychristmas.core.MR
 import com.deange.nastychristmas.ui.compose.BackHandler
-import com.deange.nastychristmas.ui.compose.evaluate
+import com.deange.nastychristmas.ui.theme.Strings
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 
 class EndGameScreen(
@@ -32,7 +31,7 @@ class EndGameScreen(
     ) {
       Text(
         modifier = Modifier.align(Alignment.TopStart),
-        text = MR.strings.thanks_for_playing.evaluate(),
+        text = Strings.thanksForPlaying.evaluate(),
         style = MaterialTheme.typography.titleLarge,
       )
 
@@ -44,7 +43,7 @@ class EndGameScreen(
       ) {
         Text(
           style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold),
-          text = MR.strings.ok.evaluate(),
+          text = Strings.ok.evaluate(),
         )
       }
     }

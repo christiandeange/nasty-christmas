@@ -45,16 +45,15 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.deange.nastychristmas.core.MR
 import com.deange.nastychristmas.ui.compose.BackHandler
 import com.deange.nastychristmas.ui.compose.TextController
 import com.deange.nastychristmas.ui.compose.asMutableState
-import com.deange.nastychristmas.ui.compose.evaluate
 import com.deange.nastychristmas.ui.compose.flow.FlowRow
 import com.deange.nastychristmas.ui.compose.flow.SizeMode
 import com.deange.nastychristmas.ui.compose.serifFont
-import com.deange.nastychristmas.ui.compose.toPainter
+import com.deange.nastychristmas.ui.resources.ImageResource
 import com.deange.nastychristmas.ui.theme.AppTypography
+import com.deange.nastychristmas.ui.theme.Strings
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 
 class PlayersScreen(
@@ -75,14 +74,12 @@ class PlayersScreen(
         currentPlayerName.isNotBlank() && currentPlayerName !in players
       }
 
-      MR.images.background.toPainter()?.let { background ->
-        Image(
-          modifier = Modifier.fillMaxSize().blur(8.dp),
-          painter = background,
-          contentDescription = null,
-          contentScale = ContentScale.Crop,
-        )
-      }
+      Image(
+        modifier = Modifier.fillMaxSize().blur(8.dp),
+        painter = ImageResource("background.jpg").toPainter(),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+      )
 
       Scaffold(
         containerColor = Color.Transparent,
@@ -94,7 +91,7 @@ class PlayersScreen(
             MaterialTheme(typography = AppTypography(serifFont)) {
               Text(
                 modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
-                text = MR.strings.app_name.evaluate(),
+                text = Strings.appName.evaluate(),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displayLarge.copy(
                   lineHeight = MaterialTheme.typography.displayLarge.lineHeight * 0.75f,
@@ -109,7 +106,7 @@ class PlayersScreen(
               shape = CircleShape,
               value = currentPlayerName,
               onValueChange = { currentPlayerName = it },
-              label = { Text(MR.strings.player_hint.evaluate()) },
+              label = { Text(Strings.playerHint.evaluate()) },
               singleLine = true,
               colors = TextFieldDefaults.outlinedTextFieldColors(
                 containerColor = Color.Black.copy(alpha = 0.80f),
@@ -133,7 +130,7 @@ class PlayersScreen(
                 }) {
                   Icon(
                     painter = rememberVectorPainter(Icons.Default.PlayArrow),
-                    contentDescription = MR.strings.add.evaluate(),
+                    contentDescription = Strings.add.evaluate(),
                   )
                 }
               }
@@ -191,7 +188,7 @@ class PlayersScreen(
             ) {
               Text(
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = Bold),
-                text = MR.strings.lets_get_nasty.evaluate().uppercase(),
+                text = Strings.letsGetNasty.evaluate().uppercase(),
               )
             }
           }

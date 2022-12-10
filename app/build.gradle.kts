@@ -4,7 +4,6 @@ plugins {
   kotlin("multiplatform")
   kotlin("plugin.serialization")
   id("com.android.library")
-  id("dev.icerock.mobile.multiplatform-resources")
   id("org.jetbrains.compose")
 }
 
@@ -12,14 +11,15 @@ android {
   namespace = "com.deange.nastychristmas.core"
   compileSdk = 33
 
-  // Remove with AGP 8.
-  sourceSets["main"].res.srcDir(
-    buildDir
-      .resolve("generated")
-      .resolve("moko")
-      .resolve("androidMain")
-      .resolve("res")
-  )
+  buildFeatures {
+    compose = true
+    resValues = true
+  }
+
+  sourceSets.named("main").configure {
+    res.srcDir("resources")
+    assets.srcDir("fonts")
+  }
 }
 
 kotlin {
@@ -47,7 +47,6 @@ kotlin {
         api(compose.ui)
 
         api(libs.kotlinx.serialization.json)
-        api(libs.mokoresources)
         api(libs.workflow.core)
         api(libs.workflow.runtime)
       }
@@ -60,16 +59,20 @@ kotlin {
     val jsMain by getting {
       dependencies {
         implementation(compose.web.core)
+
+        implementation(npm("@messageformat/core", "3.0.0"))
       }
+
+      resources.srcDir("resources")
+      resources.srcDir("fonts")
     }
     val jvmMain by getting {
       dependencies {
         implementation(compose.desktop.currentOs)
       }
+
+      resources.srcDir("resources")
+      resources.srcDir("fonts")
     }
   }
-}
-
-multiplatformResources {
-  multiplatformResourcesPackage = "com.deange.nastychristmas.core"
 }

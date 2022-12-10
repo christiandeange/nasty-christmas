@@ -23,11 +23,10 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
-import com.deange.nastychristmas.core.MR
 import com.deange.nastychristmas.ui.compose.BackHandler
 import com.deange.nastychristmas.ui.compose.TextController
 import com.deange.nastychristmas.ui.compose.asMutableState
-import com.deange.nastychristmas.ui.compose.evaluate
+import com.deange.nastychristmas.ui.theme.Strings
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 
 class OpenGiftScreen(
@@ -52,7 +51,7 @@ class OpenGiftScreen(
         shape = RoundedCornerShape(20.dp),
         value = currentGiftName,
         onValueChange = { currentGiftName = it },
-        label = { Text(MR.strings.open_gift_round_title.evaluate(roundNumber, playerName)) },
+        label = { Text(Strings.openGiftRoundTitle.evaluate(roundNumber, playerName)) },
         singleLine = true,
         keyboardOptions = KeyboardOptions(
           capitalization = KeyboardCapitalization.Sentences,
@@ -73,7 +72,7 @@ class OpenGiftScreen(
       ) {
         Icon(
           painter = rememberVectorPainter(Icons.Default.Add),
-          contentDescription = MR.strings.add.evaluate(),
+          contentDescription = Strings.add.evaluate(),
         )
       }
     }

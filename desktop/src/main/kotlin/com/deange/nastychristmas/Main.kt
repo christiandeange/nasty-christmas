@@ -8,7 +8,6 @@ import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import com.deange.nastychristmas.core.MR
 import com.deange.nastychristmas.end.EndGameWorkflow
 import com.deange.nastychristmas.init.PlayersWorkflow
 import com.deange.nastychristmas.round.NewRoundWorkflow
@@ -19,8 +18,8 @@ import com.deange.nastychristmas.state.GameState
 import com.deange.nastychristmas.store.DataStoreStorage
 import com.deange.nastychristmas.store.PersistentStorage
 import com.deange.nastychristmas.store.preference
-import com.deange.nastychristmas.ui.compose.evaluate
 import com.deange.nastychristmas.ui.compose.initTypography
+import com.deange.nastychristmas.ui.theme.Strings
 import com.deange.nastychristmas.workflow.App
 import com.deange.nastychristmas.workflow.AppOutput
 import com.deange.nastychristmas.workflow.AppProps
@@ -78,7 +77,7 @@ fun main() {
 
     Window(
       onCloseRequest = ::exitApplication,
-      title = MR.strings.app_name.evaluate(),
+      title = Strings.appName.evaluate(),
       state = windowState,
     ) {
       App(

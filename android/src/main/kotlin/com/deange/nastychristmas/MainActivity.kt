@@ -20,7 +20,11 @@ import com.deange.nastychristmas.round.StealingRoundWorkflow
 import com.deange.nastychristmas.settings.GameSettingsWorkflow
 import com.deange.nastychristmas.store.DataStoreStorage
 import com.deange.nastychristmas.store.PersistentStorage
+import com.deange.nastychristmas.ui.compose.fontsAssetManager
 import com.deange.nastychristmas.ui.compose.initTypography
+import com.deange.nastychristmas.ui.resources.EN
+import com.deange.nastychristmas.ui.resources.StringResources
+import com.deange.nastychristmas.ui.theme.Language
 import com.deange.nastychristmas.ui.theme.NastyChristmasTheme
 import com.deange.nastychristmas.ui.theme.StatusBarTheme
 import com.deange.nastychristmas.ui.workflow.WorkflowRendering
@@ -58,16 +62,19 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
 
     runBlocking {
+      fontsAssetManager = assets
       initTypography()
     }
 
     setContent {
       NastyChristmasTheme {
-        StatusBarTheme()
-        WorkflowRendering(viewModel.renderings) { screen ->
-          Surface(Modifier.fillMaxSize()) {
-            Box {
-              screen.Content()
+        Language(StringResources.EN) {
+          StatusBarTheme()
+          WorkflowRendering(viewModel.renderings) { screen ->
+            Surface(Modifier.fillMaxSize()) {
+              Box {
+                screen.Content()
+              }
             }
           }
         }

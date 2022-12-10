@@ -28,13 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
-import com.deange.nastychristmas.core.MR
 import com.deange.nastychristmas.round.StealOrOpenChoice.Open
 import com.deange.nastychristmas.round.StealOrOpenChoice.Steal
 import com.deange.nastychristmas.ui.compose.AppScaffold
 import com.deange.nastychristmas.ui.compose.BackBehaviour
 import com.deange.nastychristmas.ui.compose.TwoLineText
-import com.deange.nastychristmas.ui.compose.evaluate
+import com.deange.nastychristmas.ui.theme.Strings
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -58,15 +57,15 @@ class StealingRoundScreen(
       onBack = backBehaviour,
       title = {
         TwoLineText(
-          title = MR.strings.round.evaluate(roundNumber),
-          description = MR.strings.steal_round_title.evaluate(playerName),
+          title = Strings.round.evaluate(roundNumber),
+          description = Strings.stealRoundTitle.evaluate(playerName),
         )
       },
       actionIcons = {
         IconButton(onClick = { onChangeSettings() }) {
           Icon(
             painter = rememberVectorPainter(image = Icons.Default.Settings),
-            contentDescription = MR.strings.settings.evaluate(),
+            contentDescription = Strings.settings.evaluate(),
           )
         }
       }
@@ -85,8 +84,8 @@ class StealingRoundScreen(
               is Open -> {
                 ChoiceRow(
                   modifier = Modifier.animateItemPlacement(),
-                  titleText = MR.strings.open_gift_title.evaluate(),
-                  descriptionText = MR.strings.open_gift_description.evaluate(),
+                  titleText = Strings.openGiftTitle.evaluate(),
+                  descriptionText = Strings.openGiftDescription.evaluate(),
                   isSelected = choice.isSelected,
                   onClick = choice.onPicked,
                 )
@@ -94,7 +93,7 @@ class StealingRoundScreen(
               is Steal -> {
                 ChoiceRow(
                   modifier = Modifier.animateItemPlacement(),
-                  titleText = MR.strings.steal_from.evaluate(choice.playerName),
+                  titleText = Strings.stealFrom.evaluate(choice.playerName),
                   descriptionText = choice.giftName,
                   isSelected = choice.isSelected,
                   onClick = choice.onPicked.takeIf { choice.isEnabled },
@@ -113,7 +112,7 @@ class StealingRoundScreen(
         ) {
           Text(
             style = LocalTextStyle.current.copy(fontWeight = Bold),
-            text = MR.strings.confirm.evaluate().uppercase(),
+            text = Strings.confirm.evaluate().uppercase(),
           )
         }
       }

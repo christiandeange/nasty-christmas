@@ -15,12 +15,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import com.deange.nastychristmas.core.MR
 import com.deange.nastychristmas.ui.compose.BackBehaviour.Disabled
 import com.deange.nastychristmas.ui.compose.BackBehaviour.Enabled
 import com.deange.nastychristmas.ui.compose.BackBehaviour.Hidden
 import com.deange.nastychristmas.ui.theme.LocalColorTheme
 import com.deange.nastychristmas.ui.theme.NastyChristmasTheme
+import com.deange.nastychristmas.ui.theme.Strings
 
 @Composable
 fun AppScaffold(
@@ -48,7 +48,7 @@ fun AppScaffold(
             val icon: @Composable () -> Unit = {
               Icon(
                 painter = rememberVectorPainter(Icons.Default.ArrowBack),
-                contentDescription = MR.strings.back.evaluate(),
+                contentDescription = Strings.back.evaluate(),
               )
             }
 

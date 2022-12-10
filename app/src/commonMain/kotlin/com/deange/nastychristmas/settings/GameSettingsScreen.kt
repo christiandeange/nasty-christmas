@@ -30,14 +30,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.input.KeyboardCapitalization.Companion.Sentences
 import androidx.compose.ui.unit.dp
-import com.deange.nastychristmas.core.MR
 import com.deange.nastychristmas.model.OwnedGift
 import com.deange.nastychristmas.ui.compose.AppScaffold
 import com.deange.nastychristmas.ui.compose.BackBehaviour.Enabled
 import com.deange.nastychristmas.ui.compose.TextController
 import com.deange.nastychristmas.ui.compose.TwoLineText
 import com.deange.nastychristmas.ui.compose.asMutableState
-import com.deange.nastychristmas.ui.compose.evaluate
+import com.deange.nastychristmas.ui.theme.Strings
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 
 class GameSettingsScreen(
@@ -53,7 +52,7 @@ class GameSettingsScreen(
   override fun Content() {
     AppScaffold(
       onBack = Enabled(onBack),
-      title = { Text(MR.strings.settings.evaluate()) },
+      title = { Text(Strings.settings.evaluate()) },
     ) {
       Column(
         modifier = Modifier
@@ -67,7 +66,7 @@ class GameSettingsScreen(
 
         Text(
           modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
-          text = MR.strings.edit_gift_names.evaluate(),
+          text = Strings.editGiftNames.evaluate(),
           style = MaterialTheme.typography.titleMedium,
         )
 
@@ -92,7 +91,7 @@ class GameSettingsScreen(
             ) {
               Text(
                 style = LocalTextStyle.current.copy(fontWeight = Bold),
-                text = MR.strings.reset_app.evaluate().uppercase(),
+                text = Strings.resetApp.evaluate().uppercase(),
               )
             }
           } else {
@@ -105,7 +104,7 @@ class GameSettingsScreen(
             ) {
               Text(
                 style = LocalTextStyle.current.copy(fontWeight = Bold),
-                text = MR.strings.confirm_reset_app.evaluate().uppercase(),
+                text = Strings.confirmResetApp.evaluate().uppercase(),
               )
             }
           }
@@ -116,7 +115,7 @@ class GameSettingsScreen(
           ) {
             Text(
               style = LocalTextStyle.current.copy(fontWeight = Bold),
-              text = MR.strings.confirm.evaluate().uppercase(),
+              text = Strings.confirm.evaluate().uppercase(),
             )
           }
         }
@@ -146,8 +145,8 @@ private fun EnforceOwnershipCheck(
     )
 
     TwoLineText(
-      title = MR.strings.enforce_ownership_title.evaluate(),
-      description = MR.strings.enforce_ownership_description.evaluate(),
+      title = Strings.enforceOwnershipTitle.evaluate(),
+      description = Strings.enforceOwnershipDescription.evaluate(),
     )
   }
 }
