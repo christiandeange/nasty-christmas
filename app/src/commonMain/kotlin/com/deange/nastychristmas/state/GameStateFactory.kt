@@ -1,5 +1,6 @@
 package com.deange.nastychristmas.state
 
+import com.deange.nastychristmas.model.GameStats
 import com.deange.nastychristmas.model.GiftOwners
 import com.deange.nastychristmas.settings.GameSettings
 import com.deange.nastychristmas.workflow.AppState
@@ -10,7 +11,7 @@ import com.deange.nastychristmas.workflow.AppState.OpeningGift
 import com.deange.nastychristmas.workflow.AppState.PickingPlayer
 import com.deange.nastychristmas.workflow.AppState.StealingRound
 
-fun AppState.asGameState(): GameState? = when (this) {
+fun AppState.asGameState(): GameState = when (this) {
   is InitializingPlayers -> {
     GameState(
       allPlayers = allPlayers,
@@ -18,7 +19,8 @@ fun AppState.asGameState(): GameState? = when (this) {
       roundNumber = -1,
       currentPlayer = null,
       gifts = GiftOwners(emptyMap()),
-      settings = GameSettings(enforceOwnership = true),
+      stats = GameStats(),
+      settings = GameSettings.Default,
     )
   }
   is PickingPlayer -> {
@@ -28,6 +30,7 @@ fun AppState.asGameState(): GameState? = when (this) {
       roundNumber = round,
       currentPlayer = selectedPlayer,
       gifts = gifts,
+      stats = stats,
       settings = settings,
     )
   }
@@ -38,6 +41,7 @@ fun AppState.asGameState(): GameState? = when (this) {
       roundNumber = round,
       currentPlayer = startingPlayer,
       gifts = gifts,
+      stats = stats,
       settings = settings,
     )
   }
@@ -48,6 +52,7 @@ fun AppState.asGameState(): GameState? = when (this) {
       roundNumber = round,
       currentPlayer = player,
       gifts = gifts,
+      stats = stats,
       settings = settings,
     )
   }
@@ -58,8 +63,20 @@ fun AppState.asGameState(): GameState? = when (this) {
       roundNumber = round,
       currentPlayer = player,
       gifts = gifts,
+      stats = stats,
       settings = settings,
     )
   }
-  is EndGame -> null
+  is EndGame -> {
+    val allPlayers = gifts.toList().map { it.key }
+    GameState(
+      allPlayers = allPlayers,
+      playerPool = setOf(),
+      roundNumber = allPlayers.size + 1,
+      currentPlayer = null,
+      gifts = gifts,
+      stats = stats,
+      settings = GameSettings.Default,
+    )
+  }
 }

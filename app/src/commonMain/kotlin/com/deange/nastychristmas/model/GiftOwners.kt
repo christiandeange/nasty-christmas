@@ -7,6 +7,8 @@ class GiftOwners(
   private val owners: Map<Player, OwnedGift>
 ) : Iterable<Map.Entry<Player, OwnedGift>> by owners.entries {
 
+  operator fun get(player: Player): Gift? = owners[player]?.gift
+
   operator fun plus(ownedGift: OwnedGift): GiftOwners {
     return GiftOwners(owners + (ownedGift.owner to ownedGift))
   }

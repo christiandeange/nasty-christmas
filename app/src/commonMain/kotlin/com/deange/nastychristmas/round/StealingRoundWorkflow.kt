@@ -1,5 +1,6 @@
 package com.deange.nastychristmas.round
 
+import com.deange.nastychristmas.model.GameStats
 import com.deange.nastychristmas.round.PlayerChoice.OpenNewGift
 import com.deange.nastychristmas.round.PlayerChoice.StealGiftFrom
 import com.deange.nastychristmas.round.StealingRoundOutput.ChangeGameSettings
@@ -22,6 +23,7 @@ class StealingRoundWorkflow : StatefulWorkflow<
       ?: StealingRoundState(
         currentPlayer = props.startingPlayer,
         gifts = props.gifts,
+        stats = GameStats(),
         currentChoice = null,
         previousState = null,
       )
@@ -70,7 +72,8 @@ class StealingRoundWorkflow : StatefulWorkflow<
         setOutput(
           ChangeGameSettings(
             currentPlayer = state.currentPlayer,
-            gifts = state.gifts
+            gifts = state.gifts,
+            stats = state.stats,
           )
         )
       },
@@ -82,10 +85,12 @@ class StealingRoundWorkflow : StatefulWorkflow<
       onConfirmChoice = context.eventHandler {
         when (val currentChoice: PlayerChoice = state.currentChoice!!) {
           is OpenNewGift -> {
+            val stats = state.stats.withOpen(state.currentPlayer)
             setOutput(
               EndRound(
                 playerOpeningGift = state.currentPlayer,
                 gifts = state.gifts,
+                stats = stats,
               )
             )
           }

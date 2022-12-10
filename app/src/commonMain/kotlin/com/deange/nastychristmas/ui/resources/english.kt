@@ -12,6 +12,7 @@ val StringResources.Companion.EN
     enforceOwnershipTitle = "Enforce Ownership",
     giftHint = "Gift Name",
     letsGetNasty = "Let’s Get Nasty!",
+    newGame = "New Game",
     ok = "OK",
     openGiftDescription = "This finishes the current round.",
     openGiftRoundTitle = "Round %d: %s is opening…",

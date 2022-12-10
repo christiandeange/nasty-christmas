@@ -7,6 +7,7 @@ import com.deange.nastychristmas.init.PlayersOutput.NoPlayers
 import com.deange.nastychristmas.init.PlayersOutput.StartWithPlayers
 import com.deange.nastychristmas.init.PlayersProps
 import com.deange.nastychristmas.init.PlayersWorkflow
+import com.deange.nastychristmas.model.GameStats
 import com.deange.nastychristmas.model.GiftOwners
 import com.deange.nastychristmas.model.owns
 import com.deange.nastychristmas.round.NewRoundOutput.PlayerSelected
@@ -88,6 +89,7 @@ class AppWorkflow(
           startingPlayer = renderState.player,
           round = renderState.round,
           gifts = renderState.gifts,
+          stats = renderState.stats,
           settings = renderState.settings,
         )
       )
@@ -104,6 +106,11 @@ class AppWorkflow(
       InitializingPlayers(
         allPlayers = gameState.allPlayers,
       )
+    } else if (gameState.playerPool.isEmpty()) {
+      EndGame(
+        stats = gameState.stats,
+        gifts = gameState.gifts,
+      )
     } else if (gameState.currentPlayer == null) {
       PickingPlayer(
         allPlayers = gameState.allPlayers,
@@ -111,6 +118,7 @@ class AppWorkflow(
         selectedPlayer = null,
         round = gameState.roundNumber,
         gifts = gameState.gifts,
+        stats = gameState.stats,
         settings = gameState.settings,
       )
     } else if (gameState.gifts.stealableGifts(gameState.currentPlayer).isEmpty()) {
@@ -120,6 +128,7 @@ class AppWorkflow(
         round = gameState.roundNumber,
         player = gameState.currentPlayer,
         gifts = gameState.gifts,
+        stats = gameState.stats,
         settings = gameState.settings,
       )
     } else {
@@ -129,6 +138,7 @@ class AppWorkflow(
         round = gameState.roundNumber,
         startingPlayer = gameState.currentPlayer,
         gifts = gameState.gifts,
+        stats = gameState.stats,
         settings = gameState.settings,
       )
     }
@@ -152,7 +162,8 @@ class AppWorkflow(
               selectedPlayer = null,
               round = 1,
               gifts = GiftOwners(emptyMap()),
-              settings = GameSettings(enforceOwnership = true),
+              stats = GameStats(),
+              settings = GameSettings.Default,
             )
           }
         }
@@ -188,6 +199,7 @@ class AppWorkflow(
                 round = renderState.round,
                 player = player,
                 gifts = renderState.gifts,
+                stats = renderState.stats,
                 settings = renderState.settings,
               )
             } else {
@@ -197,6 +209,7 @@ class AppWorkflow(
                 round = renderState.round,
                 startingPlayer = player,
                 gifts = renderState.gifts,
+                stats = renderState.stats,
                 settings = renderState.settings,
               )
             }
@@ -227,6 +240,7 @@ class AppWorkflow(
               round = renderState.round,
               player = output.currentPlayer,
               gifts = output.gifts,
+              stats = renderState.stats + output.stats,
               settings = renderState.settings,
             )
           }
@@ -237,6 +251,7 @@ class AppWorkflow(
               round = renderState.round,
               player = output.playerOpeningGift,
               gifts = output.gifts,
+              stats = renderState.stats + output.stats,
               settings = renderState.settings,
             )
           }
@@ -262,11 +277,15 @@ class AppWorkflow(
             selectedPlayer = null,
             round = renderState.round + 1,
             gifts = newGifts,
+            stats = renderState.stats,
             settings = renderState.settings,
           )
         } else {
           setOutput(ClearGameState)
-          EndGame(gifts = newGifts)
+          EndGame(
+            gifts = newGifts,
+            stats = renderState.stats,
+          )
         }
       }
     }
@@ -275,7 +294,10 @@ class AppWorkflow(
   private fun RenderContext.renderEndGame(
     renderState: EndGame,
   ): ViewRendering {
-    val endGameProps = EndGameProps(finalGifts = renderState.gifts.clearOwnerHistory())
+    val endGameProps = EndGameProps(
+      finalGifts = renderState.gifts.clearOwnerHistory(),
+      stats = renderState.stats,
+    )
     return renderChild(endGameWorkflow, endGameProps) {
       savingGameStateAction {
         setOutput(Exit)
@@ -300,6 +322,7 @@ class AppWorkflow(
               round = renderState.round,
               startingPlayer = renderState.player,
               gifts = output.settings.gifts,
+              stats = renderState.stats,
               settings = output.settings.settings,
             )
           }
@@ -318,8 +341,7 @@ class AppWorkflow(
   ) = action(name) {
     update()
 
-    state.asGameState()?.let { gameState ->
-      setOutput(SaveGameState(gameState))
-    }
+    val savedState: GameState = state.asGameState()
+    setOutput(SaveGameState(savedState))
   }
 }

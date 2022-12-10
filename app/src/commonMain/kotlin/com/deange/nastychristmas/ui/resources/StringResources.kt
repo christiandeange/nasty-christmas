@@ -11,6 +11,7 @@ class StringResources(
   enforceOwnershipTitle: String,
   giftHint: String,
   letsGetNasty: String,
+  newGame: String,
   ok: String,
   openGiftDescription: String,
   openGiftRoundTitle: String,
@@ -36,6 +37,7 @@ class StringResources(
   val enforceOwnershipTitle = StringResource(enforceOwnershipTitle)
   val giftHint = StringResource(giftHint)
   val letsGetNasty = StringResource(letsGetNasty)
+  val newGame = StringResource(newGame)
   val ok = StringResource(ok)
   val openGiftDescription = StringResource(openGiftDescription)
   val openGiftRoundTitle = StringResource(openGiftRoundTitle)

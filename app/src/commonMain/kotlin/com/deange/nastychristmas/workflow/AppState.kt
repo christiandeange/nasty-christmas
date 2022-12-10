@@ -1,5 +1,6 @@
 package com.deange.nastychristmas.workflow
 
+import com.deange.nastychristmas.model.GameStats
 import com.deange.nastychristmas.model.GiftOwners
 import com.deange.nastychristmas.model.Player
 import com.deange.nastychristmas.settings.GameSettings
@@ -19,6 +20,7 @@ sealed class AppState {
     val selectedPlayer: Player?,
     val round: Int,
     val gifts: GiftOwners,
+    val stats: GameStats,
     val settings: GameSettings,
   ) : AppState()
 
@@ -29,6 +31,7 @@ sealed class AppState {
     val player: Player,
     val round: Int,
     val gifts: GiftOwners,
+    val stats: GameStats,
     val settings: GameSettings,
   ) : AppState()
 
@@ -39,12 +42,14 @@ sealed class AppState {
     val startingPlayer: Player,
     val round: Int,
     val gifts: GiftOwners,
+    val stats: GameStats,
     val settings: GameSettings,
   ) : AppState()
 
   @Serializable
   data class EndGame(
     val gifts: GiftOwners,
+    val stats: GameStats,
   ) : AppState()
 
   @Serializable
@@ -54,6 +59,7 @@ sealed class AppState {
     val player: Player,
     val round: Int,
     val gifts: GiftOwners,
+    val stats: GameStats,
     val settings: GameSettings,
   ) : AppState()
 }
