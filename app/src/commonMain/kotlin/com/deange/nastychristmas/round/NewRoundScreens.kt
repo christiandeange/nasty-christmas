@@ -59,20 +59,29 @@ class NewRoundPlayerSelectionScreen(
     }
 
     var frame: Int by remember { mutableStateOf(0) }
-    var randomPlayer by remember { mutableStateOf(playerPool.random(random)) }
+    var playerShown by remember { mutableStateOf(playerPool.random(random)) }
+
+    fun randomPlayer(): Player {
+      // Selects a player that isn't currently selected.
+      return (playerPool - playerShown).random(random)
+    }
 
     LaunchedEffect(frame) {
       if (frame < frameDelays.lastIndex) {
         delay(frameDelays[frame])
         frame++
-        randomPlayer = (playerPool - randomPlayer).random(random)
+        playerShown = randomPlayer()
       } else {
         delay(frameDelays[frame])
-        onPlayerSelected(randomPlayer)
+        if (random.nextBoolean()) {
+          // 50% of the time, a new random player is selected right before the selection ends.
+          playerShown = randomPlayer()
+        }
+        onPlayerSelected(playerShown)
       }
     }
 
-    PlayerSelectionScreen(randomPlayer, round, onContinue = null)
+    PlayerSelectionScreen(playerShown, round, onContinue = null)
   }
 }
 
