@@ -300,7 +300,7 @@ class AppWorkflow(
     )
     return renderChild(endGameWorkflow, endGameProps) {
       savingGameStateAction {
-        setOutput(Exit)
+        state = InitializingPlayers(allPlayers = emptyList())
       }
     }
   }
