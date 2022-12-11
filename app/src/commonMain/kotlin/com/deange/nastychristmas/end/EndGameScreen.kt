@@ -55,44 +55,46 @@ class EndGameScreen(
           repeatMode = Restart,
         )
       )
-      Box(modifier = Modifier.fillMaxSize()) {
+      Column(modifier = Modifier.fillMaxSize()) {
         LinearProgressIndicator(
           progress = index / 4f,
           modifier = Modifier.fillMaxWidth().height(2.dp),
         )
 
-        Crossfade(
-          modifier = Modifier.align(Center),
-          targetState = floor(index).toInt(),
-        ) { statIndex ->
-          when (statIndex % 4) {
-            0 -> {
-              GameStat(
-                title = Strings.statMostSteals.evaluate(),
-                values = stats.stealsByPlayer,
-                formatter = { it.name },
-              )
-            }
-            1 -> {
-              GameStat(
-                title = Strings.statMostStolenFrom.evaluate(),
-                values = stats.stolenFromByPlayer,
-                formatter = { it.name },
-              )
-            }
-            2 -> {
-              GameStat(
-                title = Strings.statMostOpens.evaluate(),
-                values = stats.opensByPlayer,
-                formatter = { it.name },
-              )
-            }
-            3 -> {
-              GameStat(
-                title = Strings.statMostStolenGift.evaluate(),
-                values = stats.stealsByGift,
-                formatter = { it.name },
-              )
+        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+          Crossfade(
+            modifier = Modifier.fillMaxWidth().align(Center),
+            targetState = floor(index).toInt(),
+          ) { statIndex ->
+            when (statIndex % 4) {
+              0 -> {
+                GameStat(
+                  title = Strings.statMostSteals.evaluate(),
+                  values = stats.stealsByPlayer,
+                  formatter = { it.name },
+                )
+              }
+              1 -> {
+                GameStat(
+                  title = Strings.statMostStolenFrom.evaluate(),
+                  values = stats.stolenFromByPlayer,
+                  formatter = { it.name },
+                )
+              }
+              2 -> {
+                GameStat(
+                  title = Strings.statMostOpens.evaluate(),
+                  values = stats.opensByPlayer,
+                  formatter = { it.name },
+                )
+              }
+              3 -> {
+                GameStat(
+                  title = Strings.statMostStolenGift.evaluate(),
+                  values = stats.stealsByGift,
+                  formatter = { it.name },
+                )
+              }
             }
           }
         }
@@ -100,8 +102,7 @@ class EndGameScreen(
         FilledTonalButton(
           modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
-            .align(Alignment.BottomCenter),
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
           onClick = { onContinue() },
         ) {
           Text(

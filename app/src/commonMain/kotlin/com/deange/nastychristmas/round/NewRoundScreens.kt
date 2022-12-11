@@ -22,8 +22,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Black
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.deange.nastychristmas.model.Player
@@ -85,7 +86,6 @@ class NewRoundPlayerSelectionScreen(
     PlayerSelectionScreen(
       player = playerShown,
       round = round,
-      textSize = random.nextInt(28, 42).sp,
       onContinue = null
     )
   }
@@ -110,7 +110,6 @@ class NewRoundPlayerScreen(
       PlayerSelectionScreen(
         player = player,
         round = round,
-        textSize = MaterialTheme.typography.headlineLarge.fontSize,
         onContinue = onContinue,
       )
     }
@@ -121,7 +120,6 @@ class NewRoundPlayerScreen(
 private fun PlayerSelectionScreen(
   player: Player,
   round: Int,
-  textSize: TextUnit,
   onContinue: (() -> Unit)?,
 ) {
   Box(
@@ -139,12 +137,11 @@ private fun PlayerSelectionScreen(
       modifier = Modifier
         .fillMaxWidth()
         .align(Alignment.Center),
-      text = player.name,
+      text = player.name.uppercase(),
       textAlign = TextAlign.Center,
       style = MaterialTheme.typography.headlineLarge.copy(
-        fontSize = textSize,
+        fontWeight = Bold,
         letterSpacing = 3.sp,
-        fontFeatureSettings = "smcp",
       ),
     )
 
