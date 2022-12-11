@@ -54,8 +54,8 @@ object PresetKonfetti {
   fun explode(): List<Party> {
     return listOf(
       Party(
-        speed = 0f,
-        maxSpeed = 30f,
+        speed = 15f,
+        maxSpeed = 45f,
         damping = 0.9f,
         spread = 360,
         colors = DefaultColors,
