@@ -68,28 +68,28 @@ class EndGameScreen(
           when (statIndex % 4) {
             0 -> {
               GameStat(
-                title = "Most Steals",
+                title = Strings.statMostSteals.evaluate(),
                 values = stats.stealsByPlayer,
                 formatter = { it.name },
               )
             }
             1 -> {
               GameStat(
-                title = "Most Stolen From",
+                title = Strings.statMostStolenFrom.evaluate(),
                 values = stats.stolenFromByPlayer,
                 formatter = { it.name },
               )
             }
             2 -> {
               GameStat(
-                title = "Most Gifts Opened",
+                title = Strings.statMostOpens.evaluate(),
                 values = stats.opensByPlayer,
                 formatter = { it.name },
               )
             }
             3 -> {
               GameStat(
-                title = "Most Stolen Gift",
+                title = Strings.statMostStolenGift.evaluate(),
                 values = stats.stealsByGift,
                 formatter = { it.name },
               )
@@ -132,7 +132,7 @@ class EndGameScreen(
 
       val max = values.values.maxOrNull() ?: 0
       val description = if (max == 0) {
-        "N/A"
+        Strings.notApplicable.evaluate()
       } else {
         values
           .filterValues { it == max }

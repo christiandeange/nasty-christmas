@@ -12,6 +12,7 @@ class StringResources(
   giftHint: String,
   letsGetNasty: String,
   newGame: String,
+  notApplicable: String,
   ok: String,
   openGiftDescription: String,
   openGiftRoundTitle: String,
@@ -22,6 +23,10 @@ class StringResources(
   round: String,
   roundTitle: String,
   settings: String,
+  statMostOpens: String,
+  statMostSteals: String,
+  statMostStolenFrom: String,
+  statMostStolenGift: String,
   stealFrom: String,
   stealRoundTitle: String,
   thanksForPlaying: String,
@@ -38,6 +43,7 @@ class StringResources(
   val giftHint = StringResource(giftHint)
   val letsGetNasty = StringResource(letsGetNasty)
   val newGame = StringResource(newGame)
+  val notApplicable = StringResource(notApplicable)
   val ok = StringResource(ok)
   val openGiftDescription = StringResource(openGiftDescription)
   val openGiftRoundTitle = StringResource(openGiftRoundTitle)
@@ -48,6 +54,10 @@ class StringResources(
   val round = StringResource(round)
   val roundTitle = StringResource(roundTitle)
   val settings = StringResource(settings)
+  val statMostOpens = StringResource(statMostOpens)
+  val statMostSteals = StringResource(statMostSteals)
+  val statMostStolenFrom = StringResource(statMostStolenFrom)
+  val statMostStolenGift = StringResource(statMostStolenGift)
   val stealFrom = StringResource(stealFrom)
   val stealRoundTitle = StringResource(stealRoundTitle)
   val thanksForPlaying = StringResource(thanksForPlaying)
