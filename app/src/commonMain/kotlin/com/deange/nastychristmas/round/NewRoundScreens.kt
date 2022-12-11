@@ -21,8 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.font.FontWeight.Companion.Black
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -159,7 +157,7 @@ private fun PlayerSelectionScreen(
         onClick = { onContinue!!() },
       ) {
         Text(
-          style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold),
+          style = LocalTextStyle.current.copy(fontWeight = Bold),
           text = Strings.ok.evaluate(),
         )
       }
