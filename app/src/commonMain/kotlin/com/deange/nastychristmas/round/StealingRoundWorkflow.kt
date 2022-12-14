@@ -29,6 +29,16 @@ class StealingRoundWorkflow : StatefulWorkflow<
       )
   }
 
+  override fun onPropsChanged(
+    old: StealingRoundProps,
+    new: StealingRoundProps,
+    state: StealingRoundState
+  ): StealingRoundState {
+    return super.onPropsChanged(old, new, state).copy(
+      gifts = new.gifts,
+    )
+  }
+
   override fun render(
     renderProps: StealingRoundProps,
     renderState: StealingRoundState,

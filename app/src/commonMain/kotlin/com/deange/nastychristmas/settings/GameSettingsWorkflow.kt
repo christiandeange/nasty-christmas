@@ -1,5 +1,7 @@
 package com.deange.nastychristmas.settings
 
+import com.deange.nastychristmas.model.GameStats
+import com.deange.nastychristmas.model.Gift
 import com.deange.nastychristmas.model.GiftOwners
 import com.deange.nastychristmas.settings.GameSettingsOutput.ResetGame
 import com.deange.nastychristmas.settings.GameSettingsOutput.UpdateGameSettings
@@ -51,7 +53,11 @@ class GameSettingsWorkflow : StatefulWorkflow<
         setOutput(UpdateGameSettings(props))
       },
       onConfirmSettings = context.eventHandler {
-        setOutput(UpdateGameSettings(state.asSettings(props.gifts)))
+        val newGiftNames = state.giftNames.map { it.newName.textValue }
+        if (newGiftNames.size == newGiftNames.distinct().size) {
+          // Only output new settings if all gift names are different.
+          setOutput(UpdateGameSettings(state.asSettings(props.gifts, props.stats)))
+        }
       },
     )
   }
@@ -64,15 +70,30 @@ class GameSettingsWorkflow : StatefulWorkflow<
     return map { GiftNameRow(it.gift, it.newName) }
   }
 
-  private fun GameSettingsState.asSettings(gifts: GiftOwners): ChangeableSettings {
+  private fun GameSettingsState.asSettings(
+    gifts: GiftOwners,
+    stats: GameStats,
+  ): ChangeableSettings {
     return ChangeableSettings(
       settings = GameSettings(enforceOwnership = enforceOwnership),
       gifts = GiftOwners(
         owners = gifts.associate { (player, ownedGift) ->
-          val newGiftName = giftNames.single { it.gift == ownedGift }.newName.textValue
-          player to ownedGift.copy(gift = ownedGift.gift.copy(name = newGiftName))
+          player to ownedGift.copy(
+            gift = ownedGift.gift.copy(
+              name = newGiftName(ownedGift.gift.name),
+            )
+          )
         }
-      )
+      ),
+      stats = GameStats(
+        stealsByGift = stats.stealsByGift.mapKeys { (gift, _) ->
+          Gift(name = newGiftName(gift.name))
+        }
+      ),
     )
+  }
+
+  private fun GameSettingsState.newGiftName(oldGiftName: String): String {
+    return giftNames.single { it.gift.gift.name == oldGiftName }.newName.textValue
   }
 }

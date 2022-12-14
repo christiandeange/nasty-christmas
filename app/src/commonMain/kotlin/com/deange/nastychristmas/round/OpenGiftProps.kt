@@ -5,4 +5,5 @@ import com.deange.nastychristmas.model.Player
 data class OpenGiftProps(
   val player: Player,
   val round: Int,
+  val giftNames: Set<String>,
 )

@@ -8,6 +8,7 @@ val StringResources.Companion.EN
     confirm = "Confirm",
     confirmResetApp = "Confirm Reset App",
     editGiftNames = "Edit Gift Names",
+    errorGiftExists = "A gift with that name has already been opened.",
     enforceOwnershipDescription = "Require that you cannot steal a gift you have already had in the same round.",
     enforceOwnershipTitle = "Enforce Ownership",
     giftHint = "Gift Name",

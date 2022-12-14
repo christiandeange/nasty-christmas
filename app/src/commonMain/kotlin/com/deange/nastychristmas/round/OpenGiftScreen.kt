@@ -16,6 +16,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.Bottom
 import androidx.compose.ui.Modifier
@@ -33,8 +35,11 @@ class OpenGiftScreen(
   val playerName: String,
   val roundNumber: Int,
   val giftName: TextController,
+  val errorGiftExists: Boolean,
   val onAddGift: (String) -> Unit,
 ) : ViewRendering {
+  private val originalGiftName = giftName.textValue
+
   @Composable
   override fun Content() {
     BackHandler(onBack = { /* no-op */ })
@@ -45,13 +50,25 @@ class OpenGiftScreen(
       verticalAlignment = Bottom,
     ) {
       var currentGiftName by giftName.asMutableState()
+      var isError by remember(this@OpenGiftScreen, originalGiftName) {
+        mutableStateOf(errorGiftExists)
+      }
 
       OutlinedTextField(
         modifier = Modifier.weight(1f),
         shape = RoundedCornerShape(20.dp),
         value = currentGiftName,
-        onValueChange = { currentGiftName = it },
-        label = { Text(Strings.openGiftRoundTitle.evaluate(roundNumber, playerName)) },
+        onValueChange = {
+          isError = false
+          currentGiftName = it
+        },
+        label = {
+          if (isError) {
+            Text(Strings.errorGiftExists.evaluate())
+          } else {
+            Text(Strings.openGiftRoundTitle.evaluate(roundNumber, playerName))
+          }
+        },
         singleLine = true,
         keyboardOptions = KeyboardOptions(
           capitalization = KeyboardCapitalization.Sentences,
@@ -62,6 +79,7 @@ class OpenGiftScreen(
             onAddGift(currentGiftName)
           }
         }),
+        isError = isError,
       )
 
       FilledTonalButton(

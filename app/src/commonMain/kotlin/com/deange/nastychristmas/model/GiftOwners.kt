@@ -3,7 +3,7 @@ package com.deange.nastychristmas.model
 import kotlinx.serialization.Serializable
 
 @Serializable(with = GiftOwnersSerializer::class)
-class GiftOwners(
+data class GiftOwners(
   private val owners: Map<Player, OwnedGift>
 ) : Iterable<Map.Entry<Player, OwnedGift>> by owners.entries {
 

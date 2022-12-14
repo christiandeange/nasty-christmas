@@ -2,6 +2,7 @@ package com.deange.nastychristmas.round
 
 import com.deange.nastychristmas.model.Gift
 import com.deange.nastychristmas.ui.compose.TextController
+import com.deange.nastychristmas.ui.theme.Strings
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.deange.nastychristmas.ui.workflow.fromSnapshot
 import com.deange.nastychristmas.ui.workflow.toSnapshot
@@ -23,8 +24,12 @@ class OpenGiftWorkflow : StatefulWorkflow<OpenGiftProps, OpenGiftState, Gift, Vi
       playerName = renderProps.player.name,
       roundNumber = renderProps.round,
       giftName = renderState.giftName,
-      onAddGift = context.eventHandler { giftName ->
-        setOutput(Gift(giftName.trim()))
+      errorGiftExists = renderState.giftName.textValue in renderProps.giftNames,
+      onAddGift = context.eventHandler { name ->
+        val giftName = name.trim()
+        if (giftName !in props.giftNames) {
+          setOutput(Gift(giftName))
+        }
       }
     )
   }

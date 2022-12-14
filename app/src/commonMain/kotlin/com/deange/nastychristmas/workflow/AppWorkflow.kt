@@ -266,6 +266,7 @@ class AppWorkflow(
     val openGiftProps = OpenGiftProps(
       player = renderState.player,
       round = renderState.round,
+      giftNames = renderState.gifts.map { it.value.gift.name }.toSet(),
     )
     return renderChild(openGiftWorkflow, openGiftProps) { gift ->
       savingGameStateAction {
@@ -311,6 +312,7 @@ class AppWorkflow(
     val changeableSettings = ChangeableSettings(
       settings = renderState.settings,
       gifts = renderState.gifts,
+      stats = renderState.stats,
     )
     return renderChild(gameSettingsWorkflow, changeableSettings) { output ->
       savingGameStateAction {
@@ -322,7 +324,7 @@ class AppWorkflow(
               round = renderState.round,
               startingPlayer = renderState.player,
               gifts = output.settings.gifts,
-              stats = renderState.stats,
+              stats = output.settings.stats,
               settings = output.settings.settings,
             )
           }

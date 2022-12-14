@@ -18,7 +18,7 @@ actual class ImageResource actual constructor(
 ) {
   @Composable
   actual fun toPainter(): Painter {
-    var painter by remember { mutableStateOf<Painter>(BitmapPainter(BlankBitmap)) }
+    var painter by remember(name) { mutableStateOf<Painter>(BitmapPainter(BlankBitmap)) }
 
     LaunchedEffect(name) {
       val byteArray = loadBytesFromPath("drawable/$name")

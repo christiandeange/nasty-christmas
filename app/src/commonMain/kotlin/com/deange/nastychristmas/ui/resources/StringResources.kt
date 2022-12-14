@@ -7,6 +7,7 @@ class StringResources(
   confirm: String,
   confirmResetApp: String,
   editGiftNames: String,
+  errorGiftExists: String,
   enforceOwnershipDescription: String,
   enforceOwnershipTitle: String,
   giftHint: String,
@@ -38,6 +39,7 @@ class StringResources(
   val confirm = StringResource(confirm)
   val confirmResetApp = StringResource(confirmResetApp)
   val editGiftNames = StringResource(editGiftNames)
+  val errorGiftExists = StringResource(errorGiftExists)
   val enforceOwnershipDescription = StringResource(enforceOwnershipDescription)
   val enforceOwnershipTitle = StringResource(enforceOwnershipTitle)
   val giftHint = StringResource(giftHint)
