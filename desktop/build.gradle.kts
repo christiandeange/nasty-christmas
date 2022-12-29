@@ -1,7 +1,9 @@
 plugins {
-  kotlin("jvm")
-  kotlin("plugin.serialization")
-  id("org.jetbrains.compose")
+  @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
+
+  alias(plugins.kotlin.jvm)
+  alias(plugins.kotlin.serialization)
+  alias(plugins.jetbrains.compose)
 }
 
 dependencies {

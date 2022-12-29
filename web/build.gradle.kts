@@ -2,9 +2,11 @@ import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
 plugins {
-  kotlin("multiplatform")
-  kotlin("plugin.serialization")
-  id("org.jetbrains.compose")
+  @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
+
+  alias(plugins.kotlin.multiplatform)
+  alias(plugins.kotlin.serialization)
+  alias(plugins.jetbrains.compose)
 }
 
 kotlin {

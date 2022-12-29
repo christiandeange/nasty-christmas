@@ -1,7 +1,9 @@
 plugins {
-  id("com.android.application")
-  kotlin("android")
-  kotlin("plugin.serialization")
+  @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
+
+  alias(plugins.android.application)
+  alias(plugins.kotlin.android)
+  alias(plugins.kotlin.serialization)
 }
 
 android {

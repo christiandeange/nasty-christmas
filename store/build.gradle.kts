@@ -1,7 +1,9 @@
 plugins {
-  id("com.android.library")
-  kotlin("multiplatform")
-  kotlin("plugin.serialization")
+  @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
+
+  alias(plugins.android.library)
+  alias(plugins.kotlin.multiplatform)
+  alias(plugins.kotlin.serialization)
 }
 
 android {

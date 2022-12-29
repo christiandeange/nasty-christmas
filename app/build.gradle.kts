@@ -1,10 +1,12 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
 
 plugins {
-  kotlin("multiplatform")
-  kotlin("plugin.serialization")
-  id("com.android.library")
-  id("org.jetbrains.compose")
+  @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
+
+  alias(plugins.kotlin.multiplatform)
+  alias(plugins.kotlin.serialization)
+  alias(plugins.android.library)
+  alias(plugins.jetbrains.compose)
 }
 
 android {

@@ -1,8 +1,11 @@
 plugins {
-  id("com.android.application") version "7.3.1" apply false
-  id("com.android.library") version "7.3.1" apply false
-  id("org.jetbrains.compose") version "1.2.0" apply false
-  kotlin("multiplatform") version "1.7.10" apply false
-  kotlin("android") version "1.7.10" apply false
-  kotlin("plugin.serialization") version "1.7.10" apply false
+  @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
+
+  alias(plugins.android.application) apply false
+  alias(plugins.android.library) apply false
+  alias(plugins.jetbrains.compose) apply false
+  alias(plugins.kotlin.android) apply false
+  alias(plugins.kotlin.jvm) apply false
+  alias(plugins.kotlin.multiplatform) apply false
+  alias(plugins.kotlin.serialization) apply false
 }
