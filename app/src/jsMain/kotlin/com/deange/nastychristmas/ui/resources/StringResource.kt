@@ -11,6 +11,7 @@ actual class StringResource actual constructor(
 
   actual fun evaluate(vararg formatArgs: Any): String {
     val jsFormatString = formatString.convertToMessageFormat()
+    @Suppress("UNCHECKED_CAST")
     val compiled = CompiledVariableString(
       MessageFormat(window.navigator.languages as Array<String>).compile(jsFormatString)
     )
