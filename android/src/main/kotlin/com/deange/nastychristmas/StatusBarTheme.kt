@@ -1,4 +1,4 @@
-package com.deange.nastychristmas.ui.theme
+package com.deange.nastychristmas
 
 import android.app.Activity
 import androidx.compose.material3.MaterialTheme
@@ -7,6 +7,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.deange.nastychristmas.ui.theme.LocalColorTheme
 
 @Composable
 fun StatusBarTheme() {

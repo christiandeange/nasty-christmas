@@ -26,7 +26,6 @@ import com.deange.nastychristmas.ui.resources.EN
 import com.deange.nastychristmas.ui.resources.StringResources
 import com.deange.nastychristmas.ui.theme.Language
 import com.deange.nastychristmas.ui.theme.NastyChristmasTheme
-import com.deange.nastychristmas.ui.theme.StatusBarTheme
 import com.deange.nastychristmas.ui.workflow.WorkflowRendering
 import com.deange.nastychristmas.workflow.AppWorkflow
 import kotlinx.coroutines.runBlocking
