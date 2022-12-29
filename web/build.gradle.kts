@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrTarget
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
@@ -29,6 +30,14 @@ kotlin {
 
       resources.srcDir("../app/resources")
       resources.srcDir("../app/fonts")
+    }
+  }
+
+  targets.withType<KotlinJsIrTarget>().configureEach {
+    val main by compilations.getting
+
+    tasks.named(main.processResourcesTaskName).configure {
+      dependsOn(tasks.named("unpackSkikoWasmRuntime${targetName.capitalize()}"))
     }
   }
 }
