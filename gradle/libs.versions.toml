@@ -1,21 +1,22 @@
 [versions]
 
 agp = "7.3.1"
-androidx-activity = "1.4.0"
-androidx-core = "1.8.0"
+androidx-activity = "1.6.1"
+androidx-core = "1.9.0"
 androidx-datastore = "1.0.0"
-androidx-lifecycle = "2.4.1"
-compose = "1.3.1"
-kotlin = "1.7.10"
+androidx-lifecycle = "2.5.1"
+compose-compiler = "1.3.2"
+compose-jb = "1.2.2"
+kotlin = "1.7.20"
 kotlinx-coroutines = "1.6.4"
-kotlinx-serialization = "1.3.3"
+kotlinx-serialization = "1.4.1"
 workflow = "1.8.0-beta13-SNAPSHOT"
 
 [plugins]
 
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-jetbrains-compose = { id = "org.jetbrains.compose", version = "1.2.0" }
+jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-jb" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
