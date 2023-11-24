@@ -26,7 +26,7 @@ android {
 
 kotlin {
   jvm()
-  android()
+  androidTarget()
   js(IR) {
     browser()
     binaries.executable()
@@ -60,7 +60,7 @@ kotlin {
     }
     val jsMain by getting {
       dependencies {
-        implementation(compose.web.core)
+        implementation(compose.html.core)
 
         implementation(npm("@messageformat/core", "3.0.0"))
       }

@@ -8,12 +8,12 @@ plugins {
 
 android {
   namespace = "com.deange.nastychristmas"
-  compileSdk = 33
+  compileSdk = 34
 
   defaultConfig {
     applicationId = "com.deange.nastychristmas"
     minSdk = 26
-    targetSdk = 33
+    targetSdk = 34
     versionCode = 1
     versionName = "1.0.0"
   }
