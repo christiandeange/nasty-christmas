@@ -1,5 +1,7 @@
 package com.deange.nastychristmas
 
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.window.CanvasBasedWindow
 import com.deange.nastychristmas.end.EndGameWorkflow
 import com.deange.nastychristmas.init.PlayersWorkflow
 import com.deange.nastychristmas.round.NewRoundWorkflow
@@ -58,7 +60,8 @@ private fun runApp() {
     AppProps.RestoredFromSave(game!!)
   }
 
-  ResizeableWindow(window, "Nasty Christmas") {
+  @OptIn(ExperimentalComposeUiApi::class)
+  CanvasBasedWindow(title = "Nasty Christmas") {
     App(
       workflow = workflow,
       props = initialProps,
