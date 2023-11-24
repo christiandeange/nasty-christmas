@@ -199,7 +199,7 @@ class AppWorkflow(
                 round = renderState.round,
                 player = player,
                 gifts = renderState.gifts,
-                stats = renderState.stats,
+                stats = renderState.stats + GameStats(opensByPlayer = mapOf(player to 1)),
                 settings = renderState.settings,
               )
             } else {

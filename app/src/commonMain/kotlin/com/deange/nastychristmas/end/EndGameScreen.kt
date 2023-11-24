@@ -137,10 +137,9 @@ class EndGameScreen(
         values
           .filterValues { it == max }
           .keys
-          .joinToString(
-            separator = " / ",
-            transform = formatter,
-          )
+          .map(formatter)
+          .sorted()
+          .joinToString(separator = " / ")
       }
 
       Text(
