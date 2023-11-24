@@ -23,6 +23,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -33,6 +37,8 @@ import com.deange.nastychristmas.round.StealOrOpenChoice.Steal
 import com.deange.nastychristmas.ui.compose.AppScaffold
 import com.deange.nastychristmas.ui.compose.BackBehaviour
 import com.deange.nastychristmas.ui.compose.TwoLineText
+import com.deange.nastychristmas.ui.icons.Visibility
+import com.deange.nastychristmas.ui.icons.VisibilityOff
 import com.deange.nastychristmas.ui.theme.Strings
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 
@@ -53,6 +59,8 @@ class StealingRoundScreen(
       BackBehaviour.Disabled
     }
 
+    var showUnstealableGifts by remember { mutableStateOf(false) }
+
     AppScaffold(
       onBack = backBehaviour,
       title = {
@@ -62,6 +70,18 @@ class StealingRoundScreen(
         )
       },
       actionIcons = {
+        val showHideIcon = when (showUnstealableGifts) {
+          true -> rememberVectorPainter(image = Icons.Default.Visibility)
+          false -> rememberVectorPainter(image = Icons.Default.VisibilityOff)
+        }
+
+        IconButton(onClick = { showUnstealableGifts = !showUnstealableGifts }) {
+          Icon(
+            painter = showHideIcon,
+            contentDescription = null,
+          )
+        }
+
         IconButton(onClick = { onChangeSettings() }) {
           Icon(
             painter = rememberVectorPainter(image = Icons.Default.Settings),
@@ -91,13 +111,17 @@ class StealingRoundScreen(
                 )
               }
               is Steal -> {
-                ChoiceRow(
-                  modifier = Modifier.animateItemPlacement(),
-                  titleText = Strings.stealFrom.evaluate(choice.playerName),
-                  descriptionText = choice.giftName,
-                  isSelected = choice.isSelected,
-                  onClick = choice.onPicked.takeIf { choice.isEnabled },
-                )
+                if (!choice.isEnabled && !showUnstealableGifts) {
+                  // Do not show this row if it can't be stolen
+                } else {
+                  ChoiceRow(
+                    modifier = Modifier.animateItemPlacement(),
+                    titleText = Strings.stealFrom.evaluate(choice.playerName),
+                    descriptionText = choice.giftName,
+                    isSelected = choice.isSelected,
+                    onClick = choice.onPicked.takeIf { choice.isEnabled },
+                  )
+                }
               }
             }
           }
