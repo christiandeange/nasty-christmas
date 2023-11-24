@@ -11,7 +11,7 @@ plugins {
 
 android {
   namespace = "com.deange.nastychristmas.core"
-  compileSdk = 33
+  compileSdk = 34
 
   buildFeatures {
     compose = true

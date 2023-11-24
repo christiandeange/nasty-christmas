@@ -1,0 +1,11 @@
+runtime: nodejs20
+
+handlers:
+  - url: /dist
+    static_dir: dist
+
+  - url: /node_modules
+    static_dir: node_modules
+
+  - url: /.*
+    script: auto

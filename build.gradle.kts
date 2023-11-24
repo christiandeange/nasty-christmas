@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin.Companion.kotlinNodeJsExtension
+
 plugins {
   @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
 
@@ -8,4 +11,8 @@ plugins {
   alias(plugins.kotlin.jvm) apply false
   alias(plugins.kotlin.multiplatform) apply false
   alias(plugins.kotlin.serialization) apply false
+}
+
+plugins.withType<NodeJsRootPlugin> {
+  kotlinNodeJsExtension.nodeVersion = "20.10.0"
 }

@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrTarget
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
 plugins {
@@ -43,14 +42,7 @@ kotlin {
 }
 
 tasks.withType<KotlinWebpack>().configureEach {
-  devServer?.port = 3000
-}
-
-afterEvaluate {
-  rootProject.extensions.configure<NodeJsRootExtension> {
-    versions.webpackCli.version = "4.10.0"
-    nodeVersion = "16.0.0"
-  }
+  devServer?.port = 3005
 }
 
 compose.experimental {
@@ -70,20 +62,6 @@ val copyJsAppFilesTask = tasks.register<Copy>("copyJsAppFiles") {
   into(jsAppBuild)
 }
 
-val copyJsAppDistTask = tasks.register<Copy>("copyJsAppDist") {
-  dependsOn(tasks.named("jsBrowserDistribution"))
-
-  from(distributions)
-  into(jsAppBuild.resolve("dist"))
-}
-
-val copyJsAppIndexHtmlTask = tasks.register<Copy>("copyJsAppIndexHtml") {
-  dependsOn(tasks.named("jsBrowserDistribution"))
-
-  from(distributions.resolve("index.html"))
-  into(jsAppBuild)
-}
-
 val npmInstallTask = tasks.register<Exec>("npmInstall") {
   dependsOn(copyJsAppFilesTask)
   inputs.dir(jsAppBuild)
@@ -94,11 +72,33 @@ val npmInstallTask = tasks.register<Exec>("npmInstall") {
   workingDir(jsAppBuild)
 }
 
-tasks.register<Zip>("jsDistribution") {
+val copyJsAppDistTask = tasks.register<Copy>("copyJsAppDist") {
+  dependsOn(tasks.named("jsBrowserDistribution"))
+  dependsOn(npmInstallTask)
+
+  from(distributions)
+  into(jsAppBuild.resolve("dist"))
+}
+
+val copyJsAppIndexHtmlTask = tasks.register<Copy>("copyJsAppIndexHtml") {
+  dependsOn(tasks.named("jsBrowserDistribution"))
+  dependsOn(npmInstallTask)
+
+  from(distributions.resolve("index.html"))
+  into(jsAppBuild)
+}
+
+val jsDistribution = tasks.register<Zip>("jsDistribution") {
   dependsOn(npmInstallTask)
   dependsOn(copyJsAppDistTask)
   dependsOn(copyJsAppIndexHtmlTask)
 
   from(jsAppBuild)
   destinationDirectory.set(outputDir)
+}
+
+tasks.register<Exec>("jsDeploy") {
+  dependsOn(jsDistribution)
+  workingDir(layout.buildDirectory.dir("jsapp"))
+  commandLine("gcloud", "app", "deploy")
 }
