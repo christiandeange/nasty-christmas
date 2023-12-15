@@ -15,6 +15,8 @@ kotlin {
     binaries.executable()
   }
 
+  jvmToolchain(17)
+
   sourceSets {
     val jsMain by getting {
       dependencies {

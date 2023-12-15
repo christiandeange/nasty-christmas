@@ -24,11 +24,6 @@ android {
     }
   }
 
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-  }
-
   buildFeatures {
     compose = true
     resValues = true
@@ -40,6 +35,8 @@ android {
 }
 
 kotlin {
+  jvmToolchain(17)
+
   sourceSets.all {
     languageSettings {
       optIn("kotlin.RequiresOptIn")

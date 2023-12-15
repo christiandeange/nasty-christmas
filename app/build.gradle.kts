@@ -22,6 +22,10 @@ android {
     res.srcDir("resources")
     assets.srcDir("fonts")
   }
+
+  composeOptions {
+    kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+  }
 }
 
 kotlin {
@@ -31,6 +35,8 @@ kotlin {
     browser()
     binaries.executable()
   }
+
+  jvmToolchain(17)
 
   sourceSets {
     all {
