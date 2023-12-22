@@ -3,6 +3,7 @@ package com.deange.nastychristmas.ui.resources
 class StringResources(
   add: String,
   appName: String,
+  autoScrollSpeedHint: String,
   back: String,
   confirm: String,
   confirmResetApp: String,
@@ -11,6 +12,7 @@ class StringResources(
   enforceOwnershipDescription: String,
   enforceOwnershipTitle: String,
   giftHint: String,
+  hideUnstealableGifts: String,
   letsGetNasty: String,
   newGame: String,
   notApplicable: String,
@@ -20,10 +22,12 @@ class StringResources(
   openGiftTitle: String,
   playerHint: String,
   remove: String,
+  removePlayer: String,
   resetApp: String,
   round: String,
   roundTitle: String,
   settings: String,
+  showUnstealableGifts: String,
   statMostOpens: String,
   statMostSteals: String,
   statMostStolenFrom: String,
@@ -35,6 +39,7 @@ class StringResources(
 ) {
   val add = StringResource(add)
   val appName = StringResource(appName)
+  val autoScrollSpeedHint = StringResource(autoScrollSpeedHint)
   val back = StringResource(back)
   val confirm = StringResource(confirm)
   val confirmResetApp = StringResource(confirmResetApp)
@@ -43,6 +48,7 @@ class StringResources(
   val enforceOwnershipDescription = StringResource(enforceOwnershipDescription)
   val enforceOwnershipTitle = StringResource(enforceOwnershipTitle)
   val giftHint = StringResource(giftHint)
+  val hideUnstealableGifts = StringResource(hideUnstealableGifts)
   val letsGetNasty = StringResource(letsGetNasty)
   val newGame = StringResource(newGame)
   val notApplicable = StringResource(notApplicable)
@@ -52,10 +58,12 @@ class StringResources(
   val openGiftTitle = StringResource(openGiftTitle)
   val playerHint = StringResource(playerHint)
   val remove = StringResource(remove)
+  val removePlayer = StringResource(removePlayer)
   val resetApp = StringResource(resetApp)
   val round = StringResource(round)
   val roundTitle = StringResource(roundTitle)
   val settings = StringResource(settings)
+  val showUnstealableGifts = StringResource(showUnstealableGifts)
   val statMostOpens = StringResource(statMostOpens)
   val statMostSteals = StringResource(statMostSteals)
   val statMostStolenFrom = StringResource(statMostStolenFrom)

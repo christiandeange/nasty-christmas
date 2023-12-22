@@ -77,7 +77,7 @@ class PlayersScreen(
       Image(
         modifier = Modifier.fillMaxSize().blur(8.dp),
         painter = ImageResource("background.jpg").toPainter(),
-        contentDescription = null,
+        contentDescription = Strings.appName.evaluate(),
         contentScale = ContentScale.Crop,
       )
 
@@ -165,7 +165,7 @@ class PlayersScreen(
                     IconButton(onClick = { onDeletePlayer(i) }) {
                       Icon(
                         painter = rememberVectorPainter(Icons.Default.Clear),
-                        contentDescription = null,
+                        contentDescription = Strings.removePlayer.evaluate(player),
                       )
                     }
                   },

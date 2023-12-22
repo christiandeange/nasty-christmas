@@ -100,7 +100,7 @@ class StealingRoundScreen(
         }) {
           Icon(
             painter = speedIcon,
-            contentDescription = null,
+            contentDescription = Strings.autoScrollSpeedHint.evaluate(),
           )
         }
 
@@ -112,7 +112,11 @@ class StealingRoundScreen(
         IconButton(onClick = { onChangeShowUnstealableGifts(!showUnstealableGifts) }) {
           Icon(
             painter = showHideIcon,
-            contentDescription = null,
+            contentDescription = if (showUnstealableGifts) {
+              Strings.hideUnstealableGifts.evaluate()
+            } else {
+              Strings.showUnstealableGifts.evaluate()
+            },
           )
         }
 
