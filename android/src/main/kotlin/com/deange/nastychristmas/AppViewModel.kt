@@ -17,6 +17,7 @@ import com.deange.nastychristmas.workflow.AppProps
 import com.deange.nastychristmas.workflow.AppProps.NewGame
 import com.deange.nastychristmas.workflow.AppProps.RestoredFromSave
 import com.deange.nastychristmas.workflow.AppWorkflow
+import com.squareup.workflow1.ui.WorkflowUiExperimentalApi
 import com.squareup.workflow1.ui.renderWorkflowIn
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,7 +49,10 @@ class AppViewModel(
   val renderings: StateFlow<ViewRendering> by lazy {
     val restoredGameState: GameState? =
       runCatching { game }
-        .onFailure { game = null }
+        .onFailure { e ->
+          e.printStackTrace()
+          game = null
+        }
         .getOrNull()
 
     val initialProps: AppProps = if (restoredGameState == null) {
@@ -57,6 +61,7 @@ class AppViewModel(
       RestoredFromSave(restoredGameState)
     }
 
+    @OptIn(WorkflowUiExperimentalApi::class)
     renderWorkflowIn(
       workflow = appWorkflow,
       scope = viewModelScope,

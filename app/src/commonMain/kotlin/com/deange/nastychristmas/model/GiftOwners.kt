@@ -17,8 +17,8 @@ data class GiftOwners(
     stealer: Player,
     victim: Player,
   ): GiftOwners {
-    require(stealer !in owners) { "$stealer already has a gift" }
-    require(victim in owners) { "$victim does not have a gift" }
+    require(stealer !in owners) { "${stealer.name} already has a gift" }
+    require(victim in owners) { "${victim.name} does not have a gift" }
 
     val stolenGift = owners[victim]!!.stolenBy(stealer)
 
