@@ -57,9 +57,13 @@ class StealingRoundScreen(
   val playerName: String,
   val roundNumber: Int,
   val choices: List<StealOrOpenChoice>,
+  val showUnstealableGifts: Boolean,
+  val autoScrollSpeed: Int,
   val onUndo: (() -> Unit)?,
   val onConfirmChoice: () -> Unit,
   val onChangeSettings: () -> Unit,
+  val onChangeShowUnstealableGifts: (Boolean) -> Unit,
+  val onChangeAutoScrollSpeed: (Int) -> Unit,
 ) : ViewRendering {
   @Composable
   override fun Content() {
@@ -70,10 +74,8 @@ class StealingRoundScreen(
     }
 
     val gridState = rememberLazyGridState()
-    val autoScrollState = rememberGridAutoScrollState(gridState, scrollSpeed = 1)
+    val autoScrollState = rememberGridAutoScrollState(gridState, autoScrollSpeed = autoScrollSpeed)
     var scrollSpeed by autoScrollState.scrollSpeed
-
-    var showUnstealableGifts by remember { mutableStateOf(false) }
 
     AppScaffold(
       onBack = backBehaviour,
@@ -92,7 +94,10 @@ class StealingRoundScreen(
           else -> error("Illegal autoscroll speed: $scrollSpeed")
         }
 
-        IconButton(onClick = { scrollSpeed = (scrollSpeed + 1) % 4 }) {
+        IconButton(onClick = {
+          scrollSpeed = (scrollSpeed + 1) % 4
+          onChangeAutoScrollSpeed(scrollSpeed)
+        }) {
           Icon(
             painter = speedIcon,
             contentDescription = null,
@@ -104,7 +109,7 @@ class StealingRoundScreen(
           false -> rememberVectorPainter(image = Icons.Default.VisibilityOff)
         }
 
-        IconButton(onClick = { showUnstealableGifts = !showUnstealableGifts }) {
+        IconButton(onClick = { onChangeShowUnstealableGifts(!showUnstealableGifts) }) {
           Icon(
             painter = showHideIcon,
             contentDescription = null,

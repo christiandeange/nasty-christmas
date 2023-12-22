@@ -255,6 +255,9 @@ class AppWorkflow(
               settings = renderState.settings,
             )
           }
+          is StealingRoundOutput.UpdateGameSettings -> {
+            renderState.copy(settings = output.gameSettings)
+          }
         }
       }
     }

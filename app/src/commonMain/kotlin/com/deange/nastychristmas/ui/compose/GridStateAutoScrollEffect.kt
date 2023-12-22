@@ -40,10 +40,12 @@ fun GridStateAutoScrollEffect(state: GridAutoScrollState) {
 
 data class GridAutoScrollState(
   private val gridState: LazyGridState,
-  val scrollSpeed: MutableState<Int>,
+  private val autoScrollSpeed: Int,
 ) {
   internal val isEnabledState = MutableStateFlow(false)
   internal val isEnabled: Boolean get() = isEnabledState.value
+
+  val scrollSpeed: MutableState<Int> = mutableStateOf(autoScrollSpeed)
 
   suspend fun start() {
     isEnabledState.emit(true)
@@ -61,9 +63,9 @@ data class GridAutoScrollState(
 @Composable
 fun rememberGridAutoScrollState(
   gridState: LazyGridState,
-  scrollSpeed: Int = 1,
+  autoScrollSpeed: Int = 1,
 ): GridAutoScrollState {
   return remember {
-    GridAutoScrollState(gridState, mutableStateOf(scrollSpeed))
+    GridAutoScrollState(gridState, autoScrollSpeed)
   }
 }

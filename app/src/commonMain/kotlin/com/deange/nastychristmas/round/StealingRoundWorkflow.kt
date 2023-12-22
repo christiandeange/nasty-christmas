@@ -5,6 +5,7 @@ import com.deange.nastychristmas.round.PlayerChoice.OpenNewGift
 import com.deange.nastychristmas.round.PlayerChoice.StealGiftFrom
 import com.deange.nastychristmas.round.StealingRoundOutput.ChangeGameSettings
 import com.deange.nastychristmas.round.StealingRoundOutput.EndRound
+import com.deange.nastychristmas.round.StealingRoundOutput.UpdateGameSettings
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.deange.nastychristmas.ui.workflow.fromSnapshot
 import com.deange.nastychristmas.ui.workflow.toSnapshot
@@ -34,9 +35,11 @@ class StealingRoundWorkflow : StatefulWorkflow<
     new: StealingRoundProps,
     state: StealingRoundState
   ): StealingRoundState {
-    return super.onPropsChanged(old, new, state).copy(
-      gifts = new.gifts,
-    )
+    return if (old.gifts != new.gifts) {
+      state.copy(gifts = new.gifts)
+    } else {
+      state
+    }
   }
 
   override fun render(
@@ -78,6 +81,8 @@ class StealingRoundWorkflow : StatefulWorkflow<
       playerName = renderState.currentPlayer.name,
       roundNumber = renderProps.roundNumber,
       choices = choices,
+      showUnstealableGifts = renderProps.settings.showUnstealableGifts,
+      autoScrollSpeed = renderProps.settings.autoScrollSpeed,
       onChangeSettings = context.eventHandler {
         setOutput(
           ChangeGameSettings(
@@ -109,6 +114,16 @@ class StealingRoundWorkflow : StatefulWorkflow<
           }
         }
       },
+      onChangeShowUnstealableGifts = context.eventHandler { showUnstealableGifts ->
+        setOutput(
+          UpdateGameSettings(props.settings.copy(showUnstealableGifts = showUnstealableGifts))
+        )
+      },
+      onChangeAutoScrollSpeed = context.eventHandler { autoScrollSpeed ->
+        setOutput(
+          UpdateGameSettings(props.settings.copy(autoScrollSpeed = autoScrollSpeed))
+        )
+      }
     )
   }
 

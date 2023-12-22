@@ -56,7 +56,7 @@ class GameSettingsWorkflow : StatefulWorkflow<
         val newGiftNames = state.giftNames.map { it.newName.textValue }
         if (newGiftNames.size == newGiftNames.distinct().size) {
           // Only output new settings if all gift names are different.
-          setOutput(UpdateGameSettings(state.asSettings(props.gifts, props.stats)))
+          setOutput(UpdateGameSettings(state.asSettings(props.settings, props.gifts, props.stats)))
         }
       },
     )
@@ -71,11 +71,16 @@ class GameSettingsWorkflow : StatefulWorkflow<
   }
 
   private fun GameSettingsState.asSettings(
+    originalGameSettings: GameSettings,
     gifts: GiftOwners,
     stats: GameStats,
   ): ChangeableSettings {
     return ChangeableSettings(
-      settings = GameSettings(enforceOwnership = enforceOwnership),
+      settings = GameSettings(
+        enforceOwnership = enforceOwnership,
+        showUnstealableGifts = originalGameSettings.showUnstealableGifts,
+        autoScrollSpeed = originalGameSettings.autoScrollSpeed,
+      ),
       gifts = GiftOwners(
         owners = gifts.associate { (player, ownedGift) ->
           player to ownedGift.copy(
