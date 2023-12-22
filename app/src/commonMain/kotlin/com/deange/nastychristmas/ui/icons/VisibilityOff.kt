@@ -1,5 +1,3 @@
-package com.deange.nastychristmas.ui.icons
-
 /*
  * Copyright 2022 The Android Open Source Project
  *
@@ -15,6 +13,8 @@ package com.deange.nastychristmas.ui.icons
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.deange.nastychristmas.ui.icons
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.materialIcon

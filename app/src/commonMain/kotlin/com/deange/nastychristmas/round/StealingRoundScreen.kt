@@ -12,9 +12,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,17 +31,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import com.deange.nastychristmas.round.StealOrOpenChoice.Open
 import com.deange.nastychristmas.round.StealOrOpenChoice.Steal
 import com.deange.nastychristmas.ui.compose.AppScaffold
 import com.deange.nastychristmas.ui.compose.BackBehaviour
+import com.deange.nastychristmas.ui.compose.GridStateAutoScrollEffect
 import com.deange.nastychristmas.ui.compose.TwoLineText
+import com.deange.nastychristmas.ui.compose.rememberGridAutoScrollState
+import com.deange.nastychristmas.ui.icons.LooksOne
+import com.deange.nastychristmas.ui.icons.LooksThree
+import com.deange.nastychristmas.ui.icons.LooksTwo
+import com.deange.nastychristmas.ui.icons.LooksZero
 import com.deange.nastychristmas.ui.icons.Visibility
 import com.deange.nastychristmas.ui.icons.VisibilityOff
 import com.deange.nastychristmas.ui.theme.Strings
 import com.deange.nastychristmas.ui.workflow.ViewRendering
+import kotlinx.coroutines.delay
+import kotlin.time.TimeSource.Monotonic.markNow
 
 @OptIn(ExperimentalFoundationApi::class)
 class StealingRoundScreen(
@@ -59,6 +69,10 @@ class StealingRoundScreen(
       BackBehaviour.Disabled
     }
 
+    val gridState = rememberLazyGridState()
+    val autoScrollState = rememberGridAutoScrollState(gridState, scrollSpeed = 1)
+    var scrollSpeed by autoScrollState.scrollSpeed
+
     var showUnstealableGifts by remember { mutableStateOf(false) }
 
     AppScaffold(
@@ -70,6 +84,21 @@ class StealingRoundScreen(
         )
       },
       actionIcons = {
+        val speedIcon = when (scrollSpeed) {
+          0 -> rememberVectorPainter(image = Icons.Default.LooksZero)
+          1 -> rememberVectorPainter(image = Icons.Default.LooksOne)
+          2 -> rememberVectorPainter(image = Icons.Default.LooksTwo)
+          3 -> rememberVectorPainter(image = Icons.Default.LooksThree)
+          else -> error("Illegal autoscroll speed: $scrollSpeed")
+        }
+
+        IconButton(onClick = { scrollSpeed = (scrollSpeed + 1) % 4 }) {
+          Icon(
+            painter = speedIcon,
+            contentDescription = null,
+          )
+        }
+
         val showHideIcon = when (showUnstealableGifts) {
           true -> rememberVectorPainter(image = Icons.Default.Visibility)
           false -> rememberVectorPainter(image = Icons.Default.VisibilityOff)
@@ -95,8 +124,27 @@ class StealingRoundScreen(
           .fillMaxSize()
           .padding(vertical = 16.dp)
       ) {
+        GridStateAutoScrollEffect(autoScrollState)
+
+        var lastTouch by remember { mutableStateOf(markNow()) }
+        LaunchedEffect(lastTouch) {
+          autoScrollState.pause()
+          delay(5000L)
+          autoScrollState.start()
+        }
+
         LazyVerticalGrid(
-          modifier = Modifier.weight(1f),
+          modifier = Modifier
+            .weight(1f)
+            .pointerInput(Unit) {
+              awaitPointerEventScope {
+                while (true) {
+                  awaitPointerEvent()
+                  lastTouch = markNow()
+                }
+              }
+            },
+          state = gridState,
           columns = GridCells.Adaptive(minSize = 256.dp),
         ) {
           items(choices, key = { it.key }) { choice ->
@@ -110,6 +158,7 @@ class StealingRoundScreen(
                   onClick = choice.onPicked,
                 )
               }
+
               is Steal -> {
                 if (!choice.isEnabled && !showUnstealableGifts) {
                   // Do not show this row if it can't be stolen
@@ -144,7 +193,6 @@ class StealingRoundScreen(
   }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ChoiceRow(
   modifier: Modifier = Modifier,
