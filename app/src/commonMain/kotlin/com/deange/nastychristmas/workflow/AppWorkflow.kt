@@ -25,7 +25,6 @@ import com.deange.nastychristmas.settings.GameSettingsOutput.ResetGame
 import com.deange.nastychristmas.settings.GameSettingsOutput.UpdateGameSettings
 import com.deange.nastychristmas.settings.GameSettingsWorkflow
 import com.deange.nastychristmas.state.GameState
-import com.deange.nastychristmas.state.asGameState
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.deange.nastychristmas.ui.workflow.fromSnapshot
 import com.deange.nastychristmas.ui.workflow.toSnapshot
@@ -57,7 +56,7 @@ class AppWorkflow(
     return AppState.serializer().fromSnapshot(snapshot)
       ?: when (props) {
         is NewGame -> InitializingPlayers(allPlayers = emptyList())
-        is RestoredFromSave -> stateFromRestoredGameState(props.gameState)
+        is RestoredFromSave -> props.gameState.appState
       }
   }
 
@@ -99,49 +98,6 @@ class AppWorkflow(
 
   override fun snapshotState(state: AppState): Snapshot {
     return AppState.serializer().toSnapshot(state)
-  }
-
-  private fun stateFromRestoredGameState(gameState: GameState): AppState {
-    return if (gameState.roundNumber < 0) {
-      InitializingPlayers(
-        allPlayers = gameState.allPlayers,
-      )
-    } else if (gameState.playerPool.isEmpty()) {
-      EndGame(
-        stats = gameState.stats,
-        gifts = gameState.gifts,
-      )
-    } else if (gameState.currentPlayer == null) {
-      PickingPlayer(
-        allPlayers = gameState.allPlayers,
-        playerPool = gameState.playerPool,
-        selectedPlayer = null,
-        round = gameState.roundNumber,
-        gifts = gameState.gifts,
-        stats = gameState.stats,
-        settings = gameState.settings,
-      )
-    } else if (gameState.gifts.stealableGifts(gameState.currentPlayer).isEmpty()) {
-      OpeningGift(
-        allPlayers = gameState.allPlayers,
-        playerPool = gameState.playerPool,
-        round = gameState.roundNumber,
-        player = gameState.currentPlayer,
-        gifts = gameState.gifts,
-        stats = gameState.stats,
-        settings = gameState.settings,
-      )
-    } else {
-      StealingRound(
-        allPlayers = gameState.allPlayers,
-        playerPool = gameState.playerPool,
-        round = gameState.roundNumber,
-        startingPlayer = gameState.currentPlayer,
-        gifts = gameState.gifts,
-        stats = gameState.stats,
-        settings = gameState.settings,
-      )
-    }
   }
 
   private fun RenderContext.renderInitializingPlayers(
@@ -258,6 +214,13 @@ class AppWorkflow(
           is StealingRoundOutput.UpdateGameSettings -> {
             renderState.copy(settings = output.gameSettings)
           }
+          is StealingRoundOutput.UpdateGifts -> {
+            renderState.copy(
+              startingPlayer = output.currentPlayer,
+              gifts = output.gifts,
+              stats = renderState.stats + output.stats,
+            )
+          }
         }
       }
     }
@@ -346,7 +309,6 @@ class AppWorkflow(
   ) = action(name) {
     update()
 
-    val savedState: GameState = state.asGameState()
-    setOutput(SaveGameState(savedState))
+    setOutput(SaveGameState(GameState(state)))
   }
 }

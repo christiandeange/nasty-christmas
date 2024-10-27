@@ -59,10 +59,18 @@ fun main() {
   }
 
   var game by storage.preference<GameState?>("game-state", null)
-  val initialProps: AppProps = if (game == null) {
+  val restoredGameState: GameState? =
+    runCatching { game }
+      .onFailure { e ->
+        e.printStackTrace()
+        game = null
+      }
+      .getOrNull()
+
+  val initialProps: AppProps = if (restoredGameState == null) {
     AppProps.NewGame
   } else {
-    AppProps.RestoredFromSave(game!!)
+    AppProps.RestoredFromSave(restoredGameState)
   }
 
   runBlocking {

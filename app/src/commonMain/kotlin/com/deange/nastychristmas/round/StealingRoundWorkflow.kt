@@ -6,6 +6,7 @@ import com.deange.nastychristmas.round.PlayerChoice.StealGiftFrom
 import com.deange.nastychristmas.round.StealingRoundOutput.ChangeGameSettings
 import com.deange.nastychristmas.round.StealingRoundOutput.EndRound
 import com.deange.nastychristmas.round.StealingRoundOutput.UpdateGameSettings
+import com.deange.nastychristmas.round.StealingRoundOutput.UpdateGifts
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.deange.nastychristmas.ui.workflow.fromSnapshot
 import com.deange.nastychristmas.ui.workflow.toSnapshot
@@ -95,6 +96,13 @@ class StealingRoundWorkflow : StatefulWorkflow<
       onUndo = context.eventHandler {
         state.previousState?.let { previous ->
           state = previous
+          setOutput(
+            UpdateGifts(
+              currentPlayer = state.currentPlayer,
+              gifts = state.gifts,
+              stats = state.stats,
+            )
+          )
         }
       }.takeIf { renderState.previousState != null },
       onConfirmChoice = context.eventHandler {
@@ -109,8 +117,16 @@ class StealingRoundWorkflow : StatefulWorkflow<
               )
             )
           }
+
           is StealGiftFrom -> {
             state = state.withSteal(victim = currentChoice.victim)
+            setOutput(
+              UpdateGifts(
+                currentPlayer = state.currentPlayer,
+                gifts = state.gifts,
+                stats = state.stats,
+              )
+            )
           }
         }
       },

@@ -21,4 +21,10 @@ sealed class StealingRoundOutput {
   data class UpdateGameSettings(
     val gameSettings: GameSettings,
   ) : StealingRoundOutput()
+
+  data class UpdateGifts(
+    val currentPlayer: Player,
+    val gifts: GiftOwners,
+    val stats: GameStats,
+  ) : StealingRoundOutput()
 }
