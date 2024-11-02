@@ -23,10 +23,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -108,13 +108,13 @@ class PlayersScreen(
               onValueChange = { currentPlayerName = it },
               label = { Text(Strings.playerHint.evaluate()) },
               singleLine = true,
-              colors = TextFieldDefaults.outlinedTextFieldColors(
-                containerColor = Color.Black.copy(alpha = 0.80f),
+              colors = OutlinedTextFieldDefaults.colors().copy(
+                unfocusedContainerColor = Color.Black.copy(alpha = 0.80f),
                 focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
               ),
               keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Words,
-                autoCorrect = false,
+                autoCorrectEnabled = false,
                 imeAction = Send,
               ),
               keyboardActions = KeyboardActions(onSend = {

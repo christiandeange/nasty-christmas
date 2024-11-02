@@ -3,6 +3,7 @@ plugins {
 
   alias(plugins.android.application)
   alias(plugins.kotlin.android)
+  alias(plugins.kotlin.compose)
   alias(plugins.kotlin.serialization)
 }
 

@@ -1,9 +1,9 @@
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrTarget
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
 plugins {
   @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
 
+  alias(plugins.kotlin.compose)
   alias(plugins.kotlin.multiplatform)
   alias(plugins.kotlin.serialization)
   alias(plugins.jetbrains.compose)
@@ -20,13 +20,14 @@ kotlin {
   sourceSets {
     val jsMain by getting {
       dependencies {
-        implementation(compose.web.core)
+        implementation(compose.html.core)
 
         implementation(project(":app"))
         implementation(project(":store"))
 
+        implementation(npm("buffer", "6.0.3"))
         implementation(npm("process", "0.11.10"))
-        implementation(npm("url", "0.11.0"))
+        implementation(npm("url", "0.11.4"))
       }
 
       resources.srcDir("../app/resources")
@@ -35,26 +36,20 @@ kotlin {
   }
 
   targets.withType<KotlinJsIrTarget>().configureEach {
-    val main by compilations.getting
-
-    tasks.named(main.processResourcesTaskName).configure {
-      dependsOn(tasks.named("unpackSkikoWasmRuntime${targetName.capitalize()}"))
+    val main by compilations.getting {
+      tasks.named(processResourcesTaskName).configure {
+        dependsOn(tasks.named("unpackSkikoWasmRuntime"))
+      }
     }
   }
 }
 
-tasks.withType<KotlinWebpack>().configureEach {
-  devServer?.port = 3005
-}
+val buildDir = project.layout.buildDirectory.asFile.get()
 
-compose.experimental {
-  web.application {}
-}
-
-val outputDir = project.buildDir.resolve("libs")
-val distributions = project.buildDir.resolve("distributions")
+val outputDir = buildDir.resolve("libs")
+val distributions = buildDir.resolve("dist/js/productionExecutable")
 val jsAppSrc = project.projectDir.resolve("jsapp")
-val jsAppBuild = project.buildDir.resolve("jsapp")
+val jsAppBuild = buildDir.resolve("jsapp")
 val packageJson = jsAppBuild.resolve("package.json")
 val packageLockJson = jsAppBuild.resolve("package-lock.json")
 val nodeModules = jsAppBuild.resolve("node_modules")
@@ -101,6 +96,6 @@ val jsDistribution = tasks.register<Zip>("jsDistribution") {
 
 tasks.register<Exec>("jsDeploy") {
   dependsOn(jsDistribution)
-  workingDir(layout.buildDirectory.dir("jsapp"))
+  workingDir(jsAppBuild)
   commandLine("gcloud", "app", "deploy")
 }

@@ -9,6 +9,7 @@ kotlin {
   jvm()
   js(IR) {
     browser()
+    binaries.executable()
   }
 
   jvmToolchain(17)

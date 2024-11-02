@@ -1,8 +1,7 @@
-import org.jetbrains.compose.ExperimentalComposeLibrary
-
 plugins {
   @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
 
+  alias(plugins.kotlin.compose)
   alias(plugins.kotlin.multiplatform)
   alias(plugins.kotlin.serialization)
   alias(plugins.android.library)
@@ -29,8 +28,8 @@ android {
 }
 
 kotlin {
-  jvm()
   androidTarget()
+  jvm()
   js(IR) {
     browser()
     binaries.executable()
@@ -49,7 +48,6 @@ kotlin {
     val commonMain by getting {
       dependencies {
         api(compose.foundation)
-        @OptIn(ExperimentalComposeLibrary::class)
         api(compose.material3)
         api(compose.runtime)
         api(compose.ui)
