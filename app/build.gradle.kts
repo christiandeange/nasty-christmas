@@ -10,7 +10,7 @@ plugins {
 
 android {
   namespace = "com.deange.nastychristmas.core"
-  compileSdk = 34
+  compileSdk = 35
 
   buildFeatures {
     compose = true
@@ -47,6 +47,9 @@ kotlin {
 
     val commonMain by getting {
       dependencies {
+        api(project(":firebase"))
+        api(project(":store"))
+
         api(compose.foundation)
         api(compose.material3)
         api(compose.runtime)

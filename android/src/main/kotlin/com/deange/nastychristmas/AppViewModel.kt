@@ -6,9 +6,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.savedstate.SavedStateRegistryOwner
+import com.deange.nastychristmas.state.GameSaver
 import com.deange.nastychristmas.state.GameState
-import com.deange.nastychristmas.store.PersistentStorage
-import com.deange.nastychristmas.store.preference
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.deange.nastychristmas.workflow.AppOutput.ClearGameState
 import com.deange.nastychristmas.workflow.AppOutput.Exit
@@ -25,7 +24,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 class AppViewModelFactory(
   owner: SavedStateRegistryOwner,
-  private val storage: PersistentStorage,
+  private val gameSaver: GameSaver,
   private val appWorkflow: AppWorkflow,
   defaultArgs: Bundle? = null,
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
@@ -34,31 +33,22 @@ class AppViewModelFactory(
     key: String,
     modelClass: Class<T>,
     handle: SavedStateHandle,
-  ): T = AppViewModel(handle, storage, appWorkflow) as T
+  ): T = AppViewModel(handle, gameSaver, appWorkflow) as T
 }
 
 class AppViewModel(
   savedState: SavedStateHandle,
-  storage: PersistentStorage,
+  gameSaver: GameSaver,
   appWorkflow: AppWorkflow,
 ) : ViewModel() {
   private val running = Job()
 
-  var game by storage.preference<GameState?>("game-state", null)
+  var game: GameState? by gameSaver.game()
 
   val renderings: StateFlow<ViewRendering> by lazy {
-    val restoredGameState: GameState? =
-      runCatching { game }
-        .onFailure { e ->
-          e.printStackTrace()
-          game = null
-        }
-        .getOrNull()
-
-    val initialProps: AppProps = if (restoredGameState == null) {
-      NewGame
-    } else {
-      RestoredFromSave(restoredGameState)
+    val initialProps: AppProps = when (val restoredGameState = gameSaver.restore()) {
+      null -> NewGame
+      else -> RestoredFromSave(restoredGameState)
     }
 
     @OptIn(WorkflowUiExperimentalApi::class)

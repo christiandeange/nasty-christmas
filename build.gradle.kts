@@ -6,6 +6,8 @@ plugins {
 
   alias(plugins.android.application) apply false
   alias(plugins.android.library) apply false
+  alias(plugins.buildkonfig) apply false
+  alias(plugins.google.services) apply false
   alias(plugins.jetbrains.compose) apply false
   alias(plugins.kotlin.android) apply false
   alias(plugins.kotlin.compose) apply false

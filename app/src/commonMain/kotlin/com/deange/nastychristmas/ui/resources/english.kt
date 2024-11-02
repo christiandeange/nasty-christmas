@@ -34,7 +34,7 @@ val StringResources.Companion.EN
     statMostStolenFrom = "Most Stolen From",
     statMostStolenGift = "Most Stolen Gift",
     stealFrom = "Steal from %s",
-    stealRoundTitle = "%s is going to…",
+    stealRoundTitle = "%s is able to…",
     thanksForPlaying = "Thanks for playing!",
     undo = "Undo",
   )

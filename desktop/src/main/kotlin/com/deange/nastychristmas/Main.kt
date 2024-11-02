@@ -9,20 +9,24 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import com.deange.nastychristmas.end.EndGameWorkflow
+import com.deange.nastychristmas.firebase.Firebase
+import com.deange.nastychristmas.firebase.initializeFirebase
 import com.deange.nastychristmas.init.PlayersWorkflow
 import com.deange.nastychristmas.round.NewRoundWorkflow
 import com.deange.nastychristmas.round.OpenGiftWorkflow
 import com.deange.nastychristmas.round.StealingRoundWorkflow
 import com.deange.nastychristmas.settings.GameSettingsWorkflow
+import com.deange.nastychristmas.state.GameSaver
 import com.deange.nastychristmas.state.GameState
 import com.deange.nastychristmas.store.DataStoreStorage
 import com.deange.nastychristmas.store.PersistentStorage
-import com.deange.nastychristmas.store.preference
 import com.deange.nastychristmas.ui.compose.initTypography
 import com.deange.nastychristmas.ui.theme.Strings
 import com.deange.nastychristmas.workflow.App
 import com.deange.nastychristmas.workflow.AppOutput
 import com.deange.nastychristmas.workflow.AppProps
+import com.deange.nastychristmas.workflow.AppProps.NewGame
+import com.deange.nastychristmas.workflow.AppProps.RestoredFromSave
 import com.deange.nastychristmas.workflow.AppWorkflow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
@@ -43,6 +47,10 @@ fun main() {
     )
   }
 
+  val firebase: Firebase by lazy {
+    initializeFirebase()
+  }
+
   val random by lazy {
     Random(seed = System.currentTimeMillis())
   }
@@ -58,19 +66,12 @@ fun main() {
     )
   }
 
-  var game by storage.preference<GameState?>("game-state", null)
-  val restoredGameState: GameState? =
-    runCatching { game }
-      .onFailure { e ->
-        e.printStackTrace()
-        game = null
-      }
-      .getOrNull()
+  val gameSaver = GameSaver(storage, firebase.firestore, CoroutineScope(IO) + SupervisorJob())
+  var game: GameState? by gameSaver.game()
 
-  val initialProps: AppProps = if (restoredGameState == null) {
-    AppProps.NewGame
-  } else {
-    AppProps.RestoredFromSave(restoredGameState)
+  val initialProps: AppProps = when (val restoredGameState = gameSaver.restore()) {
+    null -> NewGame
+    else -> RestoredFromSave(restoredGameState)
   }
 
   runBlocking {

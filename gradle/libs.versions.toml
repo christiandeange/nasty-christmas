@@ -18,6 +18,7 @@ workflow = "1.12.1-beta04"
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.15.2" }
+google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-jb" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

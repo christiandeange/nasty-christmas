@@ -3,21 +3,28 @@ package com.deange.nastychristmas
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat.Type.systemBars
+import androidx.core.view.WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.lifecycleScope
 import com.deange.nastychristmas.end.EndGameWorkflow
+import com.deange.nastychristmas.firebase.Firebase
 import com.deange.nastychristmas.init.PlayersWorkflow
 import com.deange.nastychristmas.round.NewRoundWorkflow
 import com.deange.nastychristmas.round.OpenGiftWorkflow
 import com.deange.nastychristmas.round.StealingRoundWorkflow
 import com.deange.nastychristmas.settings.GameSettingsWorkflow
+import com.deange.nastychristmas.state.GameSaver
 import com.deange.nastychristmas.store.DataStoreStorage
 import com.deange.nastychristmas.store.PersistentStorage
 import com.deange.nastychristmas.ui.compose.fontsAssetManager
@@ -38,6 +45,14 @@ class MainActivity : ComponentActivity() {
     DataStoreStorage(dataStore)
   }
 
+  private val firebase: Firebase by lazy {
+    (application as MainApplication).firebase
+  }
+
+  private val gameSaver: GameSaver by lazy {
+    GameSaver(storage, firebase.firestore, lifecycleScope)
+  }
+
   private val random by lazy {
     Random(seed = System.currentTimeMillis())
   }
@@ -54,10 +69,11 @@ class MainActivity : ComponentActivity() {
   }
 
   private val viewModel: AppViewModel by viewModels {
-    AppViewModelFactory(this, storage, workflow, intent.extras)
+    AppViewModelFactory(this, gameSaver, workflow, intent.extras)
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    enableEdgeToEdge()
     super.onCreate(savedInstanceState)
 
     runBlocking {
@@ -65,10 +81,14 @@ class MainActivity : ComponentActivity() {
       initTypography()
     }
 
+    with(WindowCompat.getInsetsController(window, window.decorView)) {
+      systemBarsBehavior = BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+      hide(systemBars())
+    }
+
     setContent {
       NastyChristmasTheme {
         Language(StringResources.EN) {
-          StatusBarTheme()
           WorkflowRendering(viewModel.renderings) { screen ->
             Surface(Modifier.fillMaxSize()) {
               Box {

@@ -2,7 +2,6 @@ package com.deange.nastychristmas.round
 
 import com.deange.nastychristmas.model.Gift
 import com.deange.nastychristmas.ui.compose.TextController
-import com.deange.nastychristmas.ui.theme.Strings
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.deange.nastychristmas.ui.workflow.fromSnapshot
 import com.deange.nastychristmas.ui.workflow.toSnapshot

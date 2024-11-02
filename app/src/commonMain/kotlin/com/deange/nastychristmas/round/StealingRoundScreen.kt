@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -59,6 +60,7 @@ class StealingRoundScreen(
   val choices: List<StealOrOpenChoice>,
   val showUnstealableGifts: Boolean,
   val autoScrollSpeed: Int,
+  val readOnly: Boolean,
   val onUndo: (() -> Unit)?,
   val onConfirmChoice: () -> Unit,
   val onChangeSettings: () -> Unit,
@@ -67,7 +69,9 @@ class StealingRoundScreen(
 ) : ViewRendering {
   @Composable
   override fun Content() {
-    val backBehaviour = if (onUndo != null) {
+    val backBehaviour = if (readOnly) {
+      BackBehaviour.Hidden
+    } else if (onUndo != null) {
       BackBehaviour.Enabled(onUndo)
     } else {
       BackBehaviour.Disabled
@@ -120,11 +124,13 @@ class StealingRoundScreen(
           )
         }
 
-        IconButton(onClick = { onChangeSettings() }) {
-          Icon(
-            painter = rememberVectorPainter(image = Icons.Default.Settings),
-            contentDescription = Strings.settings.evaluate(),
-          )
+        if (!readOnly) {
+          IconButton(onClick = { onChangeSettings() }) {
+            Icon(
+              painter = rememberVectorPainter(image = Icons.Default.Settings),
+              contentDescription = Strings.settings.evaluate(),
+            )
+          }
         }
       }
     ) {
@@ -163,6 +169,7 @@ class StealingRoundScreen(
                   modifier = Modifier.animateItemPlacement(),
                   titleText = Strings.openGiftTitle.evaluate(),
                   descriptionText = Strings.openGiftDescription.evaluate(),
+                  readOnly = readOnly,
                   isSelected = choice.isSelected,
                   onClick = choice.onPicked,
                 )
@@ -176,6 +183,7 @@ class StealingRoundScreen(
                     modifier = Modifier.animateItemPlacement(),
                     titleText = Strings.stealFrom.evaluate(choice.playerName),
                     descriptionText = choice.giftName,
+                    readOnly = readOnly,
                     isSelected = choice.isSelected,
                     onClick = choice.onPicked.takeIf { choice.isEnabled },
                   )
@@ -185,17 +193,19 @@ class StealingRoundScreen(
           }
         }
 
-        FilledTonalButton(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-          enabled = choices.any { it.isSelected },
-          onClick = { onConfirmChoice() },
-        ) {
-          Text(
-            style = LocalTextStyle.current.copy(fontWeight = Bold),
-            text = Strings.confirm.evaluate().uppercase(),
-          )
+        if (!readOnly) {
+          FilledTonalButton(
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            enabled = choices.any { it.isSelected },
+            onClick = { onConfirmChoice() },
+          ) {
+            Text(
+              style = LocalTextStyle.current.copy(fontWeight = Bold),
+              text = Strings.confirm.evaluate().uppercase(),
+            )
+          }
         }
       }
     }
@@ -207,10 +217,11 @@ private fun ChoiceRow(
   modifier: Modifier = Modifier,
   titleText: String,
   descriptionText: String,
+  readOnly: Boolean,
   isSelected: Boolean,
   onClick: (() -> Unit)?,
 ) {
-  val clickableModifier = if (onClick != null) {
+  val clickableModifier = if (onClick != null && !readOnly) {
     Modifier.clickable { onClick() }
   } else {
     Modifier
@@ -229,12 +240,18 @@ private fun ChoiceRow(
       .then(clickableModifier),
     verticalAlignment = CenterVertically,
   ) {
-    RadioButton(
-      modifier = Modifier.size(56.dp),
-      onClick = onClick,
-      enabled = onClick != null,
-      selected = isSelected,
-    )
+    if (!readOnly) {
+      RadioButton(
+        modifier = Modifier.size(56.dp),
+        onClick = onClick,
+        enabled = onClick != null,
+        selected = isSelected,
+      )
+    } else {
+      Spacer(
+        modifier = Modifier.size(16.dp),
+      )
+    }
 
     TwoLineText(
       title = titleText,

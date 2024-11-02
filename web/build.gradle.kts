@@ -1,8 +1,11 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrTarget
+import java.util.Properties
 
 plugins {
   @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
 
+  alias(plugins.buildkonfig)
   alias(plugins.kotlin.compose)
   alias(plugins.kotlin.multiplatform)
   alias(plugins.kotlin.serialization)
@@ -40,6 +43,18 @@ kotlin {
       tasks.named(processResourcesTaskName).configure {
         dependsOn(tasks.named("unpackSkikoWasmRuntime"))
       }
+    }
+  }
+}
+
+buildkonfig {
+  packageName = "com.deange.nastychristmas.firebase"
+
+  defaultConfigs {
+    val properties = Properties()
+    properties.load(file("firebase-credentials.properties").reader())
+    properties.entries.forEach { entry ->
+      buildConfigField(STRING, entry.key.toString(), entry.value.toString())
     }
   }
 }

@@ -9,13 +9,15 @@ import com.deange.nastychristmas.ui.resources.EN
 import com.deange.nastychristmas.ui.resources.StringResources
 import com.deange.nastychristmas.ui.theme.Language
 import com.deange.nastychristmas.ui.theme.NastyChristmasTheme
+import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.deange.nastychristmas.ui.workflow.WorkflowRendering
+import com.squareup.workflow1.Workflow
 
 @Composable
-fun App(
-  workflow: AppWorkflow,
-  props: AppProps,
-  onOutput: (AppOutput) -> Unit,
+fun <PropsT, OutputT, RenderingT : ViewRendering> App(
+  workflow: Workflow<PropsT, OutputT, RenderingT>,
+  props: PropsT,
+  onOutput: (OutputT) -> Unit,
 ) {
   NastyChristmasTheme {
     Language(StringResources.EN) {

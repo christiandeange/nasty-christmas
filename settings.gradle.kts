@@ -22,5 +22,6 @@ rootProject.name = "NastyChristmas"
 include(":android")
 include(":app")
 include(":desktop")
+include(":firebase")
 include(":store")
 include(":web")

@@ -84,6 +84,7 @@ class StealingRoundWorkflow : StatefulWorkflow<
       choices = choices,
       showUnstealableGifts = renderProps.settings.showUnstealableGifts,
       autoScrollSpeed = renderProps.settings.autoScrollSpeed,
+      readOnly = false,
       onChangeSettings = context.eventHandler {
         setOutput(
           ChangeGameSettings(
