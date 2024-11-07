@@ -25,9 +25,9 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
+import com.deange.nastychristmas.ui.compose.AppScaffold
+import com.deange.nastychristmas.ui.compose.BackBehaviour
 import com.deange.nastychristmas.ui.compose.BackHandler
-import com.deange.nastychristmas.ui.compose.SimpleList
-import com.deange.nastychristmas.ui.compose.SimpleText
 import com.deange.nastychristmas.ui.compose.TextController
 import com.deange.nastychristmas.ui.compose.asMutableState
 import com.deange.nastychristmas.ui.theme.Strings
@@ -107,8 +107,10 @@ class ReadOnlyOpenGiftScreen(
   override fun Content() {
     BackHandler(onBack = { /* no-op */ })
 
-    SimpleList(
-      title = SimpleText(Strings.openGiftRoundTitle, roundNumber, playerName),
+    AppScaffold(
+      onBack = BackBehaviour.Hidden,
+      title = { Text(Strings.openGiftRoundTitle.evaluate(roundNumber, playerName)) },
+      content = { },
     )
   }
 }

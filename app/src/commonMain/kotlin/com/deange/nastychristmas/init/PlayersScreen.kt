@@ -42,9 +42,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.deange.nastychristmas.ui.compose.BackHandler
-import com.deange.nastychristmas.ui.compose.SimpleList
-import com.deange.nastychristmas.ui.compose.SimpleListItem.OneLine
-import com.deange.nastychristmas.ui.compose.SimpleText
 import com.deange.nastychristmas.ui.compose.TextController
 import com.deange.nastychristmas.ui.compose.asMutableState
 import com.deange.nastychristmas.ui.compose.flow.FlowRow
@@ -58,6 +55,7 @@ import com.deange.nastychristmas.ui.workflow.ViewRendering
 class PlayersScreen(
   private val players: List<String>,
   private val currentPlayer: TextController,
+  private val isReadOnly: Boolean,
   private val onAddPlayer: (String) -> Unit,
   private val onDeletePlayer: (Int) -> Unit,
   private val onBack: () -> Unit,
@@ -92,13 +90,21 @@ class PlayersScreen(
         }
 
         val darkColor = Color.Black.copy(alpha = 0.80f)
+
         OutlinedTextField(
           modifier = Modifier.padding(horizontal = 72.dp, vertical = 8.dp),
           shape = CircleShape,
           value = currentPlayerName,
           onValueChange = { currentPlayerName = it },
-          placeholder = { Text(Strings.playerHint.evaluate()) },
+          placeholder = {
+            if (isReadOnly) {
+              Text(Strings.addingPlayers.evaluate())
+            } else {
+              Text(Strings.playerHint.evaluate())
+            }
+          },
           singleLine = true,
+          readOnly = isReadOnly,
           supportingText = {
             Text(
               modifier = Modifier.fillMaxWidth(),
@@ -127,20 +133,22 @@ class PlayersScreen(
             }
           }),
           trailingIcon = {
-            IconButton(onClick = {
-              if (isEnabled) {
-                onAddPlayer(currentPlayerName)
+            if (!isReadOnly) {
+              IconButton(onClick = {
+                if (isEnabled) {
+                  onAddPlayer(currentPlayerName)
+                }
+              }) {
+                Icon(
+                  painter = rememberVectorPainter(Icons.Default.Add),
+                  contentDescription = Strings.add.evaluate(),
+                )
               }
-            }) {
-              Icon(
-                painter = rememberVectorPainter(Icons.Default.Add),
-                contentDescription = Strings.add.evaluate(),
-              )
             }
           }
         )
 
-        Spacer(modifier = Modifier.weight(1f))
+        if (!isReadOnly) Spacer(modifier = Modifier.weight(1f))
 
         val scrollState = rememberScrollState()
         LaunchedEffect(players.size) {
@@ -171,36 +179,25 @@ class PlayersScreen(
             )
           }
         }
-        Box(
-          modifier = Modifier.fillMaxWidth(),
-          contentAlignment = Center,
-        ) {
-          ElevatedButton(
-            modifier = Modifier.padding(vertical = 8.dp),
-            enabled = players.size >= 2 && currentPlayerName.isBlank(),
-            onClick = { onStartGame() },
+
+        if (!isReadOnly) {
+          Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Center,
           ) {
-            Text(
-              style = MaterialTheme.typography.titleLarge.copy(fontWeight = Bold),
-              text = Strings.letsGetNasty.evaluate().uppercase(),
-            )
+            ElevatedButton(
+              modifier = Modifier.padding(vertical = 8.dp),
+              enabled = players.size >= 2 && currentPlayerName.isBlank(),
+              onClick = { onStartGame() },
+            ) {
+              Text(
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = Bold),
+                text = Strings.letsGetNasty.evaluate().uppercase(),
+              )
+            }
           }
         }
       }
     }
-  }
-}
-
-class ReadOnlyPlayersScreen(
-  private val players: List<String>,
-) : ViewRendering {
-  @Composable
-  override fun Content() {
-    BackHandler(onBack = { /* no-op */ })
-
-    SimpleList(
-      title = SimpleText(Strings.players),
-      items = players.map { player -> OneLine(SimpleText(player)) },
-    )
   }
 }

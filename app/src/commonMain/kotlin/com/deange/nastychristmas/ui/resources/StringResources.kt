@@ -2,6 +2,7 @@ package com.deange.nastychristmas.ui.resources
 
 class StringResources(
   add: String,
+  addingPlayers: String,
   appName: String,
   autoScrollSpeedHint: String,
   back: String,
@@ -22,7 +23,6 @@ class StringResources(
   openGiftRoundTitle: String,
   openGiftTitle: String,
   playerHint: String,
-  players: String,
   remove: String,
   removePlayer: String,
   resetApp: String,
@@ -41,6 +41,7 @@ class StringResources(
   undo: String,
 ) {
   val add = StringResource(add)
+  val addingPlayers = StringResource(addingPlayers)
   val appName = StringResource(appName)
   val autoScrollSpeedHint = StringResource(autoScrollSpeedHint)
   val back = StringResource(back)
@@ -61,7 +62,6 @@ class StringResources(
   val openGiftRoundTitle = StringResource(openGiftRoundTitle)
   val openGiftTitle = StringResource(openGiftTitle)
   val playerHint = StringResource(playerHint)
-  val players = StringResource(players)
   val remove = StringResource(remove)
   val removePlayer = StringResource(removePlayer)
   val resetApp = StringResource(resetApp)

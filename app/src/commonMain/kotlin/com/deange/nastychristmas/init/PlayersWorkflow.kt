@@ -31,15 +31,10 @@ class PlayersWorkflow :
     renderState: PlayersState,
     context: RenderContext
   ): ViewRendering {
-    if (renderProps.isReadOnly) {
-      return ReadOnlyPlayersScreen(
-        players = renderState.players.map { it.name },
-      )
-    }
-
     return PlayersScreen(
       players = renderState.players.map { it.name },
       currentPlayer = renderState.currentPlayer,
+      isReadOnly = renderProps.isReadOnly,
       onAddPlayer = context.eventHandler { name ->
         val newPlayers = state.players + Player(name.trim())
         state = state.copy(
