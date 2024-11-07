@@ -14,23 +14,34 @@ class OpenGiftWorkflow : StatefulWorkflow<OpenGiftProps, OpenGiftState, Gift, Vi
       ?: OpenGiftState(TextController(""))
   }
 
+  override fun onPropsChanged(old: OpenGiftProps, new: OpenGiftProps, state: OpenGiftState): OpenGiftState {
+    return initialState(new, snapshot = null)
+  }
+
   override fun render(
     renderProps: OpenGiftProps,
     renderState: OpenGiftState,
     context: RenderContext
   ): ViewRendering {
-    return OpenGiftScreen(
-      playerName = renderProps.player.name,
-      roundNumber = renderProps.round,
-      giftName = renderState.giftName,
-      errorGiftExists = renderState.giftName.textValue in renderProps.giftNames,
-      onAddGift = context.eventHandler { name ->
-        val giftName = name.trim()
-        if (giftName !in props.giftNames) {
-          setOutput(Gift(giftName))
+    return if (renderProps.isReadOnly) {
+      ReadOnlyOpenGiftScreen(
+        playerName = renderProps.player.name,
+        roundNumber = renderProps.round,
+      )
+    } else {
+      OpenGiftScreen(
+        playerName = renderProps.player.name,
+        roundNumber = renderProps.round,
+        giftName = renderState.giftName,
+        errorGiftExists = renderState.giftName.textValue in renderProps.giftNames,
+        onAddGift = context.eventHandler { name ->
+          val giftName = name.trim()
+          if (giftName !in props.giftNames) {
+            setOutput(Gift(giftName))
+          }
         }
-      }
-    )
+      )
+    }
   }
 
   override fun snapshotState(state: OpenGiftState): Snapshot {

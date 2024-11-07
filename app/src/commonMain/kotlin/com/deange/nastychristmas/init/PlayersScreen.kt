@@ -42,6 +42,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.deange.nastychristmas.ui.compose.BackHandler
+import com.deange.nastychristmas.ui.compose.SimpleList
+import com.deange.nastychristmas.ui.compose.SimpleListItem.OneLine
+import com.deange.nastychristmas.ui.compose.SimpleText
 import com.deange.nastychristmas.ui.compose.TextController
 import com.deange.nastychristmas.ui.compose.asMutableState
 import com.deange.nastychristmas.ui.compose.flow.FlowRow
@@ -96,12 +99,22 @@ class PlayersScreen(
           onValueChange = { currentPlayerName = it },
           placeholder = { Text(Strings.playerHint.evaluate()) },
           singleLine = true,
+          supportingText = {
+            Text(
+              modifier = Modifier.fillMaxWidth(),
+              text = Strings.nastyGiftPromo.evaluate(),
+              textAlign = TextAlign.Center,
+              style = MaterialTheme.typography.bodySmall.copy(fontWeight = Bold),
+            )
+          },
           colors = OutlinedTextFieldDefaults.colors(
             unfocusedContainerColor = darkColor,
             focusedContainerColor = darkColor,
             unfocusedBorderColor = darkColor,
+            unfocusedSupportingTextColor = darkColor,
             focusedBorderColor = darkColor,
             focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+            focusedSupportingTextColor = darkColor,
           ),
           keyboardOptions = KeyboardOptions(
             capitalization = KeyboardCapitalization.Words,
@@ -135,9 +148,7 @@ class PlayersScreen(
         }
 
         FlowRow(
-          modifier = Modifier
-            .verticalScroll(scrollState)
-            .padding(horizontal = 16.dp),
+          modifier = Modifier.verticalScroll(scrollState),
           mainAxisSize = SizeMode.Expand,
           mainAxisSpacing = 8.dp,
           crossAxisSpacing = 0.dp,
@@ -177,5 +188,17 @@ class PlayersScreen(
         }
       }
     }
+  }
+}
+
+class ReadOnlyPlayersScreen(
+  private val players: List<String>,
+) : ViewRendering {
+  @Composable
+  override fun Content() {
+    SimpleList(
+      title = SimpleText(Strings.players),
+      items = players.map { player -> OneLine(SimpleText(player)) },
+    )
   }
 }

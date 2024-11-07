@@ -6,4 +6,5 @@ import com.deange.nastychristmas.model.GiftOwners
 data class EndGameProps(
   val finalGifts: GiftOwners,
   val stats: GameStats,
+  val isReadOnly: Boolean,
 )

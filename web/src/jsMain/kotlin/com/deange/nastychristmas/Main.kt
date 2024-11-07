@@ -54,42 +54,52 @@ private val configuration = FirebaseConfiguration(
   authDomain = FIREBASE_AUTH_DOMAIN,
 )
 
+private val storage: PersistentStorage by lazy {
+  BrowserLocalStorage(window.localStorage, keyPrefix = "hohoho")
+}
+
+private val firebase: Firebase by lazy {
+  initializeFirebase(configuration)
+}
+
+private val random by lazy {
+  Random(seed = Date.now().toLong())
+}
+
+private val gameSaver by lazy {
+  GameSaver(storage, firebase.firestore, CoroutineScope(Dispatchers.Default) + SupervisorJob())
+}
+
+private val appWorkflow by lazy {
+  AppWorkflow(
+    playersWorkflow = PlayersWorkflow(),
+    newRoundWorkflow = NewRoundWorkflow(random),
+    openGiftWorkflow = OpenGiftWorkflow(),
+    stealingRoundWorkflow = StealingRoundWorkflow(),
+    endGameWorkflow = EndGameWorkflow(),
+    gameSettingsWorkflow = GameSettingsWorkflow(),
+  )
+}
+
+private val registryWorkflow by lazy {
+  RegistryWorkflow(
+    appWorkflow = appWorkflow,
+    firestore = firebase.firestore,
+  )
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
 private fun runMainApp() {
-  val storage: PersistentStorage by lazy {
-    BrowserLocalStorage(window.localStorage, keyPrefix = "hohoho")
-  }
-
-  val firebase: Firebase by lazy {
-    initializeFirebase(configuration)
-  }
-
-  val random by lazy {
-    Random(seed = Date.now().toLong())
-  }
-
-  val workflow by lazy {
-    AppWorkflow(
-      playersWorkflow = PlayersWorkflow(),
-      newRoundWorkflow = NewRoundWorkflow(random),
-      openGiftWorkflow = OpenGiftWorkflow(),
-      stealingRoundWorkflow = StealingRoundWorkflow(),
-      endGameWorkflow = EndGameWorkflow(),
-      gameSettingsWorkflow = GameSettingsWorkflow(),
-    )
-  }
-
-  val gameSaver = GameSaver(storage, firebase.firestore, CoroutineScope(Dispatchers.Default) + SupervisorJob())
   var game: GameState? by gameSaver.game()
 
   val initialProps: AppProps = when (val restoredGameState = gameSaver.restore()) {
     null -> NewGame
-    else -> RestoredFromSave(restoredGameState)
+    else -> RestoredFromSave(restoredGameState, isReadOnly = false)
   }
 
-  @OptIn(ExperimentalComposeUiApi::class)
   CanvasBasedWindow(title = "Nasty Christmas") {
     App(
-      workflow = workflow,
+      workflow = appWorkflow,
       props = initialProps,
       onOutput = { output ->
         when (output) {
@@ -102,26 +112,11 @@ private fun runMainApp() {
   }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 fun runRegistryApp() {
-  val storage: PersistentStorage by lazy {
-    BrowserLocalStorage(window.localStorage, keyPrefix = "hohoho")
-  }
-
-  val firebase: Firebase by lazy {
-    initializeFirebase(configuration)
-  }
-
-  val workflow by lazy {
-    RegistryWorkflow(
-      storage = storage,
-      firestore = firebase.firestore,
-    )
-  }
-
-  @OptIn(ExperimentalComposeUiApi::class)
   CanvasBasedWindow(title = "Nasty Christmas Registry") {
     App(
-      workflow = workflow,
+      workflow = registryWorkflow,
       props = Unit,
       onOutput = { },
     )

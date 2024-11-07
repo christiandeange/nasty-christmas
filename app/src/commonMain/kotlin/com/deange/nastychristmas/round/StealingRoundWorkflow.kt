@@ -38,8 +38,10 @@ class StealingRoundWorkflow : StatefulWorkflow<
   ): StealingRoundState {
     return if (old.gifts != new.gifts) {
       state.copy(gifts = new.gifts)
-    } else {
+    } else if (!new.isReadOnly) {
       state
+    } else {
+      initialState(new, snapshot = null)
     }
   }
 
@@ -60,13 +62,14 @@ class StealingRoundWorkflow : StatefulWorkflow<
 
       val allowAnySteal = !renderProps.settings.enforceOwnership
 
-      renderState.gifts.forEach { (player, gift) ->
+      renderState.gifts.forEach { (playerName, gift) ->
+        val player = renderProps.allPlayers.first { it.name == playerName }
         val isCurrentChoice = (renderState.currentChoice as? StealGiftFrom)?.victim == player
         val alreadyOwnedThisRound = renderState.currentPlayer in gift.owners
 
         add(
           StealOrOpenChoice.Steal(
-            playerName = player.name,
+            playerName = playerName,
             giftName = gift.gift.name,
             isSelected = isCurrentChoice,
             isEnabled = allowAnySteal || !alreadyOwnedThisRound,
@@ -84,7 +87,7 @@ class StealingRoundWorkflow : StatefulWorkflow<
       choices = choices,
       showUnstealableGifts = renderProps.settings.showUnstealableGifts,
       autoScrollSpeed = renderProps.settings.autoScrollSpeed,
-      readOnly = false,
+      isReadOnly = renderProps.isReadOnly,
       onChangeSettings = context.eventHandler {
         setOutput(
           ChangeGameSettings(

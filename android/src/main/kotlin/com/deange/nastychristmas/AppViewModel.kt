@@ -48,7 +48,7 @@ class AppViewModel(
   val renderings: StateFlow<ViewRendering> by lazy {
     val initialProps: AppProps = when (val restoredGameState = gameSaver.restore()) {
       null -> NewGame
-      else -> RestoredFromSave(restoredGameState)
+      else -> RestoredFromSave(restoredGameState, isReadOnly = false)
     }
 
     @OptIn(WorkflowUiExperimentalApi::class)

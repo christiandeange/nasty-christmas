@@ -37,6 +37,7 @@ import kotlin.math.floor
 
 class EndGameScreen(
   val stats: GameStats,
+  val isReadOnly: Boolean,
   val onContinue: () -> Unit,
 ) : ViewRendering {
   @Composable
@@ -70,54 +71,51 @@ class EndGameScreen(
                 GameStat(
                   title = Strings.statMostSteals.evaluate(),
                   values = stats.stealsByPlayer,
-                  formatter = { it.name },
                 )
               }
               1 -> {
                 GameStat(
                   title = Strings.statMostStolenFrom.evaluate(),
                   values = stats.stolenFromByPlayer,
-                  formatter = { it.name },
                 )
               }
               2 -> {
                 GameStat(
                   title = Strings.statMostOpens.evaluate(),
                   values = stats.opensByPlayer,
-                  formatter = { it.name },
                 )
               }
               3 -> {
                 GameStat(
                   title = Strings.statMostStolenGift.evaluate(),
                   values = stats.stealsByGift,
-                  formatter = { it.name },
                 )
               }
             }
           }
         }
 
-        FilledTonalButton(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-          onClick = { onContinue() },
-        ) {
-          Text(
-            style = LocalTextStyle.current.copy(fontWeight = Bold),
-            text = Strings.newGame.evaluate().uppercase(),
-          )
+        if (!isReadOnly) {
+          FilledTonalButton(
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            onClick = { onContinue() },
+          ) {
+            Text(
+              style = LocalTextStyle.current.copy(fontWeight = Bold),
+              text = Strings.newGame.evaluate().uppercase(),
+            )
+          }
         }
       }
     }
   }
 
   @Composable
-  private fun <T> GameStat(
+  private fun GameStat(
     title: String,
-    values: Map<T, Int>,
-    formatter: (T) -> String,
+    values: Map<String, Int>,
   ) {
     Column(
       modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -137,7 +135,6 @@ class EndGameScreen(
         values
           .filterValues { it == max }
           .keys
-          .map(formatter)
           .sorted()
           .joinToString(separator = " / ")
       }

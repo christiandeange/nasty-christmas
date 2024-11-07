@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GameState(
-  internal val appState: AppState,
+  val appState: AppState,
 )

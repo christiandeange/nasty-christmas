@@ -27,6 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.deange.nastychristmas.model.Player
 import com.deange.nastychristmas.ui.compose.BackHandler
+import com.deange.nastychristmas.ui.compose.SimpleList
+import com.deange.nastychristmas.ui.compose.SimpleListItem
+import com.deange.nastychristmas.ui.compose.SimpleText
 import com.deange.nastychristmas.ui.compose.konfetti.render.KonfettiView
 import com.deange.nastychristmas.ui.compose.konfetti.render.PresetKonfetti
 import com.deange.nastychristmas.ui.theme.Strings
@@ -109,6 +112,28 @@ class NewRoundPlayerScreen(
         player = player,
         round = round,
         onContinue = onContinue,
+      )
+    }
+  }
+}
+
+class ReadOnlyNewRoundScreen(
+  val round: Int,
+  val playerPool: Set<Player>,
+  val selectedPlayer: Player?,
+) : ViewRendering {
+  @Composable
+  override fun Content() {
+    if (selectedPlayer != null) {
+      PlayerSelectionScreen(
+        player = selectedPlayer,
+        round = round,
+        onContinue = null,
+      )
+    } else {
+      SimpleList(
+        title = SimpleText(Strings.roundSelectionTitle, round),
+        items = playerPool.map { SimpleListItem.OneLine(SimpleText(it.name)) },
       )
     }
   }

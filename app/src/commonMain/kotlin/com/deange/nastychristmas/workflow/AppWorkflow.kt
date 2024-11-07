@@ -60,29 +60,34 @@ class AppWorkflow(
       }
   }
 
+  override fun onPropsChanged(old: AppProps, new: AppProps, state: AppState): AppState {
+    return initialState(new, snapshot = null)
+  }
+
   override fun render(
     renderProps: AppProps,
     renderState: AppState,
     context: RenderContext
   ): ViewRendering = when (renderState) {
     is InitializingPlayers -> {
-      context.renderInitializingPlayers(renderState)
+      context.renderInitializingPlayers(renderProps, renderState)
     }
     is PickingPlayer -> {
-      context.renderPickingPlayer(renderState)
+      context.renderPickingPlayer(renderProps, renderState)
     }
     is StealingRound -> {
-      context.renderStealingRound(renderState)
+      context.renderStealingRound(renderProps, renderState)
     }
     is OpeningGift -> {
-      context.renderOpeningGift(renderState)
+      context.renderOpeningGift(renderProps, renderState)
     }
     is EndGame -> {
-      context.renderEndGame(renderState)
+      context.renderEndGame(renderProps, renderState)
     }
     is ChangeGameSettings -> {
       context.renderStealingRound(
-        StealingRound(
+        renderProps = renderProps,
+        renderState = StealingRound(
           allPlayers = renderState.allPlayers,
           playerPool = renderState.playerPool,
           startingPlayer = renderState.player,
@@ -90,7 +95,7 @@ class AppWorkflow(
           gifts = renderState.gifts,
           stats = renderState.stats,
           settings = renderState.settings,
-        )
+        ),
       )
       context.renderChangeGameSettings(renderState)
     }
@@ -101,9 +106,13 @@ class AppWorkflow(
   }
 
   private fun RenderContext.renderInitializingPlayers(
+    renderProps: AppProps,
     renderState: InitializingPlayers,
   ): ViewRendering {
-    val playersProps = PlayersProps(players = renderState.allPlayers)
+    val playersProps = PlayersProps(
+      players = renderState.allPlayers,
+      isReadOnly = renderProps.isReadOnly,
+    )
     return renderChild(playersWorkflow, playersProps) { output ->
       savingGameStateAction {
         when (output) {
@@ -128,6 +137,7 @@ class AppWorkflow(
   }
 
   private fun RenderContext.renderPickingPlayer(
+    renderProps: AppProps,
     renderState: PickingPlayer
   ): ViewRendering {
     val newRoundProps = NewRoundProps(
@@ -135,6 +145,7 @@ class AppWorkflow(
       playerPool = renderState.playerPool,
       selectedPlayer = renderState.selectedPlayer,
       roundNumber = renderState.round,
+      isReadOnly = renderProps.isReadOnly,
     )
     return renderChild(newRoundWorkflow, newRoundProps) { output ->
       savingGameStateAction {
@@ -155,7 +166,7 @@ class AppWorkflow(
                 round = renderState.round,
                 player = player,
                 gifts = renderState.gifts,
-                stats = renderState.stats + GameStats(opensByPlayer = mapOf(player to 1)),
+                stats = renderState.stats + GameStats(opensByPlayer = mapOf(player.name to 1)),
                 settings = renderState.settings,
               )
             } else {
@@ -176,6 +187,7 @@ class AppWorkflow(
   }
 
   private fun RenderContext.renderStealingRound(
+    renderProps: AppProps,
     renderState: StealingRound,
   ): ViewRendering {
     val stealingRoundProps = StealingRoundProps(
@@ -185,6 +197,7 @@ class AppWorkflow(
       startingPlayer = renderState.startingPlayer,
       gifts = renderState.gifts,
       settings = renderState.settings,
+      isReadOnly = renderProps.isReadOnly,
     )
     return renderChild(stealingRoundWorkflow, stealingRoundProps) { output ->
       savingGameStateAction {
@@ -227,12 +240,14 @@ class AppWorkflow(
   }
 
   private fun RenderContext.renderOpeningGift(
+    renderProps: AppProps,
     renderState: OpeningGift,
   ): ViewRendering {
     val openGiftProps = OpenGiftProps(
       player = renderState.player,
       round = renderState.round,
       giftNames = renderState.gifts.map { it.value.gift.name }.toSet(),
+      isReadOnly = renderProps.isReadOnly,
     )
     return renderChild(openGiftWorkflow, openGiftProps) { gift ->
       savingGameStateAction {
@@ -259,11 +274,13 @@ class AppWorkflow(
   }
 
   private fun RenderContext.renderEndGame(
+    renderProps: AppProps,
     renderState: EndGame,
   ): ViewRendering {
     val endGameProps = EndGameProps(
       finalGifts = renderState.gifts.clearOwnerHistory(),
       stats = renderState.stats,
+      isReadOnly = renderProps.isReadOnly,
     )
     return renderChild(endGameWorkflow, endGameProps) {
       savingGameStateAction {

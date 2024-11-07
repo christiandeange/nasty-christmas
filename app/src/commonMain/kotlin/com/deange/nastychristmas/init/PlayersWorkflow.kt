@@ -5,13 +5,14 @@ import com.deange.nastychristmas.init.PlayersOutput.PlayersUpdated
 import com.deange.nastychristmas.init.PlayersOutput.StartWithPlayers
 import com.deange.nastychristmas.model.Player
 import com.deange.nastychristmas.ui.compose.TextController
+import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.deange.nastychristmas.ui.workflow.fromSnapshot
 import com.deange.nastychristmas.ui.workflow.toSnapshot
 import com.squareup.workflow1.Snapshot
 import com.squareup.workflow1.StatefulWorkflow
 
 class PlayersWorkflow :
-  StatefulWorkflow<PlayersProps, PlayersState, PlayersOutput, PlayersScreen>() {
+  StatefulWorkflow<PlayersProps, PlayersState, PlayersOutput, ViewRendering>() {
 
   override fun initialState(props: PlayersProps, snapshot: Snapshot?): PlayersState {
     return PlayersState.serializer().fromSnapshot(snapshot)
@@ -21,11 +22,21 @@ class PlayersWorkflow :
       )
   }
 
+  override fun onPropsChanged(old: PlayersProps, new: PlayersProps, state: PlayersState): PlayersState {
+    return initialState(new, snapshot = null)
+  }
+
   override fun render(
     renderProps: PlayersProps,
     renderState: PlayersState,
     context: RenderContext
-  ): PlayersScreen {
+  ): ViewRendering {
+    if (renderProps.isReadOnly) {
+      return ReadOnlyPlayersScreen(
+        players = renderState.players.map { it.name },
+      )
+    }
+
     return PlayersScreen(
       players = renderState.players.map { it.name },
       currentPlayer = renderState.currentPlayer,

@@ -87,16 +87,18 @@ class JvmAdminFirestore : Firestore {
   @OptIn(ExperimentalStdlibApi::class)
   private fun <T : Any> Map<String, *>.toClass(strategy: DeserializationStrategy<T>): T {
     val jsonString = moshi.adapter<Map<String, *>>().toJson(this)
-    return Json.decodeFromString(strategy, jsonString)
+    return json.decodeFromString(strategy, jsonString)
   }
 
   @OptIn(ExperimentalStdlibApi::class)
   private fun <T : Any> T.toMap(strategy: SerializationStrategy<T>): Map<String, *> {
-    val jsonString = Json.encodeToString(strategy, this)
+    val jsonString = json.encodeToString(strategy, this)
     return moshi.adapter<Map<String, *>>().fromJson(jsonString)!!
   }
 
   companion object {
+    private val json = Json { ignoreUnknownKeys = true }
+
     private val moshi = Moshi.Builder().build()
   }
 }

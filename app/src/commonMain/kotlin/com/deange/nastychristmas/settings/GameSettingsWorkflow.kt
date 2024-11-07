@@ -1,7 +1,6 @@
 package com.deange.nastychristmas.settings
 
 import com.deange.nastychristmas.model.GameStats
-import com.deange.nastychristmas.model.Gift
 import com.deange.nastychristmas.model.GiftOwners
 import com.deange.nastychristmas.settings.GameSettingsOutput.ResetGame
 import com.deange.nastychristmas.settings.GameSettingsOutput.UpdateGameSettings
@@ -91,9 +90,7 @@ class GameSettingsWorkflow : StatefulWorkflow<
         }
       ),
       stats = GameStats(
-        stealsByGift = stats.stealsByGift.mapKeys { (gift, _) ->
-          Gift(name = newGiftName(gift.name))
-        }
+        stealsByGift = stats.stealsByGift.mapKeys { (giftName, _) -> newGiftName(giftName) },
       ),
     )
   }

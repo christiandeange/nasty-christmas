@@ -7,4 +7,5 @@ data class NewRoundProps(
   val playerPool: Set<Player>,
   val selectedPlayer: Player?,
   val roundNumber: Int,
+  val isReadOnly: Boolean,
 )

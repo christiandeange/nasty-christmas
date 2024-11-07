@@ -25,31 +25,51 @@ class NewRoundWorkflow(
       }
   }
 
+  override fun onPropsChanged(old: NewRoundProps, new: NewRoundProps, state: NewRoundState): NewRoundState {
+    return initialState(new, snapshot = null)
+  }
+
   override fun render(
     renderProps: NewRoundProps,
     renderState: NewRoundState,
     context: RenderContext
   ): ViewRendering = when (renderState) {
     is SelectingNextPlayer -> {
-      NewRoundPlayerSelectionScreen(
-        random = random,
-        playerPool = renderProps.playerPool,
-        round = renderProps.roundNumber,
-        onPlayerSelected = context.eventHandler { player ->
-          state = NextPlayerSelected(player)
-          setOutput(UpdateGameStateWithPlayer(player))
-        }
-      )
+      if (renderProps.isReadOnly) {
+        ReadOnlyNewRoundScreen(
+          round = renderProps.roundNumber,
+          playerPool = renderProps.playerPool,
+          selectedPlayer = null,
+        )
+      } else {
+        NewRoundPlayerSelectionScreen(
+          random = random,
+          playerPool = renderProps.playerPool,
+          round = renderProps.roundNumber,
+          onPlayerSelected = context.eventHandler { player ->
+            state = NextPlayerSelected(player)
+            setOutput(UpdateGameStateWithPlayer(player))
+          }
+        )
+      }
     }
     is NextPlayerSelected -> {
-      NewRoundPlayerScreen(
-        random = random,
-        player = renderState.player,
-        round = renderProps.roundNumber,
-        onContinue = context.eventHandler {
-          setOutput(PlayerSelected(renderState.player))
-        }
-      )
+      if (renderProps.isReadOnly) {
+        ReadOnlyNewRoundScreen(
+          round = renderProps.roundNumber,
+          playerPool = renderProps.playerPool,
+          selectedPlayer = renderState.player,
+        )
+      } else {
+        NewRoundPlayerScreen(
+          random = random,
+          player = renderState.player,
+          round = renderProps.roundNumber,
+          onContinue = context.eventHandler {
+            setOutput(PlayerSelected(renderState.player))
+          }
+        )
+      }
     }
   }
 

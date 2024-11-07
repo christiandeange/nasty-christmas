@@ -4,10 +4,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GameStats(
-  val stealsByPlayer: Map<Player, Int> = mapOf(),
-  val stolenFromByPlayer: Map<Player, Int> = mapOf(),
-  val opensByPlayer: Map<Player, Int> = mapOf(),
-  val stealsByGift: Map<Gift, Int> = mapOf(),
+  val stealsByPlayer: Map<String, Int> = mapOf(),
+  val stolenFromByPlayer: Map<String, Int> = mapOf(),
+  val opensByPlayer: Map<String, Int> = mapOf(),
+  val stealsByGift: Map<String, Int> = mapOf(),
 ) {
   operator fun plus(other: GameStats): GameStats {
     return GameStats(
@@ -20,7 +20,7 @@ data class GameStats(
 
   fun withOpen(player: Player): GameStats {
     return copy(
-      opensByPlayer = opensByPlayer.increment(player),
+      opensByPlayer = opensByPlayer.increment(player.name),
     )
   }
 
@@ -30,9 +30,9 @@ data class GameStats(
     gift: Gift,
   ): GameStats {
     return copy(
-      stealsByPlayer = stealsByPlayer.increment(player),
-      stolenFromByPlayer = stolenFromByPlayer.increment(victim),
-      stealsByGift = stealsByGift.increment(gift),
+      stealsByPlayer = stealsByPlayer.increment(player.name),
+      stolenFromByPlayer = stolenFromByPlayer.increment(victim.name),
+      stealsByGift = stealsByGift.increment(gift.name),
     )
   }
 

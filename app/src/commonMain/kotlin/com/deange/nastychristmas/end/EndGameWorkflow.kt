@@ -10,6 +10,7 @@ class EndGameWorkflow : StatelessWorkflow<EndGameProps, Unit, ViewRendering>() {
   ): ViewRendering {
     return EndGameScreen(
       stats = renderProps.stats,
+      isReadOnly = renderProps.isReadOnly,
       onContinue = context.eventHandler {
         setOutput(Unit)
       }

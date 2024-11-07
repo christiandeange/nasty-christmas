@@ -60,7 +60,7 @@ class StealingRoundScreen(
   val choices: List<StealOrOpenChoice>,
   val showUnstealableGifts: Boolean,
   val autoScrollSpeed: Int,
-  val readOnly: Boolean,
+  val isReadOnly: Boolean,
   val onUndo: (() -> Unit)?,
   val onConfirmChoice: () -> Unit,
   val onChangeSettings: () -> Unit,
@@ -69,7 +69,7 @@ class StealingRoundScreen(
 ) : ViewRendering {
   @Composable
   override fun Content() {
-    val backBehaviour = if (readOnly) {
+    val backBehaviour = if (isReadOnly) {
       BackBehaviour.Hidden
     } else if (onUndo != null) {
       BackBehaviour.Enabled(onUndo)
@@ -124,7 +124,7 @@ class StealingRoundScreen(
           )
         }
 
-        if (!readOnly) {
+        if (!isReadOnly) {
           IconButton(onClick = { onChangeSettings() }) {
             Icon(
               painter = rememberVectorPainter(image = Icons.Default.Settings),
@@ -169,7 +169,7 @@ class StealingRoundScreen(
                   modifier = Modifier.animateItemPlacement(),
                   titleText = Strings.openGiftTitle.evaluate(),
                   descriptionText = Strings.openGiftDescription.evaluate(),
-                  readOnly = readOnly,
+                  readOnly = isReadOnly,
                   isSelected = choice.isSelected,
                   onClick = choice.onPicked,
                 )
@@ -183,7 +183,7 @@ class StealingRoundScreen(
                     modifier = Modifier.animateItemPlacement(),
                     titleText = Strings.stealFrom.evaluate(choice.playerName),
                     descriptionText = choice.giftName,
-                    readOnly = readOnly,
+                    readOnly = isReadOnly,
                     isSelected = choice.isSelected,
                     onClick = choice.onPicked.takeIf { choice.isEnabled },
                   )
@@ -193,7 +193,7 @@ class StealingRoundScreen(
           }
         }
 
-        if (!readOnly) {
+        if (!isReadOnly) {
           FilledTonalButton(
             modifier = Modifier
               .fillMaxWidth()

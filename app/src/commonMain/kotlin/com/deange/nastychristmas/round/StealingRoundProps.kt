@@ -11,4 +11,5 @@ data class StealingRoundProps(
   val startingPlayer: Player,
   val gifts: GiftOwners,
   val settings: GameSettings,
+  val isReadOnly: Boolean,
 )

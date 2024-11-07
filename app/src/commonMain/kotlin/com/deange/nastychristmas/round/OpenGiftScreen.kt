@@ -26,6 +26,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.deange.nastychristmas.ui.compose.BackHandler
+import com.deange.nastychristmas.ui.compose.SimpleList
+import com.deange.nastychristmas.ui.compose.SimpleText
 import com.deange.nastychristmas.ui.compose.TextController
 import com.deange.nastychristmas.ui.compose.asMutableState
 import com.deange.nastychristmas.ui.theme.Strings
@@ -94,5 +96,17 @@ class OpenGiftScreen(
         )
       }
     }
+  }
+}
+
+class ReadOnlyOpenGiftScreen(
+  val playerName: String,
+  val roundNumber: Int,
+) : ViewRendering {
+  @Composable
+  override fun Content() {
+    SimpleList(
+      title = SimpleText(Strings.openGiftRoundTitle, roundNumber, playerName),
+    )
   }
 }

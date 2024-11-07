@@ -71,7 +71,7 @@ fun main() {
 
   val initialProps: AppProps = when (val restoredGameState = gameSaver.restore()) {
     null -> NewGame
-    else -> RestoredFromSave(restoredGameState)
+    else -> RestoredFromSave(restoredGameState, isReadOnly = false)
   }
 
   runBlocking {

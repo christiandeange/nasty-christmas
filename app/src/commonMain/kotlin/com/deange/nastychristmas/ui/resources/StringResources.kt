@@ -14,6 +14,7 @@ class StringResources(
   giftHint: String,
   hideUnstealableGifts: String,
   letsGetNasty: String,
+  nastyGiftPromo: String,
   newGame: String,
   notApplicable: String,
   ok: String,
@@ -21,10 +22,12 @@ class StringResources(
   openGiftRoundTitle: String,
   openGiftTitle: String,
   playerHint: String,
+  players: String,
   remove: String,
   removePlayer: String,
   resetApp: String,
   round: String,
+  roundSelectionTitle: String,
   roundTitle: String,
   settings: String,
   showUnstealableGifts: String,
@@ -50,6 +53,7 @@ class StringResources(
   val giftHint = StringResource(giftHint)
   val hideUnstealableGifts = StringResource(hideUnstealableGifts)
   val letsGetNasty = StringResource(letsGetNasty)
+  val nastyGiftPromo = StringResource(nastyGiftPromo)
   val newGame = StringResource(newGame)
   val notApplicable = StringResource(notApplicable)
   val ok = StringResource(ok)
@@ -57,10 +61,12 @@ class StringResources(
   val openGiftRoundTitle = StringResource(openGiftRoundTitle)
   val openGiftTitle = StringResource(openGiftTitle)
   val playerHint = StringResource(playerHint)
+  val players = StringResource(players)
   val remove = StringResource(remove)
   val removePlayer = StringResource(removePlayer)
   val resetApp = StringResource(resetApp)
   val round = StringResource(round)
+  val roundSelectionTitle = StringResource(roundSelectionTitle)
   val roundTitle = StringResource(roundTitle)
   val settings = StringResource(settings)
   val showUnstealableGifts = StringResource(showUnstealableGifts)

@@ -4,29 +4,29 @@ import kotlinx.serialization.Serializable
 
 @Serializable(with = GiftOwnersSerializer::class)
 data class GiftOwners(
-  private val owners: Map<Player, OwnedGift>
-) : Iterable<Map.Entry<Player, OwnedGift>> by owners.entries {
+  private val owners: Map<String, OwnedGift>
+) : Iterable<Map.Entry<String, OwnedGift>> by owners.entries {
 
-  operator fun get(player: Player): Gift? = owners[player]?.gift
+  operator fun get(player: Player): Gift? = owners[player.name]?.gift
 
   operator fun plus(ownedGift: OwnedGift): GiftOwners {
-    return GiftOwners(owners + (ownedGift.owner to ownedGift))
+    return GiftOwners(owners + (ownedGift.owner.name to ownedGift))
   }
 
   fun withSteal(
     stealer: Player,
     victim: Player,
   ): GiftOwners {
-    require(stealer !in owners) { "${stealer.name} already has a gift" }
-    require(victim in owners) { "${victim.name} does not have a gift" }
+    require(stealer.name !in owners) { "${stealer.name} already has a gift" }
+    require(victim.name in owners) { "${victim.name} does not have a gift" }
 
-    val stolenGift = owners[victim]!!.stolenBy(stealer)
+    val stolenGift = owners[victim.name]!!.stolenBy(stealer)
 
     return GiftOwners(
       owners = buildMap {
         putAll(owners)
-        put(stealer, stolenGift)
-        remove(victim)
+        put(stealer.name, stolenGift)
+        remove(victim.name)
       }
     )
   }
