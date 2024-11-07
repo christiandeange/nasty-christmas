@@ -196,6 +196,8 @@ class ReadOnlyPlayersScreen(
 ) : ViewRendering {
   @Composable
   override fun Content() {
+    BackHandler(onBack = { /* no-op */ })
+
     SimpleList(
       title = SimpleText(Strings.players),
       items = players.map { player -> OneLine(SimpleText(player)) },

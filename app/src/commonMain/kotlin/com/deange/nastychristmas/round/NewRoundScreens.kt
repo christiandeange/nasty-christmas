@@ -26,10 +26,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.deange.nastychristmas.model.Player
-import com.deange.nastychristmas.ui.compose.BackHandler
-import com.deange.nastychristmas.ui.compose.SimpleList
-import com.deange.nastychristmas.ui.compose.SimpleListItem
-import com.deange.nastychristmas.ui.compose.SimpleText
+import com.deange.nastychristmas.ui.compose.AppScaffold
+import com.deange.nastychristmas.ui.compose.BackBehaviour
 import com.deange.nastychristmas.ui.compose.konfetti.render.KonfettiView
 import com.deange.nastychristmas.ui.compose.konfetti.render.PresetKonfetti
 import com.deange.nastychristmas.ui.theme.Strings
@@ -46,8 +44,6 @@ class NewRoundPlayerSelectionScreen(
 ) : ViewRendering {
   @Composable
   override fun Content() {
-    BackHandler(onBack = { /* no-op */ })
-
     val frameDelays = remember {
       // Last delay is between 1.25s and 1.75s, everything prior exponentially decays to that amount.
       val finalTimeout = random.nextLong(1250L, 1750L)
@@ -85,6 +81,7 @@ class NewRoundPlayerSelectionScreen(
     }
 
     PlayerSelectionScreen(
+      onBack = BackBehaviour.Hidden,
       player = playerShown,
       round = round,
       onContinue = null
@@ -96,44 +93,28 @@ class NewRoundPlayerScreen(
   val random: Random,
   val player: Player,
   val round: Int,
-  val onContinue: () -> Unit
+  val onContinue: (() -> Unit)?,
 ) : ViewRendering {
   @Composable
   override fun Content() {
-    BackHandler(onBack = onContinue)
-    Box {
-      KonfettiView(
-        modifier = Modifier.fillMaxSize(),
-        parties = PresetKonfetti.explode(),
-        random = random,
-      )
+    val onBack = if (onContinue != null) {
+      BackBehaviour.Enabled(onContinue)
+    } else {
+      BackBehaviour.Hidden
+    }
 
+    Box {
       PlayerSelectionScreen(
+        onBack = onBack,
         player = player,
         round = round,
         onContinue = onContinue,
       )
-    }
-  }
-}
 
-class ReadOnlyNewRoundScreen(
-  val round: Int,
-  val playerPool: Set<Player>,
-  val selectedPlayer: Player?,
-) : ViewRendering {
-  @Composable
-  override fun Content() {
-    if (selectedPlayer != null) {
-      PlayerSelectionScreen(
-        player = selectedPlayer,
-        round = round,
-        onContinue = null,
-      )
-    } else {
-      SimpleList(
-        title = SimpleText(Strings.roundSelectionTitle, round),
-        items = playerPool.map { SimpleListItem.OneLine(SimpleText(it.name)) },
+      KonfettiView(
+        modifier = Modifier.fillMaxSize(),
+        parties = PresetKonfetti.explode(),
+        random = random,
       )
     }
   }
@@ -141,50 +122,50 @@ class ReadOnlyNewRoundScreen(
 
 @Composable
 private fun PlayerSelectionScreen(
+  onBack: BackBehaviour,
   player: Player,
   round: Int,
   onContinue: (() -> Unit)?,
 ) {
-  Box(
-    modifier = Modifier
-      .fillMaxSize()
-      .padding(16.dp)
+  AppScaffold(
+    onBack = onBack,
+    title = { Text(Strings.roundTitle.evaluate(round)) },
   ) {
-    Text(
-      modifier = Modifier.align(Alignment.TopStart),
-      text = Strings.roundTitle.evaluate(round),
-      style = MaterialTheme.typography.titleLarge,
-    )
-
-    Text(
+    Box(
       modifier = Modifier
-        .fillMaxWidth()
-        .align(Alignment.Center),
-      text = player.name.uppercase(),
-      textAlign = TextAlign.Center,
-      style = MaterialTheme.typography.headlineLarge.copy(
-        fontWeight = Bold,
-        letterSpacing = 3.sp,
-      ),
-    )
-
-    val visibleState = remember { MutableTransitionState(false) }
-    visibleState.targetState = onContinue != null
-
-    AnimatedVisibility(
-      modifier = Modifier.align(Alignment.BottomCenter),
-      visibleState = visibleState,
-      enter = fadeIn(),
-      exit = fadeOut(),
+        .fillMaxSize()
+        .padding(16.dp)
     ) {
-      FilledTonalButton(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = { onContinue!!() },
+      Text(
+        modifier = Modifier
+          .fillMaxWidth()
+          .align(Alignment.Center),
+        text = player.name.uppercase(),
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.headlineLarge.copy(
+          fontWeight = Bold,
+          letterSpacing = 3.sp,
+        ),
+      )
+
+      val visibleState = remember { MutableTransitionState(false) }
+      visibleState.targetState = onContinue != null
+
+      AnimatedVisibility(
+        modifier = Modifier.align(Alignment.BottomCenter),
+        visibleState = visibleState,
+        enter = fadeIn(),
+        exit = fadeOut(),
       ) {
-        Text(
-          style = LocalTextStyle.current.copy(fontWeight = Bold),
-          text = Strings.ok.evaluate(),
-        )
+        FilledTonalButton(
+          modifier = Modifier.fillMaxWidth(),
+          onClick = { onContinue!!() },
+        ) {
+          Text(
+            style = LocalTextStyle.current.copy(fontWeight = Bold),
+            text = Strings.ok.evaluate(),
+          )
+        }
       }
     }
   }

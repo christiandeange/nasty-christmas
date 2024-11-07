@@ -58,11 +58,12 @@ fun main() {
   val workflow by lazy {
     AppWorkflow(
       playersWorkflow = PlayersWorkflow(),
-      newRoundWorkflow = NewRoundWorkflow(random),
+      newRoundWorkflow = NewRoundWorkflow(),
       openGiftWorkflow = OpenGiftWorkflow(),
       stealingRoundWorkflow = StealingRoundWorkflow(),
       endGameWorkflow = EndGameWorkflow(),
       gameSettingsWorkflow = GameSettingsWorkflow(),
+      random = random,
     )
   }
 

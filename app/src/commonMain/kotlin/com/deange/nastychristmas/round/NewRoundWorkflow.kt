@@ -11,9 +11,7 @@ import com.squareup.workflow1.Snapshot
 import com.squareup.workflow1.StatefulWorkflow
 import kotlin.random.Random
 
-class NewRoundWorkflow(
-  private val random: Random,
-) : StatefulWorkflow<NewRoundProps, NewRoundState, NewRoundOutput, ViewRendering>() {
+class NewRoundWorkflow : StatefulWorkflow<NewRoundProps, NewRoundState, NewRoundOutput, ViewRendering>() {
   override fun initialState(props: NewRoundProps, snapshot: Snapshot?): NewRoundState {
     return NewRoundState.serializer().fromSnapshot(snapshot)
       ?: if (props.selectedPlayer != null) {
@@ -35,41 +33,29 @@ class NewRoundWorkflow(
     context: RenderContext
   ): ViewRendering = when (renderState) {
     is SelectingNextPlayer -> {
-      if (renderProps.isReadOnly) {
-        ReadOnlyNewRoundScreen(
-          round = renderProps.roundNumber,
-          playerPool = renderProps.playerPool,
-          selectedPlayer = null,
-        )
-      } else {
-        NewRoundPlayerSelectionScreen(
-          random = random,
-          playerPool = renderProps.playerPool,
-          round = renderProps.roundNumber,
-          onPlayerSelected = context.eventHandler { player ->
+      NewRoundPlayerSelectionScreen(
+        random = Random(renderProps.seed),
+        playerPool = renderProps.playerPool,
+        round = renderProps.roundNumber,
+        onPlayerSelected = context.eventHandler { player ->
+          if (!renderProps.isReadOnly) {
             state = NextPlayerSelected(player)
             setOutput(UpdateGameStateWithPlayer(player))
           }
-        )
-      }
+        }
+      )
     }
     is NextPlayerSelected -> {
-      if (renderProps.isReadOnly) {
-        ReadOnlyNewRoundScreen(
-          round = renderProps.roundNumber,
-          playerPool = renderProps.playerPool,
-          selectedPlayer = renderState.player,
-        )
-      } else {
-        NewRoundPlayerScreen(
-          random = random,
-          player = renderState.player,
-          round = renderProps.roundNumber,
-          onContinue = context.eventHandler {
+      NewRoundPlayerScreen(
+        random = Random(renderProps.seed),
+        player = renderState.player,
+        round = renderProps.roundNumber,
+        onContinue = context.eventHandler {
+          if (!renderProps.isReadOnly) {
             setOutput(PlayerSelected(renderState.player))
           }
-        )
-      }
+        }.takeUnless { renderProps.isReadOnly },
+      )
     }
   }
 

@@ -105,6 +105,8 @@ class ReadOnlyOpenGiftScreen(
 ) : ViewRendering {
   @Composable
   override fun Content() {
+    BackHandler(onBack = { /* no-op */ })
+
     SimpleList(
       title = SimpleText(Strings.openGiftRoundTitle, roundNumber, playerName),
     )

@@ -43,6 +43,7 @@ import com.squareup.workflow1.Snapshot
 import com.squareup.workflow1.StatefulWorkflow
 import com.squareup.workflow1.WorkflowAction
 import com.squareup.workflow1.action
+import kotlin.random.Random
 
 class AppWorkflow(
   private val playersWorkflow: PlayersWorkflow,
@@ -51,6 +52,7 @@ class AppWorkflow(
   private val stealingRoundWorkflow: StealingRoundWorkflow,
   private val endGameWorkflow: EndGameWorkflow,
   private val gameSettingsWorkflow: GameSettingsWorkflow,
+  private val random: Random,
 ) : StatefulWorkflow<AppProps, AppState, AppOutput, ViewRendering>() {
   override fun initialState(props: AppProps, snapshot: Snapshot?): AppState {
     return AppState.serializer().fromSnapshot(snapshot)
@@ -125,6 +127,7 @@ class AppWorkflow(
               allPlayers = output.players,
               playerPool = output.players.toSet(),
               selectedPlayer = null,
+              seed = random.nextInt(),
               round = 1,
               gifts = GiftOwners(emptyMap()),
               stats = GameStats(),
@@ -144,6 +147,7 @@ class AppWorkflow(
       allPlayers = renderState.allPlayers,
       playerPool = renderState.playerPool,
       selectedPlayer = renderState.selectedPlayer,
+      seed = renderState.seed,
       roundNumber = renderState.round,
       isReadOnly = renderProps.isReadOnly,
     )
@@ -257,6 +261,7 @@ class AppWorkflow(
             allPlayers = renderState.allPlayers,
             playerPool = renderState.playerPool,
             selectedPlayer = null,
+            seed = random.nextInt(),
             round = renderState.round + 1,
             gifts = newGifts,
             stats = renderState.stats,

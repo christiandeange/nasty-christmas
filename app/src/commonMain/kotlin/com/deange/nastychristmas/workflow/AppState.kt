@@ -22,6 +22,7 @@ sealed class AppState {
     val allPlayers: List<Player>,
     val playerPool: Set<Player>,
     val selectedPlayer: Player?,
+    val seed: Int,
     val round: Int,
     val gifts: GiftOwners,
     val stats: GameStats,
