@@ -87,19 +87,7 @@ class AppWorkflow(
       context.renderEndGame(renderProps, renderState)
     }
     is ChangeGameSettings -> {
-      context.renderStealingRound(
-        renderProps = renderProps,
-        renderState = StealingRound(
-          allPlayers = renderState.allPlayers,
-          playerPool = renderState.playerPool,
-          startingPlayer = renderState.player,
-          round = renderState.round,
-          gifts = renderState.gifts,
-          stats = renderState.stats,
-          settings = renderState.settings,
-        ),
-      )
-      context.renderChangeGameSettings(renderState)
+      context.renderChangeGameSettings(renderProps, renderState)
     }
   }
 
@@ -295,30 +283,48 @@ class AppWorkflow(
   }
 
   private fun RenderContext.renderChangeGameSettings(
-    renderState: ChangeGameSettings
+    renderProps: AppProps,
+    renderState: ChangeGameSettings,
   ): ViewRendering {
-    val changeableSettings = ChangeableSettings(
-      settings = renderState.settings,
-      gifts = renderState.gifts,
-      stats = renderState.stats,
+    val stealingRoundRendering = renderStealingRound(
+      renderProps = renderProps,
+      renderState = StealingRound(
+        allPlayers = renderState.allPlayers,
+        playerPool = renderState.playerPool,
+        startingPlayer = renderState.player,
+        round = renderState.round,
+        gifts = renderState.gifts,
+        stats = renderState.stats,
+        settings = renderState.settings,
+      ),
     )
-    return renderChild(gameSettingsWorkflow, changeableSettings) { output ->
-      savingGameStateAction {
-        when (output) {
-          is UpdateGameSettings -> {
-            state = StealingRound(
-              allPlayers = renderState.allPlayers,
-              playerPool = renderState.playerPool,
-              round = renderState.round,
-              startingPlayer = renderState.player,
-              gifts = output.settings.gifts,
-              stats = output.settings.stats,
-              settings = output.settings.settings,
-            )
-          }
-          is ResetGame -> {
-            state = initialState(NewGame, snapshot = null)
-            setOutput(ClearGameState)
+
+    return if (renderProps.isReadOnly) {
+      stealingRoundRendering
+    } else {
+      val changeableSettings = ChangeableSettings(
+        settings = renderState.settings,
+        gifts = renderState.gifts,
+        stats = renderState.stats,
+      )
+      return renderChild(gameSettingsWorkflow, changeableSettings) { output ->
+        savingGameStateAction {
+          when (output) {
+            is UpdateGameSettings -> {
+              state = StealingRound(
+                allPlayers = renderState.allPlayers,
+                playerPool = renderState.playerPool,
+                round = renderState.round,
+                startingPlayer = renderState.player,
+                gifts = output.settings.gifts,
+                stats = output.settings.stats,
+                settings = output.settings.settings,
+              )
+            }
+            is ResetGame -> {
+              state = initialState(NewGame, snapshot = null)
+              setOutput(ClearGameState)
+            }
           }
         }
       }
