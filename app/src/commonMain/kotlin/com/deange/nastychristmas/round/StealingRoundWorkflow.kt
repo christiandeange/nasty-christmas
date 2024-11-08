@@ -84,7 +84,7 @@ class StealingRoundWorkflow(storage: PersistentStorage) : StatefulWorkflow<
           )
         )
       }
-    }
+    }.sortedWith(ChoiceSorter)
 
     return StealingRoundScreen(
       playerName = renderState.currentPlayer.name,
