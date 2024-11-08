@@ -5,20 +5,25 @@ import com.deange.nastychristmas.round.PlayerChoice.OpenNewGift
 import com.deange.nastychristmas.round.PlayerChoice.StealGiftFrom
 import com.deange.nastychristmas.round.StealingRoundOutput.ChangeGameSettings
 import com.deange.nastychristmas.round.StealingRoundOutput.EndRound
-import com.deange.nastychristmas.round.StealingRoundOutput.UpdateGameSettings
 import com.deange.nastychristmas.round.StealingRoundOutput.UpdateGifts
+import com.deange.nastychristmas.store.PersistentStorage
+import com.deange.nastychristmas.store.booleanPreference
+import com.deange.nastychristmas.store.intPreference
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.deange.nastychristmas.ui.workflow.fromSnapshot
 import com.deange.nastychristmas.ui.workflow.toSnapshot
 import com.squareup.workflow1.Snapshot
 import com.squareup.workflow1.StatefulWorkflow
 
-class StealingRoundWorkflow : StatefulWorkflow<
+class StealingRoundWorkflow(storage: PersistentStorage) : StatefulWorkflow<
     StealingRoundProps,
     StealingRoundState,
     StealingRoundOutput,
     ViewRendering
     >() {
+
+  private var showUnstealableGifts by storage.booleanPreference("showUnstealableGifts", defaultValue = false)
+  private var autoScrollSpeed by storage.intPreference("autoScrollSpeed", defaultValue = 1)
 
   override fun initialState(props: StealingRoundProps, snapshot: Snapshot?): StealingRoundState {
     return StealingRoundState.serializer().fromSnapshot(snapshot)
@@ -85,8 +90,8 @@ class StealingRoundWorkflow : StatefulWorkflow<
       playerName = renderState.currentPlayer.name,
       roundNumber = renderProps.roundNumber,
       choices = choices,
-      showUnstealableGifts = renderProps.settings.showUnstealableGifts,
-      autoScrollSpeed = renderProps.settings.autoScrollSpeed,
+      showUnstealableGifts = showUnstealableGifts,
+      autoScrollSpeed = autoScrollSpeed,
       isReadOnly = renderProps.isReadOnly,
       onChangeSettings = context.eventHandler {
         setOutput(
@@ -135,14 +140,10 @@ class StealingRoundWorkflow : StatefulWorkflow<
         }
       },
       onChangeShowUnstealableGifts = context.eventHandler { showUnstealableGifts ->
-        setOutput(
-          UpdateGameSettings(props.settings.copy(showUnstealableGifts = showUnstealableGifts))
-        )
+        this@StealingRoundWorkflow.showUnstealableGifts = showUnstealableGifts
       },
       onChangeAutoScrollSpeed = context.eventHandler { autoScrollSpeed ->
-        setOutput(
-          UpdateGameSettings(props.settings.copy(autoScrollSpeed = autoScrollSpeed))
-        )
+        this@StealingRoundWorkflow.autoScrollSpeed = autoScrollSpeed
       }
     )
   }

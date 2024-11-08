@@ -77,8 +77,6 @@ class GameSettingsWorkflow : StatefulWorkflow<
     return ChangeableSettings(
       settings = GameSettings(
         enforceOwnership = enforceOwnership,
-        showUnstealableGifts = originalGameSettings.showUnstealableGifts,
-        autoScrollSpeed = originalGameSettings.autoScrollSpeed,
       ),
       gifts = GiftOwners(
         owners = gifts.associate { (player, ownedGift) ->

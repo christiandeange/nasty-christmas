@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
       playersWorkflow = PlayersWorkflow(),
       newRoundWorkflow = NewRoundWorkflow(),
       openGiftWorkflow = OpenGiftWorkflow(),
-      stealingRoundWorkflow = StealingRoundWorkflow(),
+      stealingRoundWorkflow = StealingRoundWorkflow(storage),
       endGameWorkflow = EndGameWorkflow(),
       gameSettingsWorkflow = GameSettingsWorkflow(),
       random = random,

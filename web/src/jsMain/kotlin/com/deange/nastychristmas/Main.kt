@@ -75,7 +75,7 @@ private val appWorkflow by lazy {
     playersWorkflow = PlayersWorkflow(),
     newRoundWorkflow = NewRoundWorkflow(),
     openGiftWorkflow = OpenGiftWorkflow(),
-    stealingRoundWorkflow = StealingRoundWorkflow(),
+    stealingRoundWorkflow = StealingRoundWorkflow(storage),
     endGameWorkflow = EndGameWorkflow(),
     gameSettingsWorkflow = GameSettingsWorkflow(),
     random = random,
