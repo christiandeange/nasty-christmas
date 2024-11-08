@@ -89,6 +89,7 @@ class StealingRoundWorkflow(storage: PersistentStorage) : StatefulWorkflow<
     return StealingRoundScreen(
       playerName = renderState.currentPlayer.name,
       roundNumber = renderProps.roundNumber,
+      isLastRound = renderProps.playerPool.isEmpty(),
       choices = choices,
       showUnstealableGifts = showUnstealableGifts,
       autoScrollSpeed = autoScrollSpeed,

@@ -19,9 +19,11 @@ class StringResources(
   newGame: String,
   notApplicable: String,
   ok: String,
-  openGiftDescription: String,
+  openGiftEndGame: String,
+  openGiftEndRound: String,
   openGiftRoundTitle: String,
-  openGiftTitle: String,
+  openLastGiftTitle: String,
+  openNewGiftTitle: String,
   playerHint: String,
   remove: String,
   removePlayer: String,
@@ -58,9 +60,11 @@ class StringResources(
   val newGame = StringResource(newGame)
   val notApplicable = StringResource(notApplicable)
   val ok = StringResource(ok)
-  val openGiftDescription = StringResource(openGiftDescription)
+  val openGiftEndGame = StringResource(openGiftEndGame)
+  val openGiftDescription = StringResource(openGiftEndRound)
   val openGiftRoundTitle = StringResource(openGiftRoundTitle)
-  val openGiftTitle = StringResource(openGiftTitle)
+  val openLastGiftTitle = StringResource(openLastGiftTitle)
+  val openNewGiftTitle = StringResource(openNewGiftTitle)
   val playerHint = StringResource(playerHint)
   val remove = StringResource(remove)
   val removePlayer = StringResource(removePlayer)

@@ -57,6 +57,7 @@ import kotlin.time.TimeSource.Monotonic.markNow
 class StealingRoundScreen(
   val playerName: String,
   val roundNumber: Int,
+  val isLastRound: Boolean,
   val choices: List<StealOrOpenChoice>,
   val showUnstealableGifts: Boolean,
   val autoScrollSpeed: Int,
@@ -167,8 +168,16 @@ class StealingRoundScreen(
               is Open -> {
                 ChoiceRow(
                   modifier = Modifier.animateItemPlacement(),
-                  titleText = Strings.openGiftTitle.evaluate(),
-                  descriptionText = Strings.openGiftDescription.evaluate(),
+                  titleText = if (isLastRound) {
+                    Strings.openLastGiftTitle.evaluate()
+                  } else {
+                    Strings.openNewGiftTitle.evaluate()
+                  },
+                  descriptionText = if (isLastRound) {
+                    Strings.openGiftEndGame.evaluate()
+                  } else {
+                    Strings.openGiftDescription.evaluate()
+                  },
                   readOnly = isReadOnly,
                   isSelected = choice.isSelected,
                   onClick = choice.onPicked,
