@@ -41,12 +41,12 @@ class StealingRoundWorkflow(storage: PersistentStorage) : StatefulWorkflow<
     new: StealingRoundProps,
     state: StealingRoundState
   ): StealingRoundState {
-    return if (old.gifts != new.gifts) {
-      state.copy(gifts = new.gifts)
-    } else if (!new.isReadOnly) {
-      state
-    } else {
+    return if (new.isReadOnly) {
       initialState(new, snapshot = null)
+    } else if (old.gifts != new.gifts) {
+      state.copy(gifts = new.gifts)
+    } else {
+      state
     }
   }
 
