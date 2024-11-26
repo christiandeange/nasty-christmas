@@ -9,4 +9,5 @@ data class ChangeableSettings(
   val settings: GameSettings,
   val gifts: GiftOwners,
   val stats: GameStats,
+  val roundStats: GameStats,
 )

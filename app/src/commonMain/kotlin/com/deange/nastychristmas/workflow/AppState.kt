@@ -50,6 +50,7 @@ sealed class AppState {
     val round: Int,
     val gifts: GiftOwners,
     val stats: GameStats,
+    val roundStats: GameStats,
     val settings: GameSettings,
   ) : AppState()
 
@@ -69,6 +70,7 @@ sealed class AppState {
     val round: Int,
     val gifts: GiftOwners,
     val stats: GameStats,
+    val roundStats: GameStats,
     val settings: GameSettings,
   ) : AppState()
 }

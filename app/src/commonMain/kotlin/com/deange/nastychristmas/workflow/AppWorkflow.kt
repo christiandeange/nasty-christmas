@@ -169,6 +169,7 @@ class AppWorkflow(
                 startingPlayer = player,
                 gifts = renderState.gifts,
                 stats = renderState.stats,
+                roundStats = GameStats(),
                 settings = renderState.settings,
               )
             }
@@ -201,7 +202,8 @@ class AppWorkflow(
               round = renderState.round,
               player = output.currentPlayer,
               gifts = output.gifts,
-              stats = renderState.stats + output.stats,
+              stats = renderState.stats,
+              roundStats = renderState.roundStats,
               settings = renderState.settings,
             )
           }
@@ -223,7 +225,7 @@ class AppWorkflow(
             renderState.copy(
               startingPlayer = output.currentPlayer,
               gifts = output.gifts,
-              stats = renderState.stats + output.stats,
+              roundStats = output.stats,
             )
           }
         }
@@ -295,6 +297,7 @@ class AppWorkflow(
         round = renderState.round,
         gifts = renderState.gifts,
         stats = renderState.stats,
+        roundStats = renderState.roundStats,
         settings = renderState.settings,
       ),
     )
@@ -306,6 +309,7 @@ class AppWorkflow(
         settings = renderState.settings,
         gifts = renderState.gifts,
         stats = renderState.stats,
+        roundStats = renderState.roundStats,
       )
       return renderChild(gameSettingsWorkflow, changeableSettings) { output ->
         savingGameStateAction {
@@ -318,6 +322,7 @@ class AppWorkflow(
                 startingPlayer = renderState.player,
                 gifts = output.settings.gifts,
                 stats = output.settings.stats,
+                roundStats = output.settings.roundStats,
                 settings = output.settings.settings,
               )
             }
