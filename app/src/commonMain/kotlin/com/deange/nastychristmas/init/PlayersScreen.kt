@@ -1,6 +1,5 @@
 package com.deange.nastychristmas.init
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -44,9 +43,9 @@ import androidx.compose.ui.unit.sp
 import com.deange.nastychristmas.ui.compose.BackHandler
 import com.deange.nastychristmas.ui.compose.TextController
 import com.deange.nastychristmas.ui.compose.asMutableState
+import com.deange.nastychristmas.ui.compose.christmasBackground
 import com.deange.nastychristmas.ui.compose.flow.FlowRow
 import com.deange.nastychristmas.ui.compose.flow.SizeMode
-import com.deange.nastychristmas.ui.compose.rememberLoginGradientBrush
 import com.deange.nastychristmas.ui.compose.serifFont
 import com.deange.nastychristmas.ui.theme.AppTypography
 import com.deange.nastychristmas.ui.theme.Strings
@@ -65,9 +64,9 @@ class PlayersScreen(
   override fun Content() {
     BackHandler(onBack = onBack)
 
-    Surface(modifier = Modifier.fillMaxSize().background(rememberLoginGradientBrush())) {
+    Surface(modifier = Modifier.fillMaxSize()) {
       Column(
-        modifier = Modifier.background(rememberLoginGradientBrush()).padding(horizontal = 16.dp),
+        modifier = Modifier.christmasBackground().padding(horizontal = 16.dp),
         horizontalAlignment = CenterHorizontally,
       ) {
         var currentPlayerName by currentPlayer.asMutableState()

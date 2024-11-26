@@ -63,6 +63,7 @@ kotlin {
     val androidMain by getting {
       dependencies {
         implementation(libs.androidx.activity.compose)
+        implementation(libs.bundles.shaders)
       }
     }
     val jsMain by getting {
@@ -78,6 +79,7 @@ kotlin {
     val jvmMain by getting {
       dependencies {
         implementation(compose.desktop.currentOs)
+        implementation(libs.bundles.shaders)
       }
 
       resources.srcDir("resources")

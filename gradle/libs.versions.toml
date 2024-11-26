@@ -37,12 +37,19 @@ androidx-lifecycle = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", ve
 firebase-admin = { module = "com.google.firebase:firebase-admin", version = "9.4.1" }
 firebase-cloud-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "firebase" }
 
-kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines"}
-kotlinx-serialization-cbor = { module = "org.jetbrains.kotlinx:kotlinx-serialization-cbor", version.ref = "kotlinx-serialization"}
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization"}
+kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-cbor = { module = "org.jetbrains.kotlinx:kotlinx-serialization-cbor", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
 moshi = { module = "com.squareup.moshi:moshi", version = "1.15.1" }
+
+canvas = { module = "com.mikepenz.hypnoticcanvas:hypnoticcanvas", version = "0.2.0" }
+canvas-shaders = { module = "com.mikepenz.hypnoticcanvas:hypnoticcanvas-shaders", version = "0.2.0" }
 
 workflow-core = { module = "com.squareup.workflow1:workflow-core", version.ref = "workflow" }
 workflow-runtime = { module = "com.squareup.workflow1:workflow-runtime", version.ref = "workflow" }
 workflow-ui-android = { module = "com.squareup.workflow1:workflow-ui-core-android", version.ref = "workflow" }
+
+[bundles]
+
+shaders = ["canvas", "canvas-shaders"]
