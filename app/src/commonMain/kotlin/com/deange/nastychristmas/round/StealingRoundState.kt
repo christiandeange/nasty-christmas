@@ -34,7 +34,7 @@ data class StealingRoundState(
 @Serializable
 sealed class PlayerChoice {
   @Serializable
-  object OpenNewGift : PlayerChoice()
+  data object OpenNewGift : PlayerChoice()
 
   @Serializable
   data class StealGiftFrom(

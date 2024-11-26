@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class NewRoundState {
   @Serializable
-  object SelectingNextPlayer : NewRoundState()
+  data object SelectingNextPlayer : NewRoundState()
 
   @Serializable
   data class NextPlayerSelected(

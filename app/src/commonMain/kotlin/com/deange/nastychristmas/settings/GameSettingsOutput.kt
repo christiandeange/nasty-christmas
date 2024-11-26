@@ -5,5 +5,5 @@ sealed class GameSettingsOutput {
     val settings: ChangeableSettings,
   ) : GameSettingsOutput()
 
-  object ResetGame : GameSettingsOutput()
+  data object ResetGame : GameSettingsOutput()
 }

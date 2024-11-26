@@ -82,7 +82,7 @@ fun AppScaffold(
 }
 
 sealed interface BackBehaviour {
-  object Hidden : BackBehaviour
-  object Disabled : BackBehaviour
+  data object Hidden : BackBehaviour
+  data object Disabled : BackBehaviour
   data class Enabled(val onBack: () -> Unit) : BackBehaviour
 }
