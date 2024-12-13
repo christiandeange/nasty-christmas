@@ -168,12 +168,18 @@ class PlayersScreen(
                 containerColor = darkColor,
               ),
               trailingIcon = {
-                Icon(
-                  painter = rememberVectorPainter(Icons.Default.Clear),
-                  contentDescription = Strings.removePlayer.evaluate(player),
-                )
+                if (!isReadOnly) {
+                  Icon(
+                    painter = rememberVectorPainter(Icons.Default.Clear),
+                    contentDescription = Strings.removePlayer.evaluate(player),
+                  )
+                }
               },
-              onClick = { onDeletePlayer(i) },
+              onClick = {
+                if (!isReadOnly) {
+                  onDeletePlayer(i)
+                }
+              },
               selected = false,
             )
           }
