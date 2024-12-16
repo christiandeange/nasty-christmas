@@ -12,20 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat.Type.systemBars
 import androidx.core.view.WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.lifecycleScope
-import com.deange.nastychristmas.end.EndGameWorkflow
-import com.deange.nastychristmas.firebase.Firebase
-import com.deange.nastychristmas.init.PlayersWorkflow
-import com.deange.nastychristmas.round.NewRoundWorkflow
-import com.deange.nastychristmas.round.OpenGiftWorkflow
-import com.deange.nastychristmas.round.StealingRoundWorkflow
-import com.deange.nastychristmas.settings.GameSettingsWorkflow
-import com.deange.nastychristmas.state.GameSaver
-import com.deange.nastychristmas.store.DataStoreStorage
-import com.deange.nastychristmas.store.PersistentStorage
 import com.deange.nastychristmas.ui.compose.fontsAssetManager
 import com.deange.nastychristmas.ui.compose.initTypography
 import com.deange.nastychristmas.ui.resources.EN
@@ -33,43 +19,20 @@ import com.deange.nastychristmas.ui.resources.StringResources
 import com.deange.nastychristmas.ui.theme.Language
 import com.deange.nastychristmas.ui.theme.NastyChristmasTheme
 import com.deange.nastychristmas.ui.workflow.WorkflowRendering
-import com.deange.nastychristmas.workflow.AppWorkflow
 import kotlinx.coroutines.runBlocking
-import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
-  private val dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-
-  private val storage: PersistentStorage by lazy {
-    DataStoreStorage(dataStore)
-  }
-
-  private val firebase: Firebase by lazy {
-    (application as MainApplication).firebase
-  }
-
-  private val gameSaver: GameSaver by lazy {
-    GameSaver(storage, firebase.firestore, lifecycleScope)
-  }
-
-  private val random by lazy {
-    Random(seed = System.currentTimeMillis())
-  }
-
-  private val workflow by lazy {
-    AppWorkflow(
-      playersWorkflow = PlayersWorkflow(),
-      newRoundWorkflow = NewRoundWorkflow(),
-      openGiftWorkflow = OpenGiftWorkflow(),
-      stealingRoundWorkflow = StealingRoundWorkflow(storage),
-      endGameWorkflow = EndGameWorkflow(),
-      gameSettingsWorkflow = GameSettingsWorkflow(),
-      random = random,
-    )
+  private val mainApplication by lazy {
+    application as MainApplication
   }
 
   private val viewModel: AppViewModel by viewModels {
-    AppViewModelFactory(this, gameSaver, workflow, intent.extras)
+    AppViewModelFactory(
+      owner = this,
+      gameSaver = mainApplication.gameSaver,
+      appWorkflow = mainApplication.workflow,
+      defaultArgs = intent.extras,
+    )
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
