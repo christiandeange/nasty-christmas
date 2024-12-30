@@ -18,12 +18,22 @@ class JsFirestore : Firestore {
     return store.document(path).get().data(strategy)
   }
 
+  override suspend fun exists(path: String): Boolean {
+    return store.document(path).get().exists
+  }
+
   override fun <T : Any> observeAll(path: String, strategy: DeserializationStrategy<T>): Flow<List<T>> {
-    return store.collection(path).snapshots.map { it.documents.map { it.data(strategy) } }
+    return store.collection(path).snapshots.map {
+      it.documents.mapNotNull { snapshot ->
+        if (snapshot.exists) snapshot.data(strategy) else null
+      }
+    }
   }
 
   override fun <T : Any> observe(path: String, strategy: DeserializationStrategy<T>): Flow<T?> {
-    return store.document(path).snapshots.map { it.data(strategy) }
+    return store.document(path).snapshots.map { snapshot ->
+      if (snapshot.exists) snapshot.data(strategy) else null
+    }
   }
 
   override suspend fun <T : Any> add(path: String, strategy: SerializationStrategy<T>, data: T) {

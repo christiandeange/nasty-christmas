@@ -4,6 +4,12 @@ import com.deange.nastychristmas.firebase.Firestore
 import com.deange.nastychristmas.firebase.add
 import com.deange.nastychristmas.store.PersistentStorage
 import com.deange.nastychristmas.store.preference
+import com.deange.nastychristmas.workflow.AppState.ChangeGameSettings
+import com.deange.nastychristmas.workflow.AppState.EndGame
+import com.deange.nastychristmas.workflow.AppState.InitializingPlayers
+import com.deange.nastychristmas.workflow.AppState.OpeningGift
+import com.deange.nastychristmas.workflow.AppState.PickingPlayer
+import com.deange.nastychristmas.workflow.AppState.StealingRound
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.properties.ReadWriteProperty
@@ -41,11 +47,32 @@ class GameSaver(
       .getOrNull()
   }
 
+  suspend fun generateGameCode(): String {
+    lateinit var code: String
+    do {
+      code = List(6) { GAME_CODE_CHARS.random() }.joinToString("")
+    } while (firestore.exists("game-state/$code"))
+
+    return code
+  }
+
   private suspend fun saveGameState(gameState: GameState?) {
-    if (gameState != null) {
-      firestore.add("game-state/default/", gameState)
-    } else {
-      firestore.delete("game-state/default/")
+    val gameCode = when (val appState = gameState?.appState) {
+      is InitializingPlayers -> appState.gameCode
+      is PickingPlayer -> appState.settings.gameCode
+      is StealingRound -> appState.settings.gameCode
+      is OpeningGift -> appState.settings.gameCode
+      is EndGame -> appState.settings.gameCode
+      is ChangeGameSettings -> appState.settings.gameCode
+      null -> null
     }
+
+    if (gameState != null && gameCode != null) {
+      firestore.add("game-state/$gameCode/", gameState)
+    }
+  }
+
+  private companion object {
+    private val GAME_CODE_CHARS = ('A'..'Z') + ('0'..'9')
   }
 }

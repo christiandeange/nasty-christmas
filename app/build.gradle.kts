@@ -55,6 +55,7 @@ kotlin {
         api(compose.runtime)
         api(compose.ui)
 
+        api(libs.kotlinx.datetime)
         api(libs.kotlinx.serialization.json)
         api(libs.workflow.core)
         api(libs.workflow.runtime)

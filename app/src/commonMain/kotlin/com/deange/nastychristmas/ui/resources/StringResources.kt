@@ -6,9 +6,11 @@ class StringResources(
   appName: String,
   autoScrollSpeedHint: String,
   back: String,
+  clear: String,
   confirm: String,
   confirmResetApp: String,
   editGiftNames: String,
+  enterGameCode: String,
   errorGiftExists: String,
   enforceOwnershipDescription: String,
   enforceOwnershipTitle: String,
@@ -16,6 +18,7 @@ class StringResources(
   hideUnstealableGifts: String,
   letsGetNasty: String,
   nastyGiftPromo: String,
+  nastyGiftPromoWithGameCode: String,
   newGame: String,
   notApplicable: String,
   ok: String,
@@ -47,9 +50,11 @@ class StringResources(
   val appName = StringResource(appName)
   val autoScrollSpeedHint = StringResource(autoScrollSpeedHint)
   val back = StringResource(back)
+  val clear = StringResource(clear)
   val confirm = StringResource(confirm)
   val confirmResetApp = StringResource(confirmResetApp)
   val editGiftNames = StringResource(editGiftNames)
+  val enterGameCode = StringResource(enterGameCode)
   val errorGiftExists = StringResource(errorGiftExists)
   val enforceOwnershipDescription = StringResource(enforceOwnershipDescription)
   val enforceOwnershipTitle = StringResource(enforceOwnershipTitle)
@@ -57,6 +62,7 @@ class StringResources(
   val hideUnstealableGifts = StringResource(hideUnstealableGifts)
   val letsGetNasty = StringResource(letsGetNasty)
   val nastyGiftPromo = StringResource(nastyGiftPromo)
+  val nastyGiftPromoWithGameCode = StringResource(nastyGiftPromoWithGameCode)
   val newGame = StringResource(newGame)
   val notApplicable = StringResource(notApplicable)
   val ok = StringResource(ok)

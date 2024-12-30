@@ -54,6 +54,7 @@ import com.deange.nastychristmas.ui.workflow.ViewRendering
 class PlayersScreen(
   private val players: List<String>,
   private val currentPlayer: TextController,
+  private val gameCode: String?,
   private val isReadOnly: Boolean,
   private val onAddPlayer: (String) -> Unit,
   private val onDeletePlayer: (Int) -> Unit,
@@ -96,21 +97,29 @@ class PlayersScreen(
           value = currentPlayerName,
           onValueChange = { currentPlayerName = it },
           placeholder = {
-            if (isReadOnly) {
-              Text(Strings.addingPlayers.evaluate())
-            } else {
-              Text(Strings.playerHint.evaluate())
-            }
+            Text(
+              if (!isReadOnly) {
+                Strings.playerHint.evaluate()
+              } else {
+                Strings.addingPlayers.evaluate()
+              }
+            )
           },
           singleLine = true,
           readOnly = isReadOnly,
           supportingText = {
-            Text(
-              modifier = Modifier.fillMaxWidth(),
-              text = Strings.nastyGiftPromo.evaluate(),
-              textAlign = TextAlign.Center,
-              style = MaterialTheme.typography.bodySmall.copy(fontWeight = Bold),
-            )
+            if (!isReadOnly) {
+              Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = if (gameCode == null) {
+                  Strings.nastyGiftPromo.evaluate()
+                } else {
+                  Strings.nastyGiftPromoWithGameCode.evaluate(gameCode)
+                },
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodySmall.copy(fontWeight = Bold),
+              )
+            }
           },
           colors = OutlinedTextFieldDefaults.colors(
             unfocusedContainerColor = darkColor,

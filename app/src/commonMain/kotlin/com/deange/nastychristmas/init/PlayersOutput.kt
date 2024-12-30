@@ -9,6 +9,10 @@ sealed class PlayersOutput {
     val players: List<Player>,
   ) : PlayersOutput()
 
+  data class GameCodeUpdated(
+    val gameCode: String,
+  ) : PlayersOutput()
+
   data class StartWithPlayers(
     val players: List<Player>,
   ) : PlayersOutput()

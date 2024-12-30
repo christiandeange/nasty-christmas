@@ -13,6 +13,8 @@ interface Firestore {
 
   suspend fun <T : Any> get(path: String, strategy: DeserializationStrategy<T>): T
 
+  suspend fun exists(path: String): Boolean
+
   fun <T : Any> observeAll(path: String, strategy: DeserializationStrategy<T>): Flow<List<T>>
 
   fun <T : Any> observe(path: String, strategy: DeserializationStrategy<T>): Flow<T?>

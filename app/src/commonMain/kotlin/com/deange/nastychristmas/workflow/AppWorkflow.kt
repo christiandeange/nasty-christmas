@@ -2,8 +2,9 @@ package com.deange.nastychristmas.workflow
 
 import com.deange.nastychristmas.end.EndGameProps
 import com.deange.nastychristmas.end.EndGameWorkflow
-import com.deange.nastychristmas.init.PlayersOutput
+import com.deange.nastychristmas.init.PlayersOutput.GameCodeUpdated
 import com.deange.nastychristmas.init.PlayersOutput.NoPlayers
+import com.deange.nastychristmas.init.PlayersOutput.PlayersUpdated
 import com.deange.nastychristmas.init.PlayersOutput.StartWithPlayers
 import com.deange.nastychristmas.init.PlayersProps
 import com.deange.nastychristmas.init.PlayersWorkflow
@@ -24,7 +25,7 @@ import com.deange.nastychristmas.settings.GameSettings
 import com.deange.nastychristmas.settings.GameSettingsOutput.ResetGame
 import com.deange.nastychristmas.settings.GameSettingsOutput.UpdateGameSettings
 import com.deange.nastychristmas.settings.GameSettingsWorkflow
-import com.deange.nastychristmas.state.GameState
+import com.deange.nastychristmas.state.GameStateFactory
 import com.deange.nastychristmas.ui.workflow.ViewRendering
 import com.deange.nastychristmas.ui.workflow.fromSnapshot
 import com.deange.nastychristmas.ui.workflow.toSnapshot
@@ -52,12 +53,13 @@ class AppWorkflow(
   private val stealingRoundWorkflow: StealingRoundWorkflow,
   private val endGameWorkflow: EndGameWorkflow,
   private val gameSettingsWorkflow: GameSettingsWorkflow,
+  private val gameStateFactory: GameStateFactory,
   private val random: Random,
 ) : StatefulWorkflow<AppProps, AppState, AppOutput, ViewRendering>() {
   override fun initialState(props: AppProps, snapshot: Snapshot?): AppState {
     return AppState.serializer().fromSnapshot(snapshot)
       ?: when (props) {
-        is NewGame -> InitializingPlayers(allPlayers = emptyList())
+        is NewGame -> InitializingPlayers(allPlayers = emptyList(), gameCode = null)
         is RestoredFromSave -> props.gameState.appState
       }
   }
@@ -101,14 +103,24 @@ class AppWorkflow(
   ): ViewRendering {
     val playersProps = PlayersProps(
       players = renderState.allPlayers,
+      gameCode = renderState.gameCode,
       isReadOnly = renderProps.isReadOnly,
     )
     return renderChild(playersWorkflow, playersProps) { output ->
       savingGameStateAction {
         when (output) {
           is NoPlayers -> setOutput(Exit)
-          is PlayersOutput.PlayersUpdated -> {
-            state = InitializingPlayers(allPlayers = output.players)
+          is PlayersUpdated -> {
+            state = InitializingPlayers(
+              allPlayers = output.players,
+              gameCode = renderState.gameCode,
+            )
+          }
+          is GameCodeUpdated -> {
+            state = InitializingPlayers(
+              allPlayers = renderState.allPlayers,
+              gameCode = output.gameCode,
+            )
           }
           is StartWithPlayers -> {
             state = PickingPlayer(
@@ -119,7 +131,7 @@ class AppWorkflow(
               round = 1,
               gifts = GiftOwners(emptyMap()),
               stats = GameStats(),
-              settings = GameSettings.Default,
+              settings = GameSettings.default(gameCode = renderState.gameCode!!),
             )
           }
         }
@@ -262,6 +274,7 @@ class AppWorkflow(
           EndGame(
             gifts = newGifts,
             stats = renderState.stats,
+            settings = renderState.settings,
           )
         }
       }
@@ -279,7 +292,7 @@ class AppWorkflow(
     )
     return renderChild(endGameWorkflow, endGameProps) {
       savingGameStateAction {
-        state = InitializingPlayers(allPlayers = emptyList())
+        state = InitializingPlayers(allPlayers = emptyList(), gameCode = null)
       }
     }
   }
@@ -342,6 +355,6 @@ class AppWorkflow(
   ) = action(name) {
     update()
 
-    setOutput(SaveGameState(GameState(state)))
+    setOutput(SaveGameState(gameStateFactory.create(state)))
   }
 }

@@ -13,11 +13,13 @@ import com.deange.nastychristmas.round.OpenGiftWorkflow
 import com.deange.nastychristmas.round.StealingRoundWorkflow
 import com.deange.nastychristmas.settings.GameSettingsWorkflow
 import com.deange.nastychristmas.state.GameSaver
+import com.deange.nastychristmas.state.GameStateFactory
 import com.deange.nastychristmas.store.DataStoreStorage
 import com.deange.nastychristmas.store.PersistentStorage
 import com.deange.nastychristmas.workflow.AppWorkflow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.datetime.Clock
 import kotlin.random.Random
 
 class MainApplication : Application() {
@@ -39,14 +41,19 @@ class MainApplication : Application() {
     GameSaver(storage, firebase.firestore, CoroutineScope(Dispatchers.IO))
   }
 
+  val gameStateFactory by lazy {
+    GameStateFactory(Clock.System)
+  }
+
   val workflow by lazy {
     AppWorkflow(
-      playersWorkflow = PlayersWorkflow(),
+      playersWorkflow = PlayersWorkflow(gameSaver = gameSaver),
       newRoundWorkflow = NewRoundWorkflow(),
       openGiftWorkflow = OpenGiftWorkflow(),
       stealingRoundWorkflow = StealingRoundWorkflow(storage),
       endGameWorkflow = EndGameWorkflow(),
       gameSettingsWorkflow = GameSettingsWorkflow(),
+      gameStateFactory = gameStateFactory,
       random = random,
     )
   }

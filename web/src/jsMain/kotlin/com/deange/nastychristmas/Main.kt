@@ -18,6 +18,7 @@ import com.deange.nastychristmas.round.StealingRoundWorkflow
 import com.deange.nastychristmas.settings.GameSettingsWorkflow
 import com.deange.nastychristmas.state.GameSaver
 import com.deange.nastychristmas.state.GameState
+import com.deange.nastychristmas.state.GameStateFactory
 import com.deange.nastychristmas.store.BrowserLocalStorage
 import com.deange.nastychristmas.store.PersistentStorage
 import com.deange.nastychristmas.ui.compose.initTypography
@@ -34,6 +35,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.plus
+import kotlinx.datetime.Clock
 import org.jetbrains.skiko.wasm.onWasmReady
 import kotlin.js.Date
 import kotlin.random.Random
@@ -70,14 +72,19 @@ private val gameSaver by lazy {
   GameSaver(storage, firebase.firestore, CoroutineScope(Dispatchers.Default) + SupervisorJob())
 }
 
+private val gameStateFactory by lazy {
+  GameStateFactory(Clock.System)
+}
+
 private val appWorkflow by lazy {
   AppWorkflow(
-    playersWorkflow = PlayersWorkflow(),
+    playersWorkflow = PlayersWorkflow(gameSaver = gameSaver),
     newRoundWorkflow = NewRoundWorkflow(),
     openGiftWorkflow = OpenGiftWorkflow(),
     stealingRoundWorkflow = StealingRoundWorkflow(storage),
     endGameWorkflow = EndGameWorkflow(),
     gameSettingsWorkflow = GameSettingsWorkflow(),
+    gameStateFactory = gameStateFactory,
     random = random,
   )
 }
@@ -86,6 +93,7 @@ private val registryWorkflow by lazy {
   RegistryWorkflow(
     appWorkflow = appWorkflow,
     firestore = firebase.firestore,
+    gameStateFactory = gameStateFactory,
   )
 }
 

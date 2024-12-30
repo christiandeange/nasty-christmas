@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GameSettingsState(
+  val gameCode: String,
   val enforceOwnership: Boolean,
   val showConfirmResetGame: Boolean,
   val giftNames: List<GiftName>,

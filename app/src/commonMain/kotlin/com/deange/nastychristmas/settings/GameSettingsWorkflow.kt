@@ -21,6 +21,7 @@ class GameSettingsWorkflow : StatefulWorkflow<
   override fun initialState(props: ChangeableSettings, snapshot: Snapshot?): GameSettingsState {
     return GameSettingsState.serializer().fromSnapshot(snapshot)
       ?: GameSettingsState(
+        gameCode = props.settings.gameCode,
         enforceOwnership = props.settings.enforceOwnership,
         showConfirmResetGame = false,
         giftNames = props.gifts.map { (_, ownedGift) ->
@@ -84,6 +85,7 @@ class GameSettingsWorkflow : StatefulWorkflow<
   ): ChangeableSettings {
     return ChangeableSettings(
       settings = GameSettings(
+        gameCode = gameCode,
         enforceOwnership = enforceOwnership,
       ),
       gifts = GiftOwners(

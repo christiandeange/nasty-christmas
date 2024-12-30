@@ -18,6 +18,7 @@ import com.deange.nastychristmas.round.StealingRoundWorkflow
 import com.deange.nastychristmas.settings.GameSettingsWorkflow
 import com.deange.nastychristmas.state.GameSaver
 import com.deange.nastychristmas.state.GameState
+import com.deange.nastychristmas.state.GameStateFactory
 import com.deange.nastychristmas.store.DataStoreStorage
 import com.deange.nastychristmas.store.PersistentStorage
 import com.deange.nastychristmas.ui.compose.initTypography
@@ -33,6 +34,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.plus
 import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.Clock
 import java.io.File
 import kotlin.random.Random
 
@@ -48,26 +50,34 @@ fun main() {
   }
 
   val firebase: Firebase by lazy {
-    initializeFirebase()
+    initializeFirebase(dispatcher = IO)
   }
 
   val random by lazy {
     Random(seed = System.currentTimeMillis())
   }
 
+  val gameSaver by lazy {
+    GameSaver(storage, firebase.firestore, CoroutineScope(IO) + SupervisorJob())
+  }
+
+  val gameStateFactory by lazy {
+    GameStateFactory(Clock.System)
+  }
+
   val workflow by lazy {
     AppWorkflow(
-      playersWorkflow = PlayersWorkflow(),
+      playersWorkflow = PlayersWorkflow(gameSaver = gameSaver),
       newRoundWorkflow = NewRoundWorkflow(),
       openGiftWorkflow = OpenGiftWorkflow(),
       stealingRoundWorkflow = StealingRoundWorkflow(storage),
       endGameWorkflow = EndGameWorkflow(),
       gameSettingsWorkflow = GameSettingsWorkflow(),
+      gameStateFactory = gameStateFactory,
       random = random,
     )
   }
 
-  val gameSaver = GameSaver(storage, firebase.firestore, CoroutineScope(IO) + SupervisorJob())
   var game: GameState? by gameSaver.game()
 
   val initialProps: AppProps = when (val restoredGameState = gameSaver.restore()) {

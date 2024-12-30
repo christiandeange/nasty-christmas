@@ -14,6 +14,7 @@ sealed class AppState {
   @SerialName("InitializingPlayers")
   data class InitializingPlayers(
     val allPlayers: List<Player>,
+    val gameCode: String?,
   ) : AppState()
 
   @Serializable
@@ -59,6 +60,7 @@ sealed class AppState {
   data class EndGame(
     val gifts: GiftOwners,
     val stats: GameStats,
+    val settings: GameSettings,
   ) : AppState()
 
   @Serializable

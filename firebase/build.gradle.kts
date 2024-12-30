@@ -25,6 +25,7 @@ kotlin {
     val commonMain by getting {
       dependencies {
         api(libs.kotlinx.coroutines)
+        api(libs.kotlinx.datetime)
         api(libs.kotlinx.serialization.json)
       }
     }

@@ -10,4 +10,5 @@ data class PlayersState(
   val players: List<Player>,
   @Serializable(with = TextControllerSerializer::class)
   val currentPlayer: TextController,
+  val gameCode: String?,
 )

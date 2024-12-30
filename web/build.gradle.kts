@@ -59,34 +59,57 @@ buildkonfig {
   }
 }
 
+val projectDir = project.layout.projectDirectory.asFile
 val buildDir = project.layout.buildDirectory.asFile.get()
 
 val outputDir = buildDir.resolve("libs")
 val distributions = buildDir.resolve("dist/js/productionExecutable")
-val jsAppSrc = project.projectDir.resolve("jsapp")
+val jsAppSrc = projectDir.resolve("jsapp")
 val jsAppBuild = buildDir.resolve("jsapp")
 val packageJson = jsAppBuild.resolve("package.json")
-val packageLockJson = jsAppBuild.resolve("package-lock.json")
-val nodeModules = jsAppBuild.resolve("node_modules")
+val packageLockJsonApp = jsAppBuild.resolve("package-lock.json")
+val nodeModulesApp = jsAppBuild.resolve("node_modules")
+
+val functionsBuild = jsAppBuild.resolve("functions")
+val packageJsonFunctions = functionsBuild.resolve("package.json")
+val nodeModulesFunctions = functionsBuild.resolve("node_modules")
+val packageLockJsonFunctions = functionsBuild.resolve("package-lock.json")
 
 val copyJsAppFilesTask = tasks.register<Copy>("copyJsAppFiles") {
   from(jsAppSrc)
   into(jsAppBuild)
 }
 
-val npmInstallTask = tasks.register<Exec>("npmInstall") {
+val npmInstallAppTask = tasks.register<Exec>("npmInstallApp") {
   dependsOn(copyJsAppFilesTask)
-  inputs.dir(jsAppBuild)
-  outputs.dir(nodeModules)
-  outputs.file(packageLockJson)
+
+  inputs.file(packageJson)
+  outputs.dir(nodeModulesFunctions)
+  outputs.file(packageLockJsonApp)
 
   commandLine("npm", "install")
   workingDir(jsAppBuild)
 }
 
+val npmInstallFunctionsTask = tasks.register<Exec>("npmInstallFunctions") {
+  dependsOn(copyJsAppFilesTask)
+
+  inputs.file(packageJsonFunctions)
+  outputs.dir(nodeModulesFunctions)
+  outputs.file(packageLockJsonFunctions)
+
+  commandLine("npm", "install")
+  workingDir(functionsBuild)
+}
+
+val npmInstallAllTask = tasks.register("npmInstall") {
+  dependsOn(npmInstallAppTask)
+  dependsOn(npmInstallFunctionsTask)
+}
+
 val copyJsAppDistTask = tasks.register<Copy>("copyJsAppDist") {
   dependsOn(tasks.named("jsBrowserDistribution"))
-  dependsOn(npmInstallTask)
+  dependsOn(npmInstallAllTask)
 
   from(distributions)
   into(jsAppBuild.resolve("dist"))
@@ -94,14 +117,14 @@ val copyJsAppDistTask = tasks.register<Copy>("copyJsAppDist") {
 
 val copyJsAppIndexHtmlTask = tasks.register<Copy>("copyJsAppIndexHtml") {
   dependsOn(tasks.named("jsBrowserDistribution"))
-  dependsOn(npmInstallTask)
+  dependsOn(npmInstallAllTask)
 
   from(distributions.resolve("index.html"))
   into(jsAppBuild)
 }
 
 val jsDistribution = tasks.register<Zip>("jsDistribution") {
-  dependsOn(npmInstallTask)
+  dependsOn(npmInstallAllTask)
   dependsOn(copyJsAppDistTask)
   dependsOn(copyJsAppIndexHtmlTask)
 
@@ -109,8 +132,22 @@ val jsDistribution = tasks.register<Zip>("jsDistribution") {
   destinationDirectory.set(outputDir)
 }
 
-tasks.register<Exec>("jsDeploy") {
+val gcloudDeploy = tasks.register<Exec>("gcloudDeploy") {
   dependsOn(jsDistribution)
+
   workingDir(jsAppBuild)
   commandLine("gcloud", "app", "deploy")
+}
+
+val firebaseDeploy = tasks.register<Exec>("firebaseDeploy") {
+  dependsOn(jsDistribution)
+  dependsOn(gcloudDeploy)
+
+  workingDir(jsAppBuild)
+  commandLine("firebase", "deploy", "--only", "functions")
+}
+
+tasks.register("jsDeploy") {
+  dependsOn(gcloudDeploy)
+  dependsOn(firebaseDeploy)
 }

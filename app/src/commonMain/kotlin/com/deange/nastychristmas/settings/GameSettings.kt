@@ -4,10 +4,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GameSettings(
+  val gameCode: String,
   val enforceOwnership: Boolean,
 ) {
   companion object {
-    val Default = GameSettings(
+    fun default(gameCode: String) = GameSettings(
+      gameCode = gameCode,
       enforceOwnership = true,
     )
   }
