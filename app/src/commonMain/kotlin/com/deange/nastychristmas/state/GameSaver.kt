@@ -12,6 +12,9 @@ import com.deange.nastychristmas.workflow.AppState.PickingPlayer
 import com.deange.nastychristmas.workflow.AppState.StealingRound
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import nastychristmas.app.generated.resources.Res
+import nastychristmas.app.generated.resources.bad_words
+import org.jetbrains.compose.resources.getStringArray
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -48,10 +51,12 @@ class GameSaver(
   }
 
   suspend fun generateGameCode(): String {
+    val badWords = getStringArray(Res.array.bad_words).map { it.uppercase() }
+
     lateinit var code: String
     do {
       code = List(6) { GAME_CODE_CHARS.random() }.joinToString("")
-    } while (firestore.exists("game-state/$code"))
+    } while (badWords.any { it in code } || firestore.exists("game-state/$code"))
 
     return code
   }
@@ -73,6 +78,6 @@ class GameSaver(
   }
 
   private companion object {
-    private val GAME_CODE_CHARS = ('A'..'Z') + ('0'..'9')
+    private val GAME_CODE_CHARS = ('A'..'Z')
   }
 }

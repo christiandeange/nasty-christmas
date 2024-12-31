@@ -50,6 +50,7 @@ kotlin {
         api(project(":firebase"))
         api(project(":store"))
 
+        api(compose.components.resources)
         api(compose.foundation)
         api(compose.material3)
         api(compose.runtime)
