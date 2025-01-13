@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -65,9 +66,9 @@ class PlayersScreen(
   override fun Content() {
     BackHandler(onBack = onBack)
 
-    Surface(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().christmasBackground()) {
       Column(
-        modifier = Modifier.christmasBackground().padding(horizontal = 16.dp),
+        modifier = Modifier.padding(horizontal = 16.dp).imePadding().verticalScroll(rememberScrollState()),
         horizontalAlignment = CenterHorizontally,
       ) {
         var currentPlayerName by currentPlayer.asMutableState()
@@ -164,7 +165,6 @@ class PlayersScreen(
         }
 
         FlowRow(
-          modifier = Modifier.verticalScroll(scrollState),
           mainAxisSize = SizeMode.Expand,
           mainAxisSpacing = 8.dp,
           crossAxisSpacing = 0.dp,

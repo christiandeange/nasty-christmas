@@ -3,6 +3,7 @@ package com.deange.nastychristmas.round
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -47,7 +48,7 @@ class OpenGiftScreen(
     BackHandler(onBack = { /* no-op */ })
 
     Row(
-      modifier = Modifier.padding(16.dp),
+      modifier = Modifier.padding(16.dp).imePadding(),
       horizontalArrangement = spacedBy(16.dp),
       verticalAlignment = Bottom,
     ) {
