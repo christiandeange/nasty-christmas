@@ -1,7 +1,7 @@
 package com.deange.nastychristmas.state
 
 import com.deange.nastychristmas.workflow.AppState
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 
 class GameStateFactory(
   private val clock: Clock,

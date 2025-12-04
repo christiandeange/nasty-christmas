@@ -19,8 +19,8 @@ import com.deange.nastychristmas.store.PersistentStorage
 import com.deange.nastychristmas.workflow.AppWorkflow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.datetime.Clock
 import kotlin.random.Random
+import kotlin.time.Clock
 
 class MainApplication : Application() {
   val dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")

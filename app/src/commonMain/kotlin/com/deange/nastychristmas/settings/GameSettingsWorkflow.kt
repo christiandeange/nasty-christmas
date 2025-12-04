@@ -33,26 +33,26 @@ class GameSettingsWorkflow : StatefulWorkflow<
   override fun render(
     renderProps: ChangeableSettings,
     renderState: GameSettingsState,
-    context: RenderContext
+    context: RenderContext<ChangeableSettings, GameSettingsState, GameSettingsOutput>,
   ): ViewRendering {
     return GameSettingsScreen(
       enforceOwnership = renderState.enforceOwnership,
-      onEnforceOwnershipChanged = context.eventHandler { enforceOwnership ->
+      onEnforceOwnershipChanged = context.eventHandler("onEnforceOwnershipChanged") { enforceOwnership ->
         state = state.copy(enforceOwnership = enforceOwnership)
       },
       giftNames = renderState.giftNames.asRows(),
       showConfirmResetGame = renderState.showConfirmResetGame,
-      onResetGame = context.eventHandler {
+      onResetGame = context.eventHandler("onResetGame") {
         if (!state.showConfirmResetGame) {
           state = state.copy(showConfirmResetGame = true)
         } else {
           setOutput(ResetGame)
         }
       },
-      onBack = context.eventHandler {
+      onBack = context.eventHandler("onBack") {
         setOutput(UpdateGameSettings(props))
       },
-      onConfirmSettings = context.eventHandler {
+      onConfirmSettings = context.eventHandler("onConfirmSettings") {
         val newGiftNames = state.giftNames.map { it.newName.textValue }
         if (newGiftNames.size == newGiftNames.distinct().size) {
           // Only output new settings if all gift names are different.

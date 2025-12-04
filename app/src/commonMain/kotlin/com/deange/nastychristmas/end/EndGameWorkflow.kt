@@ -6,12 +6,12 @@ import com.squareup.workflow1.StatelessWorkflow
 class EndGameWorkflow : StatelessWorkflow<EndGameProps, Unit, ViewRendering>() {
   override fun render(
     renderProps: EndGameProps,
-    context: RenderContext,
+    context: RenderContext<EndGameProps, Unit>,
   ): ViewRendering {
     return EndGameScreen(
       stats = renderProps.stats,
       isReadOnly = renderProps.isReadOnly,
-      onContinue = context.eventHandler {
+      onContinue = context.eventHandler("onContinue") {
         setOutput(Unit)
       }
     )

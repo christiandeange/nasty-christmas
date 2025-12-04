@@ -16,8 +16,7 @@ import com.deange.nastychristmas.workflow.AppProps
 import com.deange.nastychristmas.workflow.AppProps.NewGame
 import com.deange.nastychristmas.workflow.AppProps.RestoredFromSave
 import com.deange.nastychristmas.workflow.AppWorkflow
-import com.squareup.workflow1.ui.WorkflowUiExperimentalApi
-import com.squareup.workflow1.ui.renderWorkflowIn
+import com.squareup.workflow1.android.renderWorkflowIn
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -51,7 +50,6 @@ class AppViewModel(
       else -> RestoredFromSave(restoredGameState, isReadOnly = false)
     }
 
-    @OptIn(WorkflowUiExperimentalApi::class)
     renderWorkflowIn(
       workflow = appWorkflow,
       scope = viewModelScope,

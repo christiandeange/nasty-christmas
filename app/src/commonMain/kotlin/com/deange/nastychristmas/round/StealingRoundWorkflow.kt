@@ -53,13 +53,13 @@ class StealingRoundWorkflow(storage: PersistentStorage) : StatefulWorkflow<
   override fun render(
     renderProps: StealingRoundProps,
     renderState: StealingRoundState,
-    context: RenderContext
+    context: RenderContext<StealingRoundProps, StealingRoundState, StealingRoundOutput>,
   ): ViewRendering {
     val choices = buildList {
       add(
         StealOrOpenChoice.Open(
           isSelected = renderState.currentChoice is OpenNewGift,
-          onPicked = context.eventHandler {
+          onPicked = context.eventHandler("onPicked") {
             state = state.copy(currentChoice = OpenNewGift)
           }
         )
@@ -78,7 +78,7 @@ class StealingRoundWorkflow(storage: PersistentStorage) : StatefulWorkflow<
             giftName = gift.gift.name,
             isSelected = isCurrentChoice,
             isEnabled = allowAnySteal || !alreadyOwnedThisRound,
-            onPicked = context.eventHandler {
+            onPicked = context.eventHandler("onPicked") {
               state = state.copy(currentChoice = StealGiftFrom(player))
             }
           )
@@ -94,7 +94,7 @@ class StealingRoundWorkflow(storage: PersistentStorage) : StatefulWorkflow<
       showUnstealableGifts = showUnstealableGifts,
       autoScrollSpeed = autoScrollSpeed,
       isReadOnly = renderProps.isReadOnly,
-      onChangeSettings = context.eventHandler {
+      onChangeSettings = context.eventHandler("onChangeSettings") {
         setOutput(
           ChangeGameSettings(
             currentPlayer = state.currentPlayer,
@@ -103,7 +103,7 @@ class StealingRoundWorkflow(storage: PersistentStorage) : StatefulWorkflow<
           )
         )
       },
-      onUndo = context.eventHandler {
+      onUndo = context.eventHandler("onUndo") {
         state.previousState?.let { previous ->
           state = previous
           setOutput(
@@ -115,7 +115,7 @@ class StealingRoundWorkflow(storage: PersistentStorage) : StatefulWorkflow<
           )
         }
       }.takeIf { renderState.previousState != null },
-      onConfirmChoice = context.eventHandler {
+      onConfirmChoice = context.eventHandler("onConfirmChoice") {
         when (val currentChoice: PlayerChoice = state.currentChoice!!) {
           is OpenNewGift -> {
             val stats = state.stats.withOpen(state.currentPlayer)
@@ -140,10 +140,10 @@ class StealingRoundWorkflow(storage: PersistentStorage) : StatefulWorkflow<
           }
         }
       },
-      onChangeShowUnstealableGifts = context.eventHandler { showUnstealableGifts ->
+      onChangeShowUnstealableGifts = context.eventHandler("onChangeShowUnstealableGifts") { showUnstealableGifts ->
         this@StealingRoundWorkflow.showUnstealableGifts = showUnstealableGifts
       },
-      onChangeAutoScrollSpeed = context.eventHandler { autoScrollSpeed ->
+      onChangeAutoScrollSpeed = context.eventHandler("onChangeAutoScrollSpeed") { autoScrollSpeed ->
         this@StealingRoundWorkflow.autoScrollSpeed = autoScrollSpeed
       }
     )

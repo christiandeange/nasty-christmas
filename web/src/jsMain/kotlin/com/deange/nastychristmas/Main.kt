@@ -35,10 +35,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.plus
-import kotlinx.datetime.Clock
 import org.jetbrains.skiko.wasm.onWasmReady
 import kotlin.js.Date
 import kotlin.random.Random
+import kotlin.time.Clock
 
 suspend fun main() {
   initTypography()

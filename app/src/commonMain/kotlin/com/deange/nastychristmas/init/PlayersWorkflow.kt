@@ -36,11 +36,11 @@ class PlayersWorkflow(
   override fun render(
     renderProps: PlayersProps,
     renderState: PlayersState,
-    context: RenderContext
+    context: RenderContext<PlayersProps, PlayersState, PlayersOutput>
   ): ViewRendering {
     if (!renderProps.isReadOnly && renderState.gameCode == null) {
       context.runningWorker(Worker.from { gameSaver.generateGameCode() }, "generate-game-code") { gameCode ->
-        action {
+        action("generate-game-code") {
           state = state.copy(gameCode = gameCode)
           setOutput(GameCodeUpdated(gameCode))
         }
@@ -52,7 +52,7 @@ class PlayersWorkflow(
       currentPlayer = renderState.currentPlayer,
       gameCode = renderState.gameCode,
       isReadOnly = renderProps.isReadOnly,
-      onAddPlayer = context.eventHandler { name ->
+      onAddPlayer = context.eventHandler("onAddPlayer") { name ->
         val newPlayers = state.players + Player(name.trim())
         state = state.copy(
           players = newPlayers,
@@ -61,15 +61,15 @@ class PlayersWorkflow(
         )
         setOutput(PlayersUpdated(state.players))
       },
-      onDeletePlayer = context.eventHandler { index ->
+      onDeletePlayer = context.eventHandler("onDeletePlayer") { index ->
         val newPlayers = state.players.toMutableList().apply { removeAt(index) }.toList()
         state = state.copy(players = newPlayers)
         setOutput(PlayersUpdated(state.players))
       },
-      onBack = context.eventHandler {
+      onBack = context.eventHandler("onBack") {
         setOutput(NoPlayers)
       },
-      onStartGame = context.eventHandler {
+      onStartGame = context.eventHandler("onStartGame") {
         setOutput(StartWithPlayers(state.players))
       },
     )

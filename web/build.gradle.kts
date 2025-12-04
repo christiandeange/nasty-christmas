@@ -3,13 +3,11 @@ import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrTarget
 import java.util.Properties
 
 plugins {
-  @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
-
-  alias(plugins.buildkonfig)
-  alias(plugins.kotlin.compose)
-  alias(plugins.kotlin.multiplatform)
-  alias(plugins.kotlin.serialization)
-  alias(plugins.jetbrains.compose)
+  alias(libs.plugins.buildkonfig)
+  alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.kotlin.serialization)
+  alias(libs.plugins.jetbrains.compose)
 }
 
 kotlin {

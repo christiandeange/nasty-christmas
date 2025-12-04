@@ -35,7 +35,7 @@ class RegistryWorkflow(
   override fun render(
     renderProps: Unit,
     renderState: RegistryState,
-    context: RenderContext,
+    context: RenderContext<Unit, RegistryState, Unit>,
   ): ViewRendering {
     val childRendering = when (val gameCode = renderState.gameCode) {
       is GameCodeStatus.None -> {
@@ -44,7 +44,7 @@ class RegistryWorkflow(
       is GameCodeStatus.Unvalidated -> {
         val worker = Worker.from { firestore.exists("game-state/${gameCode.code}/") }
         context.runningWorker(worker, "game-state-exists-${gameCode.code}") { exists ->
-          action {
+          action("game-state-exists") {
             state = if (exists) {
               state.copy(gameCode = GameCodeStatus.Validated(gameCode.code))
             } else {
@@ -57,7 +57,7 @@ class RegistryWorkflow(
       is GameCodeStatus.Validated -> {
         val worker = firestore.observe<GameState>("game-state/${gameCode.code}/").asWorker()
         context.runningWorker(worker, "game-state-${gameCode.code}") { currentStateData ->
-          action {
+          action("game-state") {
             state = currentStateData?.appState?.let { state.copy(appState = it) }
               ?: initialState(renderProps, null)
           }
@@ -70,10 +70,10 @@ class RegistryWorkflow(
 
     return RegistryScreen(
       gameCode = renderState.gameCode,
-      onGameCodeEntered = context.eventHandler { newGameCode ->
+      onGameCodeEntered = context.eventHandler("onGameCodeEntered") { newGameCode ->
         state = state.copy(gameCode = GameCodeStatus.Unvalidated(newGameCode))
       },
-      onClearGameCode = context.eventHandler {
+      onClearGameCode = context.eventHandler("onClearGameCode") {
         state = state.copy(gameCode = GameCodeStatus.None)
       },
       childRendering = childRendering,

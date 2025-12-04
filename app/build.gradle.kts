@@ -1,16 +1,14 @@
 plugins {
-  @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
-
-  alias(plugins.kotlin.compose)
-  alias(plugins.kotlin.multiplatform)
-  alias(plugins.kotlin.serialization)
-  alias(plugins.android.library)
-  alias(plugins.jetbrains.compose)
+  alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.kotlin.serialization)
+  alias(libs.plugins.android.library)
+  alias(libs.plugins.jetbrains.compose)
 }
 
 android {
   namespace = "com.deange.nastychristmas.core"
-  compileSdk = 35
+  compileSdk = 36
 
   buildFeatures {
     compose = true
@@ -56,7 +54,6 @@ kotlin {
         api(compose.runtime)
         api(compose.ui)
 
-        api(libs.kotlinx.datetime)
         api(libs.kotlinx.serialization.json)
         api(libs.workflow.core)
         api(libs.workflow.runtime)

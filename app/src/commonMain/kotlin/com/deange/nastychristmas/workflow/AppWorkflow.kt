@@ -71,7 +71,7 @@ class AppWorkflow(
   override fun render(
     renderProps: AppProps,
     renderState: AppState,
-    context: RenderContext
+    context: RenderContext<AppProps, AppState, AppOutput>,
   ): ViewRendering = when (renderState) {
     is InitializingPlayers -> {
       context.renderInitializingPlayers(renderProps, renderState)
@@ -97,7 +97,7 @@ class AppWorkflow(
     return AppState.serializer().toSnapshot(state)
   }
 
-  private fun RenderContext.renderInitializingPlayers(
+  private fun RenderContext<AppProps, AppState, AppOutput>.renderInitializingPlayers(
     renderProps: AppProps,
     renderState: InitializingPlayers,
   ): ViewRendering {
@@ -139,7 +139,7 @@ class AppWorkflow(
     }
   }
 
-  private fun RenderContext.renderPickingPlayer(
+  private fun RenderContext<AppProps, AppState, AppOutput>.renderPickingPlayer(
     renderProps: AppProps,
     renderState: PickingPlayer
   ): ViewRendering {
@@ -191,7 +191,7 @@ class AppWorkflow(
     }
   }
 
-  private fun RenderContext.renderStealingRound(
+  private fun RenderContext<AppProps, AppState, AppOutput>.renderStealingRound(
     renderProps: AppProps,
     renderState: StealingRound,
   ): ViewRendering {
@@ -245,7 +245,7 @@ class AppWorkflow(
     }
   }
 
-  private fun RenderContext.renderOpeningGift(
+  private fun RenderContext<AppProps, AppState, AppOutput>.renderOpeningGift(
     renderProps: AppProps,
     renderState: OpeningGift,
   ): ViewRendering {
@@ -281,7 +281,7 @@ class AppWorkflow(
     }
   }
 
-  private fun RenderContext.renderEndGame(
+  private fun RenderContext<AppProps, AppState, AppOutput>.renderEndGame(
     renderProps: AppProps,
     renderState: EndGame,
   ): ViewRendering {
@@ -297,7 +297,7 @@ class AppWorkflow(
     }
   }
 
-  private fun RenderContext.renderChangeGameSettings(
+  private fun RenderContext<AppProps, AppState, AppOutput>.renderChangeGameSettings(
     renderProps: AppProps,
     renderState: ChangeGameSettings,
   ): ViewRendering {

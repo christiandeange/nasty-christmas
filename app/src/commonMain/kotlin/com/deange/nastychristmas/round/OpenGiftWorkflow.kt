@@ -21,7 +21,7 @@ class OpenGiftWorkflow : StatefulWorkflow<OpenGiftProps, OpenGiftState, Gift, Vi
   override fun render(
     renderProps: OpenGiftProps,
     renderState: OpenGiftState,
-    context: RenderContext
+    context: RenderContext<OpenGiftProps, OpenGiftState, Gift>,
   ): ViewRendering {
     return if (renderProps.isReadOnly) {
       ReadOnlyOpenGiftScreen(
@@ -34,7 +34,7 @@ class OpenGiftWorkflow : StatefulWorkflow<OpenGiftProps, OpenGiftState, Gift, Vi
         roundNumber = renderProps.round,
         giftName = renderState.giftName,
         errorGiftExists = renderState.giftName.textValue in renderProps.giftNames,
-        onAddGift = context.eventHandler { name ->
+        onAddGift = context.eventHandler("onAddGift") { name ->
           val giftName = name.trim()
           if (giftName !in props.giftNames) {
             setOutput(Gift(giftName))

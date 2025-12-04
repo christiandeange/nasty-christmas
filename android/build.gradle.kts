@@ -1,21 +1,19 @@
 plugins {
-  @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
-
-  alias(plugins.android.application)
-  alias(plugins.google.services)
-  alias(plugins.kotlin.android)
-  alias(plugins.kotlin.compose)
-  alias(plugins.kotlin.serialization)
+  alias(libs.plugins.android.application)
+  alias(libs.plugins.google.services)
+  alias(libs.plugins.kotlin.android)
+  alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.kotlin.serialization)
 }
 
 android {
   namespace = "com.deange.nastychristmas"
-  compileSdk = 35
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "com.deange.nastychristmas"
     minSdk = 26
-    targetSdk = 35
+    targetSdk = 36
     versionCode = 1
     versionName = "1.0.0"
   }

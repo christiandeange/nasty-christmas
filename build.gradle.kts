@@ -1,21 +1,23 @@
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin.Companion.kotlinNodeJsExtension
+import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
+import org.jetbrains.kotlin.gradle.plugin.KotlinBasePlugin
 
 plugins {
-  @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
-
-  alias(plugins.android.application) apply false
-  alias(plugins.android.library) apply false
-  alias(plugins.buildkonfig) apply false
-  alias(plugins.google.services) apply false
-  alias(plugins.jetbrains.compose) apply false
-  alias(plugins.kotlin.android) apply false
-  alias(plugins.kotlin.compose) apply false
-  alias(plugins.kotlin.jvm) apply false
-  alias(plugins.kotlin.multiplatform) apply false
-  alias(plugins.kotlin.serialization) apply false
+  alias(libs.plugins.android.application) apply false
+  alias(libs.plugins.android.library) apply false
+  alias(libs.plugins.buildkonfig) apply false
+  alias(libs.plugins.google.services) apply false
+  alias(libs.plugins.jetbrains.compose) apply false
+  alias(libs.plugins.kotlin.android) apply false
+  alias(libs.plugins.kotlin.compose) apply false
+  alias(libs.plugins.kotlin.jvm) apply false
+  alias(libs.plugins.kotlin.multiplatform) apply false
+  alias(libs.plugins.kotlin.serialization) apply false
 }
 
-plugins.withType<NodeJsRootPlugin> {
-  kotlinNodeJsExtension.nodeVersion = "20.10.0"
+allprojects {
+  plugins.withType<KotlinBasePlugin> {
+    kotlinExtension.sourceSets.all {
+      languageSettings.optIn("kotlin.time.ExperimentalTime")
+    }
+  }
 }

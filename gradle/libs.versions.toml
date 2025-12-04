@@ -1,24 +1,24 @@
 [versions]
 
-agp = "8.5.2"
-androidx-activity = "1.8.1"
-androidx-core = "1.12.0"
-androidx-datastore = "1.0.0"
-androidx-lifecycle = "2.6.2"
+agp = "8.12.3"
+androidx-activity = "1.12.0"
+androidx-core = "1.17.0"
+androidx-datastore = "1.2.0"
+androidx-lifecycle = "2.10.0"
 compose-compiler = "1.5.15"
 compose-jb = "1.7.0"
-firebase = "2.1.0"
-kotlin = "2.0.21"
-kotlinx-coroutines = "1.7.3"
-kotlinx-serialization = "1.6.1"
-workflow = "1.12.1-beta04"
+firebase = "2.4.0"
+kotlin = "2.2.21"
+kotlinx-coroutines = "1.10.2"
+kotlinx-serialization = "1.9.0"
+workflow = "1.23.01"
 
 [plugins]
 
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.15.2" }
-google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.17.1" }
+google-services = { id = "com.google.gms.google-services", version = "4.4.4" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-jb" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
@@ -38,11 +38,10 @@ firebase-admin = { module = "com.google.firebase:firebase-admin", version = "9.4
 firebase-cloud-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "firebase" }
 
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
-kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.6.1" }
 kotlinx-serialization-cbor = { module = "org.jetbrains.kotlinx:kotlinx-serialization-cbor", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
-moshi = { module = "com.squareup.moshi:moshi", version = "1.15.1" }
+moshi = { module = "com.squareup.moshi:moshi", version = "1.15.2" }
 
 workflow-core = { module = "com.squareup.workflow1:workflow-core", version.ref = "workflow" }
 workflow-runtime = { module = "com.squareup.workflow1:workflow-runtime", version.ref = "workflow" }

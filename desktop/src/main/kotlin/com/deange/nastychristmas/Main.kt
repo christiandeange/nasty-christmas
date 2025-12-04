@@ -34,9 +34,9 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.plus
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.Clock
 import java.io.File
 import kotlin.random.Random
+import kotlin.time.Clock
 
 fun main() {
   val storage: PersistentStorage by lazy {

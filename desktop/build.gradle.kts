@@ -1,10 +1,8 @@
 plugins {
-  @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
-
-  alias(plugins.kotlin.compose)
-  alias(plugins.kotlin.jvm)
-  alias(plugins.kotlin.serialization)
-  alias(plugins.jetbrains.compose)
+  alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.kotlin.serialization)
+  alias(libs.plugins.jetbrains.compose)
 }
 
 dependencies {

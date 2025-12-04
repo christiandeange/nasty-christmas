@@ -1,14 +1,12 @@
 plugins {
-  @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
-
-  alias(plugins.android.library)
-  alias(plugins.kotlin.multiplatform)
-  alias(plugins.kotlin.serialization)
+  alias(libs.plugins.android.library)
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.kotlin.serialization)
 }
 
 android {
   namespace = "com.deange.nastychristmas.firebase"
-  compileSdk = 35
+  compileSdk = 36
 }
 
 kotlin {
@@ -25,7 +23,6 @@ kotlin {
     val commonMain by getting {
       dependencies {
         api(libs.kotlinx.coroutines)
-        api(libs.kotlinx.datetime)
         api(libs.kotlinx.serialization.json)
       }
     }

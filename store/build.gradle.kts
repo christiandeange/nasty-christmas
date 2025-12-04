@@ -1,8 +1,6 @@
 plugins {
-  @Suppress("DSL_SCOPE_VIOLATION") val plugins = libs.plugins
-
-  alias(plugins.kotlin.multiplatform)
-  alias(plugins.kotlin.serialization)
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {

@@ -30,14 +30,14 @@ class NewRoundWorkflow : StatefulWorkflow<NewRoundProps, NewRoundState, NewRound
   override fun render(
     renderProps: NewRoundProps,
     renderState: NewRoundState,
-    context: RenderContext
+    context: RenderContext<NewRoundProps, NewRoundState, NewRoundOutput>,
   ): ViewRendering = when (renderState) {
     is SelectingNextPlayer -> {
       NewRoundPlayerSelectionScreen(
         random = Random(renderProps.seed),
         playerPool = renderProps.playerPool,
         round = renderProps.roundNumber,
-        onPlayerSelected = context.eventHandler { player ->
+        onPlayerSelected = context.eventHandler("onPlayerSelected") { player ->
           if (!renderProps.isReadOnly) {
             state = NextPlayerSelected(player)
             setOutput(UpdateGameStateWithPlayer(player))
@@ -50,7 +50,7 @@ class NewRoundWorkflow : StatefulWorkflow<NewRoundProps, NewRoundState, NewRound
         random = Random(renderProps.seed),
         player = renderState.player,
         round = renderProps.roundNumber,
-        onContinue = context.eventHandler {
+        onContinue = context.eventHandler("onContinue") {
           if (!renderProps.isReadOnly) {
             setOutput(PlayerSelected(renderState.player))
           }
