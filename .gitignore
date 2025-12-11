@@ -11,6 +11,7 @@
 /.idea/assetWizardSettings.xml
 /.idea/uiDesigner.xml
 /.idea/deploymentTargetSelector.xml
+/.idea/copilot.*
 .DS_Store
 /build
 /captures
