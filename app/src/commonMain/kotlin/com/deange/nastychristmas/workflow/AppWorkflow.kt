@@ -150,6 +150,7 @@ class AppWorkflow(
       seed = renderState.seed,
       roundNumber = renderState.round,
       isReadOnly = renderProps.isReadOnly,
+      settings = renderState.settings,
     )
     return renderChild(newRoundWorkflow, newRoundProps) { output ->
       savingGameStateAction {

@@ -87,6 +87,7 @@ class StealingRoundWorkflow(storage: PersistentStorage) : StatefulWorkflow<
     }.sortedWith(ChoiceSorter)
 
     return StealingRoundScreen(
+      gameCode = renderProps.settings.gameCode,
       playerName = renderState.currentPlayer.name,
       roundNumber = renderProps.roundNumber,
       isLastRound = renderProps.playerPool.isEmpty(),

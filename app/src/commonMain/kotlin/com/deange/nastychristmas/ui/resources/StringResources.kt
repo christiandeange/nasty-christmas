@@ -14,6 +14,7 @@ class StringResources(
   errorGiftExists: String,
   enforceOwnershipDescription: String,
   enforceOwnershipTitle: String,
+  gameCode: String,
   giftHint: String,
   hideUnstealableGifts: String,
   letsGetNasty: String,
@@ -58,6 +59,7 @@ class StringResources(
   val errorGiftExists = StringResource(errorGiftExists)
   val enforceOwnershipDescription = StringResource(enforceOwnershipDescription)
   val enforceOwnershipTitle = StringResource(enforceOwnershipTitle)
+  val gameCode = StringResource(gameCode)
   val giftHint = StringResource(giftHint)
   val hideUnstealableGifts = StringResource(hideUnstealableGifts)
   val letsGetNasty = StringResource(letsGetNasty)

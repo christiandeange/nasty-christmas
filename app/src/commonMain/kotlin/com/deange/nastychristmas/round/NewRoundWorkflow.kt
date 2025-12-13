@@ -35,8 +35,10 @@ class NewRoundWorkflow : StatefulWorkflow<NewRoundProps, NewRoundState, NewRound
     is SelectingNextPlayer -> {
       NewRoundPlayerSelectionScreen(
         random = Random(renderProps.seed),
+        gameCode = renderProps.settings.gameCode,
         playerPool = renderProps.playerPool,
         round = renderProps.roundNumber,
+        isReadOnly = renderProps.isReadOnly,
         onPlayerSelected = context.eventHandler("onPlayerSelected") { player ->
           if (!renderProps.isReadOnly) {
             state = NextPlayerSelected(player)
@@ -48,8 +50,10 @@ class NewRoundWorkflow : StatefulWorkflow<NewRoundProps, NewRoundState, NewRound
     is NextPlayerSelected -> {
       NewRoundPlayerScreen(
         random = Random(renderProps.seed),
+        gameCode = renderProps.settings.gameCode,
         player = renderState.player,
         round = renderProps.roundNumber,
+        isReadOnly = renderProps.isReadOnly,
         onContinue = context.eventHandler("onContinue") {
           if (!renderProps.isReadOnly) {
             setOutput(PlayerSelected(renderState.player))

@@ -39,6 +39,7 @@ import com.deange.nastychristmas.round.StealOrOpenChoice.Open
 import com.deange.nastychristmas.round.StealOrOpenChoice.Steal
 import com.deange.nastychristmas.ui.compose.AppScaffold
 import com.deange.nastychristmas.ui.compose.BackBehaviour
+import com.deange.nastychristmas.ui.compose.GameCodeBox
 import com.deange.nastychristmas.ui.compose.GridStateAutoScrollEffect
 import com.deange.nastychristmas.ui.compose.TwoLineText
 import com.deange.nastychristmas.ui.compose.rememberGridAutoScrollState
@@ -55,6 +56,7 @@ import kotlin.time.TimeSource.Monotonic.markNow
 
 @OptIn(ExperimentalFoundationApi::class)
 class StealingRoundScreen(
+  val gameCode: String,
   val playerName: String,
   val roundNumber: Int,
   val isLastRound: Boolean,
@@ -132,6 +134,8 @@ class StealingRoundScreen(
               contentDescription = Strings.settings.evaluate(),
             )
           }
+
+          GameCodeBox(gameCode)
         }
       }
     ) {

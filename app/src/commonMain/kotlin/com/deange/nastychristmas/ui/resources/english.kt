@@ -14,6 +14,7 @@ val StringResources.Companion.EN
     errorGiftExists = "A gift with that name has already been opened.",
     enforceOwnershipDescription = "Require that you cannot steal a gift you have already had in the same round.",
     enforceOwnershipTitle = "Enforce Ownership",
+    gameCode = "Code",
     giftHint = "Gift Name",
     hideUnstealableGifts = "Hide unstealable gifts",
     letsGetNasty = "Let’s Get Nasty!",

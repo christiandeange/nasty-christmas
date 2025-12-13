@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.deange.nastychristmas.model.Player
 import com.deange.nastychristmas.ui.compose.AppScaffold
 import com.deange.nastychristmas.ui.compose.BackBehaviour
+import com.deange.nastychristmas.ui.compose.GameCodeBox
 import com.deange.nastychristmas.ui.compose.konfetti.render.KonfettiView
 import com.deange.nastychristmas.ui.compose.konfetti.render.PresetKonfetti
 import com.deange.nastychristmas.ui.theme.Strings
@@ -38,8 +39,10 @@ import kotlin.random.Random
 
 class NewRoundPlayerSelectionScreen(
   val random: Random,
+  val gameCode: String,
   val playerPool: Set<Player>,
   val round: Int,
+  val isReadOnly: Boolean,
   val onPlayerSelected: (Player) -> Unit,
 ) : ViewRendering {
   @Composable
@@ -82,8 +85,10 @@ class NewRoundPlayerSelectionScreen(
 
     PlayerSelectionScreen(
       onBack = BackBehaviour.Hidden,
+      gameCode = gameCode,
       player = playerShown,
       round = round,
+      isReadOnly = isReadOnly,
       onContinue = null
     )
   }
@@ -91,8 +96,10 @@ class NewRoundPlayerSelectionScreen(
 
 class NewRoundPlayerScreen(
   val random: Random,
+  val gameCode: String,
   val player: Player,
   val round: Int,
+  val isReadOnly: Boolean,
   val onContinue: (() -> Unit)?,
 ) : ViewRendering {
   @Composable
@@ -106,8 +113,10 @@ class NewRoundPlayerScreen(
     Box {
       PlayerSelectionScreen(
         onBack = onBack,
+        gameCode = gameCode,
         player = player,
         round = round,
+        isReadOnly = isReadOnly,
         onContinue = onContinue,
       )
 
@@ -123,13 +132,16 @@ class NewRoundPlayerScreen(
 @Composable
 private fun PlayerSelectionScreen(
   onBack: BackBehaviour,
+  gameCode: String,
   player: Player,
   round: Int,
+  isReadOnly: Boolean,
   onContinue: (() -> Unit)?,
 ) {
   AppScaffold(
     onBack = onBack,
     title = { Text(Strings.roundTitle.evaluate(round)) },
+    actionIcons = { if (!isReadOnly) GameCodeBox(gameCode) },
   ) {
     Box(
       modifier = Modifier
