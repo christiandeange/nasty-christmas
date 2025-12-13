@@ -11,6 +11,7 @@ import com.deange.nastychristmas.workflow.AppState.OpeningGift
 import com.deange.nastychristmas.workflow.AppState.PickingPlayer
 import com.deange.nastychristmas.workflow.AppState.StealingRound
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import nastychristmas.app.generated.resources.Res
 import nastychristmas.app.generated.resources.bad_words
@@ -23,7 +24,10 @@ class GameSaver(
   private val firestore: Firestore,
   private val updaterScope: CoroutineScope,
 ) {
-  private var game: GameState? by storage.preference("game-state", null)
+  private val preference = storage.preference<GameState?>("game-state", null)
+  private var game: GameState? by preference
+
+  fun onGameSaved(): Flow<GameState?> = preference.asFlow()
 
   fun game(): ReadWriteProperty<Any?, GameState?> {
     return object : ReadWriteProperty<Any?, GameState?> {
