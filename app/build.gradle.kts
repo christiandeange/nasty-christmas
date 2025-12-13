@@ -55,6 +55,7 @@ kotlin {
         api(compose.ui)
 
         api(libs.kotlinx.serialization.json)
+        api(libs.material.icons)
         api(libs.workflow.core)
         api(libs.workflow.runtime)
       }

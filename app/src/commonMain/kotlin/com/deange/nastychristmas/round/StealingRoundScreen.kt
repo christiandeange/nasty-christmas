@@ -167,7 +167,7 @@ class StealingRoundScreen(
             when (choice) {
               is Open -> {
                 ChoiceRow(
-                  modifier = Modifier.animateItemPlacement(),
+                  modifier = Modifier.animateItem(),
                   titleText = if (isLastRound) {
                     Strings.openLastGiftTitle.evaluate()
                   } else {
@@ -189,7 +189,7 @@ class StealingRoundScreen(
                   // Do not show this row if it can't be stolen
                 } else {
                   ChoiceRow(
-                    modifier = Modifier.animateItemPlacement(),
+                    modifier = Modifier.animateItem(),
                     titleText = Strings.stealFrom.evaluate(choice.playerName),
                     descriptionText = choice.giftName,
                     readOnly = isReadOnly,

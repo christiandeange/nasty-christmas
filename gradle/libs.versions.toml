@@ -6,7 +6,7 @@ androidx-core = "1.17.0"
 androidx-datastore = "1.2.0"
 androidx-lifecycle = "2.10.0"
 compose-compiler = "1.5.15"
-compose-jb = "1.7.0"
+compose-jb = "1.9.3"
 firebase = "2.4.0"
 kotlin = "2.2.21"
 kotlinx-coroutines = "1.10.2"
@@ -36,6 +36,8 @@ androidx-lifecycle = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", ve
 
 firebase-admin = { module = "com.google.firebase:firebase-admin", version = "9.4.1" }
 firebase-cloud-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "firebase" }
+
+material-icons = { module = "org.jetbrains.compose.material:material-icons-core", version = "1.7.3" }
 
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-cbor = { module = "org.jetbrains.kotlinx:kotlinx-serialization-cbor", version.ref = "kotlinx-serialization" }

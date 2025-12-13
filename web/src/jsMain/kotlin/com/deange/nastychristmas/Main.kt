@@ -1,7 +1,7 @@
 package com.deange.nastychristmas
 
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.window.CanvasBasedWindow
+import androidx.compose.ui.window.ComposeViewport
 import com.deange.nastychristmas.end.EndGameWorkflow
 import com.deange.nastychristmas.firebase.BuildKonfig.FIREBASE_API_KEY
 import com.deange.nastychristmas.firebase.BuildKonfig.FIREBASE_APP_ID
@@ -30,6 +30,7 @@ import com.deange.nastychristmas.workflow.AppProps
 import com.deange.nastychristmas.workflow.AppProps.NewGame
 import com.deange.nastychristmas.workflow.AppProps.RestoredFromSave
 import com.deange.nastychristmas.workflow.AppWorkflow
+import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -106,7 +107,7 @@ private fun runMainApp() {
     else -> RestoredFromSave(restoredGameState, isReadOnly = false)
   }
 
-  CanvasBasedWindow(title = "Nasty Christmas") {
+  ComposeViewport(document.body!!) {
     App(
       workflow = appWorkflow,
       props = initialProps,
@@ -123,7 +124,7 @@ private fun runMainApp() {
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun runRegistryApp() {
-  CanvasBasedWindow(title = "Nasty Christmas Registry") {
+  ComposeViewport(document.body!!) {
     App(
       workflow = registryWorkflow,
       props = Unit,
