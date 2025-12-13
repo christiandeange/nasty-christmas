@@ -15,8 +15,10 @@ import com.squareup.workflow1.StatefulWorkflow
 import com.squareup.workflow1.Worker
 import com.squareup.workflow1.action
 import com.squareup.workflow1.runningWorker
+import kotlin.random.Random
 
 class PlayersWorkflow(
+  private val random: Random,
   private val gameSaver: GameSaver,
 ) : StatefulWorkflow<PlayersProps, PlayersState, PlayersOutput, ViewRendering>() {
 
@@ -48,6 +50,7 @@ class PlayersWorkflow(
     }
 
     return PlayersScreen(
+      random = random,
       players = renderState.players.map { it.name },
       currentPlayer = renderState.currentPlayer,
       gameCode = renderState.gameCode,

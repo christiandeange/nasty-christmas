@@ -79,7 +79,7 @@ private val gameStateFactory by lazy {
 
 private val appWorkflow by lazy {
   AppWorkflow(
-    playersWorkflow = PlayersWorkflow(gameSaver = gameSaver),
+    playersWorkflow = PlayersWorkflow(random = random, gameSaver = gameSaver),
     newRoundWorkflow = NewRoundWorkflow(),
     openGiftWorkflow = OpenGiftWorkflow(),
     stealingRoundWorkflow = StealingRoundWorkflow(storage),

@@ -28,6 +28,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -46,12 +48,18 @@ import com.deange.nastychristmas.ui.compose.TextController
 import com.deange.nastychristmas.ui.compose.asMutableState
 import com.deange.nastychristmas.ui.compose.flow.FlowRow
 import com.deange.nastychristmas.ui.compose.flow.SizeMode
+import com.deange.nastychristmas.ui.compose.glitchEffect
 import com.deange.nastychristmas.ui.compose.serifFont
 import com.deange.nastychristmas.ui.theme.AppTypography
 import com.deange.nastychristmas.ui.theme.Strings
 import com.deange.nastychristmas.ui.workflow.ViewRendering
+import kotlinx.coroutines.delay
+import kotlin.random.Random
+import kotlin.random.nextInt
+import kotlin.time.Duration.Companion.seconds
 
 class PlayersScreen(
+  private val random: Random,
   private val players: List<String>,
   private val currentPlayer: TextController,
   private val gameCode: String?,
@@ -75,9 +83,15 @@ class PlayersScreen(
           currentPlayerName.isNotBlank() && currentPlayerName !in players
         }
 
+        var key by remember { mutableStateOf(0) }
+        LaunchedEffect(key) {
+          delay(random.nextInt(4..8).seconds)
+          key++
+        }
+
         MaterialTheme(typography = AppTypography(serifFont)) {
           Text(
-            modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
+            modifier = Modifier.fillMaxWidth().padding(top = 32.dp).glitchEffect(key),
             text = Strings.appName.evaluate(),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.displayLarge.copy(

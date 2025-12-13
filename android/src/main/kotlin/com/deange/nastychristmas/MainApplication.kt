@@ -47,7 +47,7 @@ class MainApplication : Application() {
 
   val workflow by lazy {
     AppWorkflow(
-      playersWorkflow = PlayersWorkflow(gameSaver = gameSaver),
+      playersWorkflow = PlayersWorkflow(random = random, gameSaver = gameSaver),
       newRoundWorkflow = NewRoundWorkflow(),
       openGiftWorkflow = OpenGiftWorkflow(),
       stealingRoundWorkflow = StealingRoundWorkflow(storage),
