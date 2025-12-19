@@ -45,8 +45,11 @@ suspend fun main() {
   initTypography()
 
   onWasmReady {
-    runRegistryApp()
-//    runMainApp()
+    if (window.location.hostname.startsWith("play.")) {
+      runMainApp()
+    } else {
+      runRegistryApp()
+    }
   }
 }
 
