@@ -73,9 +73,6 @@ class RegistryWorkflow(
       onGameCodeEntered = context.eventHandler("onGameCodeEntered") { newGameCode ->
         state = state.copy(gameCode = GameCodeStatus.Unvalidated(newGameCode))
       },
-      onClearGameCode = context.eventHandler("onClearGameCode") {
-        state = state.copy(gameCode = GameCodeStatus.None)
-      },
       childRendering = childRendering,
     )
   }

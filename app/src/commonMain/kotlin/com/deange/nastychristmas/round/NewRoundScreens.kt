@@ -42,7 +42,6 @@ class NewRoundPlayerSelectionScreen(
   val gameCode: String,
   val playerPool: Set<Player>,
   val round: Int,
-  val isReadOnly: Boolean,
   val onPlayerSelected: (Player) -> Unit,
 ) : ViewRendering {
   @Composable
@@ -88,7 +87,6 @@ class NewRoundPlayerSelectionScreen(
       gameCode = gameCode,
       player = playerShown,
       round = round,
-      isReadOnly = isReadOnly,
       onContinue = null
     )
   }
@@ -99,7 +97,6 @@ class NewRoundPlayerScreen(
   val gameCode: String,
   val player: Player,
   val round: Int,
-  val isReadOnly: Boolean,
   val onContinue: (() -> Unit)?,
 ) : ViewRendering {
   @Composable
@@ -116,7 +113,6 @@ class NewRoundPlayerScreen(
         gameCode = gameCode,
         player = player,
         round = round,
-        isReadOnly = isReadOnly,
         onContinue = onContinue,
       )
 
@@ -135,13 +131,12 @@ private fun PlayerSelectionScreen(
   gameCode: String,
   player: Player,
   round: Int,
-  isReadOnly: Boolean,
   onContinue: (() -> Unit)?,
 ) {
   AppScaffold(
     onBack = onBack,
     title = { Text(Strings.roundTitle.evaluate(round)) },
-    actionIcons = { if (!isReadOnly) GameCodeBox(gameCode) },
+    actionIcons = { GameCodeBox(gameCode) },
   ) {
     Box(
       modifier = Modifier

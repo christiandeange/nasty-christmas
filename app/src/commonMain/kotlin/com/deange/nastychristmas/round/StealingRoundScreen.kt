@@ -134,9 +134,9 @@ class StealingRoundScreen(
               contentDescription = Strings.settings.evaluate(),
             )
           }
-
-          GameCodeBox(gameCode)
         }
+
+        GameCodeBox(gameCode)
       }
     ) {
       Column(
